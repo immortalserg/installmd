@@ -26,10 +26,10 @@ read vibor5
 echo -e -n "\033[0;36mУстанавливать pi-switch-python? (y/n) \033[0m"
 read vibor6
 #задаем пароль root для MySQL
-echo -e -n "\033[1;33mВведите пароль MySQL > \033[0m"
+echo -e -n "\033[1;33mВведите пароль root для MariaDB (MySQL) > \033[0m"
 read pass
 #задаем пароль пользователя pi
-echo -e -n "\033[1;33m<будет создан пользователь pi, задайте пароль > \033[0m"
+echo -e -n "\033[1;33mБудет создан пользователь pi, задайте ему пароль > \033[0m"
 read pass2
 #добавляем пользователя
 sudo useradd -m -d /home/pi pi -p $pass2
