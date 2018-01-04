@@ -728,6 +728,11 @@ git clone -q https://github.com/sergejey/majordomo.git
 sudo cp -rp ~/majordomo/* /var/www
 sudo cp -rp ~/majordomo/.htaccess /var/www
 rmdir majordomo
+wget https://github.com/immortalserg/installmd/raw/master/mdbackup.tar.gz
+tar -xf mdbackup.tar.gz
+rm mdbackup.tar.gz
+sudo cp -rp ~/mdbackup/* /var/www
+rmdir mdbackup
 #качаем phpmyadmin
 echo -e "\033[1;36mУстанавливаю phpMyAdmin \033[0m"
 cd ~
@@ -894,6 +899,7 @@ GRANT ALL PRIVILEGES ON * . * TO 'pi'@'localhost';
 FLUSH PRIVILEGES;
 EOF
 mysql -u root -p$pass db_terminal < /var/www/db_terminal.sql
+mysql -u root -p$pass db_terminal < /var/www/dump.sql
 echo -e "\033[1;36mСистема \033[1;32mMajorDoMo \033[1;36mустановлена\033[0m "
 # Отключаем режим "Strict mode" для MySQL (для избавления от наследственных ошибок)
 echo -e "\033[1;36mНастраиваю кое какие файлы... \033[0m "
@@ -922,7 +928,8 @@ sudo apache2ctl restart
 sudo service mysql restart
 # Запускаем основной цикл
 sudo service majordomo start
-#устанавливаем модули
+#загружаем бэкап системы и устанавливаем
+
 
 #обновляем систему
 wget -q http://localhost/modules/saverestore/update_iframe.php
@@ -1018,3 +1025,5 @@ echo -e "\033[1;32m X     X   X    X   X   X X   X X   X\033[0m"
 echo -e "\033[1;32m X      XXX     X    XXX  XXXX   XXX \033[0m"
 echo
 echo -e "\033[1;32m Система установлена, перезагрузите зверька \033[0m"
+
+
