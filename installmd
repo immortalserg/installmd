@@ -13,6 +13,16 @@ echo -e "\033[0;36m2 - Установка Java и node.js\033[0m"
 echo -e "\033[0;36m0 - не устанавливать\033[0m"
 echo -e -n "\033[0;36mВаш выбор: \033[0m"
 read vibor
+#echo -e "\033[1;33mВыберите web сервер\033[0m"
+#echo -e "\033[0;36m1 - Apache\033[0m"
+#echo -e "\033[0;36m2 - nginx\033[0m"
+#echo -e -n "\033[0;36mВаш выбор: \033[0m"
+#read mdwwwserver
+echo -e "\033[1;33mВыберите конфигурацию MajorDoMo\033[0m"
+echo -e "\033[0;36m1 - Базовая конфигурация\033[0m"
+echo -e "\033[0;36m2 - Расширенная конфигурация\033[0m"
+echo -e -n "\033[0;36mВаш выбор: \033[0m"
+read mdconfig
 #выбор платы для установки WiringPi
 echo -e -n "\033[0;36mУстанавливать WiringPi? (у/n) \033[0m"
 read vibor3
@@ -25,11 +35,24 @@ read vibor5
 #выбор установки pi-switch-python
 echo -e -n "\033[0;36mУстанавливать pi-switch-python? (y/n) \033[0m"
 read vibor6
+#отображать пароли?
+echo -e -n "\033[0;36mОтображать пароли? (y/n) \033[0m"
+read vibor8
+stty echo
+case "$vibor8" in
+"n" )
 stty -echo
+;;
+esac
 #задаем пароль root для MySQL
 echo -e -n "\033[1;33mВведите пароль root для MariaDB (MySQL) > \033[0m"
 read pass
+stty echo
+case "$vibor8" in
+"n" )
 stty -echo
+;;
+esac
 #задаем пароль пользователя pi
 echo
 echo -e -n "\033[1;33mБудет создан пользователь pi, задайте ему пароль > \033[0m"
@@ -569,10 +592,6 @@ echo "Thanks for using MySQL!"
 echo
 echo
 
-
-
-
-
 #конец скрипта настройки базы данных ----------------------------------------------------------------------------------
 #добавляем запуск vlc ower http на порту 7070
 echo -n -e "\033[1;36mДобавляю запуск vlc http в сrontab: \033[0m"
@@ -728,11 +747,20 @@ git clone -q https://github.com/sergejey/majordomo.git
 sudo cp -rp ~/majordomo/* /var/www
 sudo cp -rp ~/majordomo/.htaccess /var/www
 rmdir majordomo
+
+
+#установка расширенной конфигурации
+case "$mdconfig" in
+"2" )
 wget https://github.com/immortalserg/installmd/raw/master/mdbackup.tar.gz
 tar -xf mdbackup.tar.gz
 rm mdbackup.tar.gz
 sudo cp -rp ~/mdbackup/* /var/www
 rmdir mdbackup
+;;
+esac
+
+
 #качаем phpmyadmin
 echo -e "\033[1;36mУстанавливаю phpMyAdmin \033[0m"
 cd ~
@@ -898,8 +926,18 @@ CREATE USER 'pi'@'localhost' IDENTIFIED BY '$pass2';
 GRANT ALL PRIVILEGES ON * . * TO 'pi'@'localhost';
 FLUSH PRIVILEGES;
 EOF
-#mysql -u root -p$pass db_terminal < /var/www/db_terminal.sql
+
+#выбор конфигурации для установки
+case "$mdconfig" in
+"1" )
+#базовая конфигурация
+mysql -u root -p$pass db_terminal < /var/www/db_terminal.sql
+;;
+"2" )
+#расширенная конфигурация
 mysql -u root -p$pass db_terminal < /var/www/dump.sql
+;;
+esac
 echo -e "\033[1;36mСистема \033[1;32mMajorDoMo \033[1;36mустановлена\033[0m "
 # Отключаем режим "Strict mode" для MySQL (для избавления от наследственных ошибок)
 echo -e "\033[1;36mНастраиваю кое какие файлы... \033[0m "
