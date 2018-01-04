@@ -35,6 +35,35 @@ read vibor5
 #выбор установки pi-switch-python
 echo -e -n "\033[0;36mУстанавливать pi-switch-python? (y/n) \033[0m"
 read vibor6
+#выбор установки pi-switch-python
+echo -e -n "\033[0;36mУстанавливать owfs для 1-wire? (y/n) \033[0m"
+read vibor7
+case "$vibor7" in
+"y" )
+#Выбор 1-wire адаптера
+echo -e "\033[1;33mВыберите 1-wire адаптер\033[0m"
+echo -e "\033[0;36m1 - USB адаптер DS9490R\033[0m"
+echo -e "\033[0;36m2 - UART адаптер DS2480\033[0m"
+echo -e "\033[0;36m3 - i2c адаптер DS2482\033[0m"
+echo -e -n "\033[0;36mВаш выбор: \033[0m"
+read mdowfs
+
+case "$mdowfs" in
+"2" )
+echo -e "\033[1;33mВыберите порт 1-wire адаптера DS2480\033[0m"
+echo -e "\033[0;36m0 - /dev/ttyS0\033[0m"
+echo -e "\033[0;36m1 - /dev/ttyS1\033[0m"
+echo -e "\033[0;36m2 - /dev/ttyS2 (OrangePi shield D6MG)\033[0m"
+echo -e "\033[0;36m3 - /dev/ttyS3\033[0m"
+echo -e "\033[0;36m4 - /dev/ttyS4 (Asus Tinker Board shield D6MG)\033[0m"
+echo -e "\033[0;36m5 - /dev/ttyUSB0\033[0m"
+echo -e "\033[0;36m6 - /dev/ttyUSB1\033[0m"
+echo -e -n "\033[0;36mВаш выбор: \033[0m"
+read mdowfs2
+;;
+esac
+;;
+esac
 #отображать пароли?
 echo -e -n "\033[0;36mОтображать пароли? (y/n) \033[0m"
 read vibor8
@@ -121,9 +150,15 @@ echo -n -e "\033[1;36mУстанавливаю MQTT сервер Mosquitto... \0
 sudo apt-get -qq install -y mosquitto 
 sudo apt-get -qq install -y mosquitto-clients
 echo -e "\033[1;32m установлено\033[0m"
+
+
+case "$vibor7" in
+"y" )
 echo -n -e "\033[1;36mУстанавливаю owfs... \033[0m"
 sudo apt-get -qq install -y owfs
 echo -e "\033[1;32m установлено\033[0m"
+;;
+esac
 echo -n -e "\033[1;36mУстанавливаю openvpn... \033[0m"
 sudo apt-get -qq install -y openvpn
 echo -e "\033[1;32m установлено\033[0m"
@@ -936,6 +971,54 @@ mysql -u root -p$pass db_terminal < /var/www/db_terminal.sql
 "2" )
 #расширенная конфигурация
 mysql -u root -p$pass db_terminal < /var/www/dump.sql
+;;
+esac
+
+
+#настройка owfs
+case "$vibor7" in
+"y" )
+sudo sed -i "/ONEWIRE_SERVER/s/\/\///" /var/www/config.php
+sudo sed -i "/server: port/s/localhost:4304/8234/" /etc/owfs.conf
+
+case "$mdowfs" in
+"1" )
+#USB адаптер DS9490R
+sudo sed -i "/server: usb/s/\#//" /etc/owfs.conf
+;;
+"2" )
+#UART адаптер DS2480
+sudo sed -i "/server: device/s/\#//" /etc/owfs.conf
+
+case "$mdowfs2" in
+"0" )
+sudo sed -i "/server: device/s/ttyS1/ttyS0/" /etc/owfs.conf
+;;
+"1" )
+sudo sed -i "/server: device/s/ttyS1/ttyS1/" /etc/owfs.conf
+;;
+"2" )
+sudo sed -i "/server: device/s/ttyS1/ttyS2/" /etc/owfs.conf
+;;
+"3" )
+sudo sed -i "/server: device/s/ttyS1/ttyS3/" /etc/owfs.conf
+;;
+"4" )
+sudo sed -i "/server: device/s/ttyS1/ttyS4/" /etc/owfs.conf
+;;
+"5" )
+sudo sed -i "/server: device/s/ttyS1/ttyUSB0/" /etc/owfs.conf
+;;
+"6" )
+sudo sed -i "/server: device/s/ttyS1/ttyUSB1/" /etc/owfs.conf
+;;
+esac
+;;
+"3" )
+#i2c адаптер DS2482
+echo "server: i2c = ALL:ALL" | tee -a /etc/owfs.conf
+;;
+esac
 ;;
 esac
 echo -e "\033[1;36mСистема \033[1;32mMajorDoMo \033[1;36mустановлена\033[0m "
