@@ -1,4 +1,6 @@
 #!/bin/bash
+
+echo -e "\033[1;33mВерсия скрипта 0.2\033[0m"
 #выбор платы для установки WiringPi
 echo -e "\033[1;33mВыберете вашу плату\033[0m"
 echo -e "\033[0;36m1 - OrangePi\033[0m"
@@ -831,6 +833,7 @@ git clone -q https://github.com/sergejey/majordomo.git
 # Переносим систему в директорию WEB-сервера
 sudo cp -rp ~/majordomo/* /var/www
 sudo cp -rp ~/majordomo/.htaccess /var/www
+rm -r ~/majordomo/*
 rmdir majordomo
 
 
@@ -841,6 +844,7 @@ wget https://github.com/immortalserg/installmd/raw/master/mdbackup.tar.gz
 tar -xf mdbackup.tar.gz
 rm mdbackup.tar.gz
 sudo cp -rp ~/mdbackup/* /var/www
+rm -r ~/mdbackup/*
 rmdir mdbackup
 ;;
 esac
@@ -853,6 +857,7 @@ wget -q https://files.phpmyadmin.net/phpMyAdmin/4.7.7/phpMyAdmin-4.7.7-all-langu
 tar -xf phpMyAdmin-4.7.7-all-languages.tar.gz
 rm phpMyAdmin-4.7.7-all-languages.tar.gz
 cp -a phpMyAdmin-4.7.7-all-languages /var/www/phpmyadmin
+rm -r ~/phpMyAdmin-4.7.7-all-languages/*
 rmdir phpMyAdmin-4.7.7-all-languages
 echo -e "\033[1;32mphpMyAdmin установлен\033[0m"
 echo -e -n "\033[1;36mДелаю конфигурацию... \033[0m"
@@ -1392,6 +1397,7 @@ echo "tmpfs   /var/log                tmpfs   size=20M,defaults,noatime,mode=075
 echo "tmpfs   /var/cache/apt/archives tmpfs   size=200M,defaults,noexec,nosuid,nodev,mode=0755 0 0" | tee -a /etc/fstab
 echo "tmpfs   /var/www/cached                tmpfs   size=100M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
 
+sudo sed -i '/datadir/s/\/var\/lib\/mysql/\/tmp\/mysql/' /etc/mysql/mariadb.conf.d/50-server.cnf
 
 echo
 echo -e "\033[1;32m XXXXX  XXX   XXXXX  XXX  XXXX   XXX \033[0m"
