@@ -72,6 +72,10 @@ read mdowfs2
 esac
 ;;
 esac
+#удалить локали
+echo -e -n "\033[0;36mУдалить локали? (y/n) \033[0m"
+read dellocale
+
 #отображать пароли?
 echo -e -n "\033[0;36mОтображать пароли? (y/n) \033[0m"
 read vibor8
@@ -92,14 +96,21 @@ stty -echo
 esac
 #задаем пароль пользователя pi
 echo
-echo -e -n "\033[1;33mБудет создан пользователь pi, задайте ему пароль > \033[0m"
+echo -e -n "\033[1;33mВведите пароль пользователя pi > \033[0m"
 read pass2
 stty echo
 password1=$pass
 password2=$pass
 reply='Y'
+#создать пользователя pi
+echo -e -n "\033[0;36mСоздать пользователя pi (если нету необходимо создать)? (y/n) \033[0m"
+read piuser
 #добавляем пользователя
+case "$piuser" in
+"y" )
 sudo useradd -m -d /home/pi pi -p $pass2
+;;
+esac
 #настройки локали
 sudo locale-gen en_US.UTF-8
 export LC_CTYPE=en_US.UTF-8
@@ -113,8 +124,8 @@ sudo apt-key add -qq jcameron-key.asc
 sudo apt-add-repository ppa:webupd8team/java -y
 # Обновляем информацию о пакетах
 sudo apt-get -qq update
-# Устанавливаем необходимые пакеты
-echo -n -e "\033[1;36mУстанавливаю необходимые утилиты и библиотеки... \033[0m"
+case "$dellocale" in
+"y" )
 sudo tee /etc/locale.nopurge << EOF
 en
 en_US
@@ -127,6 +138,10 @@ ru_RU.KOI8-R
 ru_RU.UTF-8
 EOF
 sudo apt-get -qq install -y localepurge 
+;;
+esac
+# Устанавливаем необходимые пакеты
+echo -n -e "\033[1;36mУстанавливаю необходимые утилиты и библиотеки... \033[0m"
 sudo apt-get -qq install -y ntpdate
 sudo apt-get -qq install -y libusb-1.0-0 
 sudo apt-get -qq install -y libusb-1.0-0-dev
