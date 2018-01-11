@@ -15,12 +15,10 @@ echo -e "\033[0;36m0 - Другая\033[0m"
 echo -e -n "\033[0;36mВаш выбор: \033[0m"
 read vibor2
 #установка Java и node.js
-echo -e "\033[1;33mУстановка Java и node.js\033[0m"
-echo -e "\033[0;36m1 - Установка только Java\033[0m"
-echo -e "\033[0;36m2 - Установка Java и node.js\033[0m"
-echo -e "\033[0;36m0 - не устанавливать\033[0m"
-echo -e -n "\033[0;36mВаш выбор: \033[0m"
+echo -e "\033[0;36m1 - Установить Java? (y/n)\033[0m"
 read vibor
+echo -e "\033[0;36m2 - Установить node.js (y/n)\033[0m"
+read vibornode
 #echo -e "\033[1;33mВыберите web сервер\033[0m"
 #echo -e "\033[0;36m1 - Apache\033[0m"
 #echo -e "\033[0;36m2 - nginx\033[0m"
@@ -662,15 +660,14 @@ sudo a2enmod rewrite
 mosquitto -d
 sudo systemctl enable mosquitto.service
 case "$vibor" in
-"1" )
+"y" )
 echo -e "\033[1;36mУстанавливаю Java...\033[0m"
 sudo apt-get -qq install -y oracle-java8-jdk
 echo -e "\033[1;32m установлено\033[0m"
 ;;
-"2" )
-echo -n -e "\033[1;36mУстанавливаю Java...\033[0m"
-sudo apt-get -qq install -y oracle-java8-jdk
-echo -e "\033[1;32m установлено\033[0m"
+esac
+case "$vibornode" in
+"y" )
 #установка node.js из исходников
 echo -e "\033[1;36mУстанавливаю node.js из исходников, можно попить чайку... литра 2 :-)\033[0m"
 cd ~
