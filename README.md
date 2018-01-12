@@ -3,6 +3,7 @@
 Скрипт установки MajorDoMo на OrangePi, Asus Tinker Board, RaspberryPi
 
 Установка.
+
 sudo su
 apt-get update && apt-get upgrade && wget https://raw.githubusercontent.com/immortalserg/installmd/master/installmd && chmod +x ./installmd && ./installmd
 
