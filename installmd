@@ -231,7 +231,7 @@ sudo apt-get -qq install -y alsa
 sudo apt-get -qq install -y alsa-utils 
 sudo apt-get -qq install -y alsa-tools
 sudo apt-get -qq install -y libav-tools
-echo -n "\033[1;36mУстановка базы данных MariaDB... \033[0m"
+echo -n -e "\033[1;36mУстановка базы данных MariaDB... \033[0m"
 sudo apt-get -qq install -y mariadb-server
 sudo apt-get -qq install -y mariadb-client
 echo -e "\033[1;32m установлено\033[0m"
