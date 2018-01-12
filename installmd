@@ -1,10 +1,10 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.2.1\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.2.2\033[0m"
 a_apt_p=$(ps -A | grep apt)
 case "$a_apt_p" in
 "" )
-echo  -e -n "\033[1;31mВНИМАНИЕ!!! Запущен процесс APT, дальнейшая установка невозможна из-за занятости процесса APT, убить все процессы APT и продолжить? (у/n)\033[0m"
+echo  -e -n "\033[1;31mВНИМАНИЕ!!! Запущен процесс APT, дальнейшая установка невозможна из-за занятости процесса APT, убить все процессы APT и продолжить? (у/n) \033[0m"
 read aptprockill
 case "$aptprockill" in
 "y" )
@@ -99,7 +99,15 @@ esac
 #удалить локали
 echo -e -n "\033[0;36mУдалить локали? (y/n) \033[0m"
 read dellocale
-
+#установить часы реального времени ds3231 на i2c0
+echo -e -n "\033[0;36mУстановить часы реального времени ds3231 на i2c0? (y/n) \033[0m"
+read realtimeset
+case "$realtimeset" in
+"y" )
+echo -e -n "\033[0;36mЗаписать текущее время системы в часы ds3132? (y/n) \033[0m"
+read realtimeset2
+;;
+esac
 #отображать пароли?
 echo -e -n "\033[0;36mОтображать пароли? (y/n) \033[0m"
 read vibor8
@@ -1355,10 +1363,23 @@ sudo service majordomo start
 wget -q http://localhost/modules/saverestore/update_iframe.php
 wget -q http://localhost/modules/market/update_iframe.php?mode2=update_all
 echo -e "\033[1;36mСистема \033[1;32mMajorDoMo \033[1;36mнастроена полностью\033[0m "
-
-
-
-
+#установка часов реального времени
+case "$realtimeset" in
+"y" )
+sudo sed -i "/exit 0/s/exit 0//" /etc/rc.local
+echo "echo ds3231 0x68 > /sys/class/i2c-adapter/i2c-0/new_device" | tee -a /etc/rc.local
+echo "rm /dev/rtc" | tee -a /etc/rc.local
+echo "ln -s /dev/rtc1 /dev/rtc" | tee -a /etc/rc.local
+echo "hwclock -s" | tee -a /etc/rc.local
+echo "exit 0" | tee -a /etc/rc.local
+case "$realtimeset2" in
+"y" )
+hwclock -w
+;;
+esac
+echo -e "\033[1;32m установлено\033[0m"
+;;
+esac
 #оптимизация работы с базой данных
 sudo service majordomo stop
 sudo service mysql stop
