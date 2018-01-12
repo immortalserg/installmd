@@ -1,6 +1,31 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.2\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.2.1\033[0m"
+a_apt_p=$(ps -A | grep apt)
+case "$a_apt_p" in
+"" )
+echo  -e -n "\033[1;31mВНИМАНИЕ!!! Запущен процесс APT, дальнейшая установка невозможна из-за занятости процесса APT, убить все процессы APT и продолжить? (у/n)\033[0m"
+read aptprockill
+case "$aptprockill" in
+"y" )
+killall apt
+;;
+"n" )
+echo -e -n "\033[1;31mЗавершено\033[0m"
+exit
+;;
+esac
+;;
+esac
+filesize=$(stat -c%s "$file");
+if [ "$filesize" = "0" ];
+then
+
+else
+sudo rm /var/lib/dpkg/lock
+sudo rm /var/lib/apt/lists/lock
+sudo rm /var/cache/apt/archives/lock
+fi
 #выбор платы для установки WiringPi
 echo -e "\033[1;33mВыберете вашу плату\033[0m"
 echo -e "\033[0;36m1 - OrangePi\033[0m"
@@ -115,7 +140,10 @@ sudo locale-gen en_US.UTF-8
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 #добавляем репы webmin
+
+sudo sed -i '/deb http:\/\/download.webmin.com\/download\/repository sarge contrib/s/deb http:\/\/download.webmin.com\/download\/repository sarge contrib//' /etc/apt/sources.list
 echo "deb http://download.webmin.com/download/repository sarge contrib" | tee -a /etc/apt/sources.list
+sudo sed -i '/deb http:\/\/webmin.mirror.somersettechsolutions.co.uk\/repository sarge contrib/s/deb http:\/\/webmin.mirror.somersettechsolutions.co.uk\/repository sarge contrib//' /etc/apt/sources.list
 echo "deb http://webmin.mirror.somersettechsolutions.co.uk/repository sarge contrib" | tee -a /etc/apt/sources.list
 sudo wget -q http://www.webmin.com/jcameron-key.asc
 sudo apt-key add -qq jcameron-key.asc
@@ -172,8 +200,6 @@ echo -n -e "\033[1;36mУстанавливаю MQTT сервер Mosquitto... \0
 sudo apt-get -qq install -y mosquitto 
 sudo apt-get -qq install -y mosquitto-clients
 echo -e "\033[1;32m установлено\033[0m"
-
-
 case "$vibor7" in
 "y" )
 echo -n -e "\033[1;36mУстанавливаю owfs... \033[0m"
@@ -1403,9 +1429,11 @@ esac
 EOF
 sudo chmod 755 /etc/init.d/prepare-dirs
 sudo update-rc.d prepare-dirs defaults 01 99
+
+sudo sed -i '/\/tmp /s/tmpfs \/tmp/\#tmpfs \/tmp/' /etc/fstab
 echo "tmpfs /tmp tmpfs defaults,noatime,nosuid,size=250m 0 0" | tee -a /etc/fstab
 echo "tmpfs /var/tmp tmpfs defaults,noatime,nosuid,size=200m 0 0" | tee -a /etc/fstab
-echo "#tmpfs /var/run tmpfs defaults,noatime,nosuid,mode=0755,size=2m 0 0" | tee -a /etc/fstab
+echo "tmpfs /run tmpfs defaults,noatime,nosuid,mode=0755,size=2m 0 0" | tee -a /etc/fstab
 echo "tmpfs   /var/log                tmpfs   size=20M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
 echo "tmpfs   /var/cache/apt/archives tmpfs   size=200M,defaults,noexec,nosuid,nodev,mode=0755 0 0" | tee -a /etc/fstab
 echo "tmpfs   /var/www/cached                tmpfs   size=100M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
