@@ -4,10 +4,7 @@
 
 Установка.
 sudo su
-apt-get update && apt-get upgrade
-wget https://raw.githubusercontent.com/immortalserg/installmd/master/installmd
-chmod +x ./installmd
-./installmd
+apt-get update && apt-get upgrade && wget https://raw.githubusercontent.com/immortalserg/installmd/master/installmd && chmod +x ./installmd && ./installmd
 
 Исправления.
 v.0.2.2
