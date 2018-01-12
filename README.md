@@ -5,11 +5,19 @@
 Установка.
 
 sudo su
-apt-get update && apt-get upgrade && wget https://raw.githubusercontent.com/immortalserg/installmd/master/installmd && chmod +x ./installmd && ./installmd
+
+apt-get update && apt-get upgrade 
+
+wget https://raw.githubusercontent.com/immortalserg/installmd/master/installmd 
+
+chmod +x ./installmd
+
+./installmd
 
 Исправления.
 v.0.2.2
 - часы реального времени DS3231
+
 v.0.2.1
 - добавлено комментирование /tmp в /etc/fstab до вставки 
 - добавлено в fstab монтирование /run в tmpfs
