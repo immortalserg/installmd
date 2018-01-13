@@ -1,0 +1,25 @@
+#!/bin/bash
+
+mysql -u root << EOF
+USE db_terminal;
+alter table app_radio ENGINE=MyISAM;
+alter table charts ENGINE=MyISAM;
+alter table charts_data ENGINE=MyISAM;
+alter table devices ENGINE=MyISAM;
+alter table devices_linked ENGINE=MyISAM;
+alter table phistory_queue ENGINE=MyISAM;
+alter table public_calls ENGINE=MyISAM;
+alter table mqtt ENGINE=MyISAM;
+EOF
+
+echo "innodb=OFF" | tee -a /etc/mysql/mariadb.conf.d/50-server.cnf
+echo "default-storage-engine = MyISAM" | tee -a /etc/mysql/mariadb.conf.d/50-server.cnf
+
+rm /tmp/mysql/ibdata1
+rm /tmp/mysql/ib_logfile0
+rm /tmp/mysql/ib_logfile1
+rm /var/lib/mysql/ibdata1
+rm /var/lib/mysql/ib_logfile0
+rm /var/lib/mysql/ib_logfile1
+
+service mysql restart
