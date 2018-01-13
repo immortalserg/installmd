@@ -2,8 +2,8 @@
 
 echo -e "\033[1;33mВерсия скрипта 0.3\033[0m"
 a_apt_p=$(ps -A | grep apt)
-case "$a_apt_p" in
-"" )
+if [ "$a_apt_p" != "" ];
+then
 echo  -e -n "\033[1;31mВНИМАНИЕ!!! Запущен процесс APT, дальнейшая установка невозможна из-за занятости процесса APT, убить все процессы APT и продолжить? (у/n) \033[0m"
 read aptprockill
 case "$aptprockill" in
@@ -15,9 +15,9 @@ echo -e -n "\033[1;31mЗавершено\033[0m"
 exit
 ;;
 esac
-;;
-esac
-filesize=$(stat -c%s "$file");
+fi
+
+filesize=$(stat -c%s "/var/lib/dpkg/lock");
 if [ "$filesize" = "0" ];
 then
 
@@ -1507,3 +1507,5 @@ echo -e "\033[1;32m X     X   X    X   X   X X   X X   X\033[0m"
 echo -e "\033[1;32m X      XXX     X    XXX  XXXX   XXX \033[0m"
 echo
 echo -e "\033[1;32m Система установлена, перезагрузите зверька \033[0m"
+
+
