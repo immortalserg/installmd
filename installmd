@@ -20,7 +20,7 @@ fi
 filesize=$(stat -c%s "/var/lib/dpkg/lock");
 if [ "$filesize" = "0" ];
 then
-
+echo "продолжаю..."
 else
 sudo rm /var/lib/dpkg/lock
 sudo rm /var/lib/apt/lists/lock
