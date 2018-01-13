@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.2.2\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.3\033[0m"
 a_apt_p=$(ps -A | grep apt)
 case "$a_apt_p" in
 "" )
@@ -48,8 +48,21 @@ read vibor2
 echo -e "\033[1;33mВыберите конфигурацию MajorDoMo\033[0m"
 echo -e "\033[0;36m1 - Базовая конфигурация\033[0m"
 echo -e "\033[0;36m2 - Расширенная конфигурация\033[0m"
+echo -e "\033[0;36m3 - Собственная конфигурация\033[0m"
 echo -e -n "\033[0;36mВаш выбор: \033[0m"
 read mdconfig
+
+case "$mdconfig" in
+"3" )
+echo -e "\033[0;36m1 - Путь к файлу бэкапа базы данных (по умолчанию /root/backup.tgz)\033[0m"
+read pathconf
+case "$pathconf" in
+"" )
+$pathconf="/root/backup.tgz"
+;;
+esac
+;;
+esac
 #установка Java и node.js
 echo -e "\033[0;36m1 - Установить Java? (y/n)\033[0m"
 read vibor
@@ -894,6 +907,15 @@ sudo cp -rp ~/mdbackup/* /var/www
 rm -r ~/mdbackup/*
 rmdir mdbackup
 ;;
+#установка своей конфигурации
+"3" )
+mkdir backup
+tar -zxf $pathconf -C ./buckup
+rm $pathconf
+sudo cp -rp ~/backup/* /var/www
+rm -r ~/backup/*
+rmdir backup
+;;
 esac
 
 
@@ -1280,8 +1302,6 @@ mysql -u root -p$pass db_terminal < /var/www/db_terminal.sql
 mysql -u root -p$pass db_terminal < /var/www/dump.sql
 ;;
 esac
-
-
 #настройка owfs
 case "$vibor7" in
 "y" )
@@ -1460,6 +1480,24 @@ echo "tmpfs   /var/cache/apt/archives tmpfs   size=200M,defaults,noexec,nosuid,n
 echo "tmpfs   /var/www/cached                tmpfs   size=100M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
 
 sudo sed -i '/datadir/s/\/var\/lib\/mysql/\/tmp\/mysql/' /etc/mysql/mariadb.conf.d/50-server.cnf
+mysql -u root << EOF
+SELECT CONCAT('ALTER TABLE ',table_schema,'.',table_name,' ENGINE=MyISAM;')
+FROM information_schema.tables
+WHERE 1=1
+  AND engine = 'InnoDB'
+  AND table_schema NOT IN ('mysql', 'performance_schema');
+EOF
+
+echo "innodb=OFF" | tee -a /etc/mysql/mariadb.conf.d/50-server.cnf
+echo "default-storage-engine = MyISAM" | tee -a /etc/mysql/mariadb.conf.d/50-server.cnf
+service mysqld stop \
+  && rm -f /tmp/mysql/ibdata1 \
+  && rm -f /tmp/mysql/ib_logfile* \
+  && rm -f /var/lib/mysql/ibdata1 \
+  && rm -f /var/lib/mysql/ib_logfile* \  
+  && service mysqld start
+
+
 
 echo
 echo -e "\033[1;32m XXXXX  XXX   XXXXX  XXX  XXXX   XXX \033[0m"
