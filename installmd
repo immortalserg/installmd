@@ -1481,6 +1481,8 @@ echo "tmpfs   /var/cache/apt/archives tmpfs   size=200M,defaults,noexec,nosuid,n
 echo "tmpfs   /var/www/cached                tmpfs   size=100M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
 
 sudo sed -i '/datadir/s/\/var\/lib\/mysql/\/tmp\/mysql/' /etc/mysql/mariadb.conf.d/50-server.cnf
+
+#конвертация таблиц из InnoDB в MyISAM
 mysql -u root << EOF
 SELECT CONCAT('ALTER TABLE ',table_schema,'.',table_name,' ENGINE=MyISAM;')
 FROM information_schema.tables
