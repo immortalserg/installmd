@@ -167,7 +167,7 @@ echo "deb http://download.webmin.com/download/repository sarge contrib" | tee -a
 sudo sed -i '/deb http:\/\/webmin.mirror.somersettechsolutions.co.uk\/repository sarge contrib/s/deb http:\/\/webmin.mirror.somersettechsolutions.co.uk\/repository sarge contrib//' /etc/apt/sources.list
 echo "deb http://webmin.mirror.somersettechsolutions.co.uk/repository sarge contrib" | tee -a /etc/apt/sources.list
 sudo wget -q http://www.webmin.com/jcameron-key.asc
-sudo apt-key add -qq jcameron-key.asc
+sudo apt-key add jcameron-key.asc
 #добавляем репы java
 sudo apt-add-repository ppa:webupd8team/java -y
 # Обновляем информацию о пакетах
