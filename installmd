@@ -63,10 +63,13 @@ $pathconf="/root/backup.tgz"
 esac
 ;;
 esac
+#конвертировать таблицы из InnoDB в MyISAM
+echo -e -n "\033[0;36mКонвертировать таблицы из InnoDB в MyISAM? (y/n)\033[0m"
+read convtable
 #установка Java и node.js
-echo -e -n "\033[0;36m1 - Установить Java? (y/n)\033[0m"
+echo -e -n "\033[0;36mУстановить Java? (y/n)\033[0m"
 read vibor
-echo -e -n "\033[0;36m2 - Установить node.js (y/n)\033[0m"
+echo -e -n "\033[0;36mУстановить node.js (y/n)\033[0m"
 read vibornode
 #выбор платы для установки WiringPi
 echo -e -n "\033[0;36mУстанавливать WiringPi? (у/n) \033[0m"
@@ -1483,6 +1486,9 @@ echo "tmpfs   /var/www/cached                tmpfs   size=100M,defaults,noatime,
 sudo sed -i '/datadir/s/\/var\/lib\/mysql/\/tmp\/mysql/' /etc/mysql/mariadb.conf.d/50-server.cnf
 
 #конвертация таблиц из InnoDB в MyISAM
+
+case "$convtable" in
+"y" )
 mysql -u root << EOF
 SELECT CONCAT('ALTER TABLE ',table_schema,'.',table_name,' ENGINE=MyISAM;')
 FROM information_schema.tables
@@ -1499,7 +1505,8 @@ service mysqld stop \
   && rm -f /var/lib/mysql/ibdata1 \
   && rm -f /var/lib/mysql/ib_logfile* \  
   && service mysqld start
-
+;;
+esac
 
 
 echo
