@@ -1,6 +1,6 @@
 # installmd
 
-Скрипт установки MajorDoMo на OrangePi, Asus Tinker Board, RaspberryPi
+Скрипт установки MajorDoMo на OrangePi, Asus Tinker Board, RaspberryPi, Cubieboard, NanoPi, BananaPi и т.п.
 
 Установка.
 
