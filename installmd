@@ -66,6 +66,9 @@ esac
 #конвертировать таблицы из InnoDB в MyISAM
 echo -e -n "\033[0;36mКонвертировать таблицы из InnoDB в MyISAM? (y/n)\033[0m"
 read convtable
+#Установка webmin
+echo -e -n "\033[0;36mУстановить Webmin? (y/n)\033[0m"
+read instwebmin
 #установка Java и node.js
 echo -e -n "\033[0;36mУстановить Java? (y/n)\033[0m"
 read vibor
@@ -166,14 +169,6 @@ esac
 #добавляем репы webmin
 sudo apt-get -qq install -y python-software-properties
 sudo apt-get -qq install -y software-properties-common
-sudo sed -i '/deb http:\/\/download.webmin.com\/download\/repository sarge contrib/s/deb http:\/\/download.webmin.com\/download\/repository sarge contrib//' /etc/apt/sources.list
-echo "deb http://download.webmin.com/download/repository sarge contrib" | tee -a /etc/apt/sources.list
-sudo sed -i '/deb http:\/\/webmin.mirror.somersettechsolutions.co.uk\/repository sarge contrib/s/deb http:\/\/webmin.mirror.somersettechsolutions.co.uk\/repository sarge contrib//' /etc/apt/sources.list
-echo "deb http://webmin.mirror.somersettechsolutions.co.uk/repository sarge contrib" | tee -a /etc/apt/sources.list
-sudo wget -q http://www.webmin.com/jcameron-key.asc
-sudo apt-key add jcameron-key.asc
-#добавляем репы java
-sudo apt-add-repository ppa:webupd8team/java -y
 # Обновляем информацию о пакетах
 sudo apt-get -qq update
 case "$dellocale" in
@@ -218,8 +213,19 @@ sudo apt-get -qq install -y libboost-python-dev
 sudo apt-get -qq install -y python-pip
 sudo apt-get -qq install -y lshw
 echo -e "\033[1;32m установлено\033[0m"
+case "$instwebmin" in
+"y" )
 echo -n -e "\033[0;36mУстанавливаю webmin... \033[0m"
+sudo sed -i '/deb http:\/\/download.webmin.com\/download\/repository sarge contrib/s/deb http:\/\/download.webmin.com\/download\/repository sarge contrib//' /etc/apt/sources.list
+echo "deb http://download.webmin.com/download/repository sarge contrib" | tee -a /etc/apt/sources.list
+sudo sed -i '/deb http:\/\/webmin.mirror.somersettechsolutions.co.uk\/repository sarge contrib/s/deb http:\/\/webmin.mirror.somersettechsolutions.co.uk\/repository sarge contrib//' /etc/apt/sources.list
+echo "deb http://webmin.mirror.somersettechsolutions.co.uk/repository sarge contrib" | tee -a /etc/apt/sources.list
+sudo wget -q http://www.webmin.com/jcameron-key.asc
+sudo apt-key add jcameron-key.asc
+sudo apt-get -qq update
 sudo apt-get -qq install -y webmin
+;;
+esac
 echo -e "\033[1;32m установлено\033[0m"
 echo -n -e "\033[1;36mУстанавливаю MQTT сервер Mosquitto... \033[0m"
 sudo apt-get -qq install -y mosquitto 
@@ -714,6 +720,9 @@ sudo systemctl enable mosquitto.service
 case "$vibor" in
 "y" )
 echo -e "\033[1;36mУстанавливаю Java...\033[0m"
+#добавляем репы java
+sudo apt-add-repository ppa:webupd8team/java -y
+sudo apt-get -qq update
 sudo apt-get -qq install -y oracle-java8-jdk
 echo -e "\033[1;32m установлено\033[0m"
 ;;
