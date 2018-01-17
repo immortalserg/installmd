@@ -278,7 +278,7 @@ sudo apt-get -qq install -y php-xmlrpc
 sudo apt-get -qq install -y php-xsl 
 sudo apt-get -qq install -y php-json
 echo -e "\033[1;32m установлено\033[0m"
-echo -n -e "\033[1;36mУстановка пакетов поддержки звука и видео (vlc, mpd, ffmpeg, alsa и т.п.)... \033[0m"
+echo -e "\033[1;36mУстановка пакетов поддержки звука и видео (vlc, mpd, ffmpeg, alsa и т.п.)... \033[0m"
 sudo apt-get -qq install -y vlc
 sudo apt-get -qq install -y mpd  
 sudo apt-get -qq install -y mplayer 
