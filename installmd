@@ -64,9 +64,9 @@ esac
 ;;
 esac
 #установка Java и node.js
-echo -e "\033[0;36m1 - Установить Java? (y/n)\033[0m"
+echo -e -n "\033[0;36m1 - Установить Java? (y/n)\033[0m"
 read vibor
-echo -e "\033[0;36m2 - Установить node.js (y/n)\033[0m"
+echo -e -n "\033[0;36m2 - Установить node.js (y/n)\033[0m"
 read vibornode
 #выбор платы для установки WiringPi
 echo -e -n "\033[0;36mУстанавливать WiringPi? (у/n) \033[0m"
