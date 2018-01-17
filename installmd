@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.3\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.3.1\033[0m"
 a_apt_p=$(ps -A | grep apt)
 if [ "$a_apt_p" != "" ];
 then
@@ -161,7 +161,8 @@ esac
 #export LC_CTYPE=en_US.UTF-8
 #export LC_ALL=en_US.UTF-8
 #добавляем репы webmin
-
+sudo apt-get -qq install -y python-software-properties
+sudo apt-get -qq install -y software-properties-common
 sudo sed -i '/deb http:\/\/download.webmin.com\/download\/repository sarge contrib/s/deb http:\/\/download.webmin.com\/download\/repository sarge contrib//' /etc/apt/sources.list
 echo "deb http://download.webmin.com/download/repository sarge contrib" | tee -a /etc/apt/sources.list
 sudo sed -i '/deb http:\/\/webmin.mirror.somersettechsolutions.co.uk\/repository sarge contrib/s/deb http:\/\/webmin.mirror.somersettechsolutions.co.uk\/repository sarge contrib//' /etc/apt/sources.list
