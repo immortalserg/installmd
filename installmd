@@ -1509,12 +1509,12 @@ EOF
 
 echo "innodb=OFF" | tee -a /etc/mysql/mariadb.conf.d/50-server.cnf
 echo "default-storage-engine = MyISAM" | tee -a /etc/mysql/mariadb.conf.d/50-server.cnf
-service mysqld stop \
-  && rm -f /tmp/mysql/ibdata1 \
-  && rm -f /tmp/mysql/ib_logfile* \
-  && rm -f /var/lib/mysql/ibdata1 \
-  && rm -f /var/lib/mysql/ib_logfile* \  
-  && service mysqld start
+service mysqld stop
+rm -f /tmp/mysql/ibdata1
+rm -f /tmp/mysql/ib_logfile*
+rm -f /var/lib/mysql/ibdata1
+rm -f /var/lib/mysql/ib_logfile* 
+service mysqld start
 ;;
 esac
 
