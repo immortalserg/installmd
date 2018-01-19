@@ -1511,8 +1511,8 @@ WHERE 1=1
   AND table_schema NOT IN ('mysql', 'performance_schema');
 EOF
 
-echo "innodb=OFF" | tee -a dbconfig
-echo "default-storage-engine = MyISAM" | tee -a dbconfig
+echo "innodb=OFF" | tee -a $dbconfig
+echo "default-storage-engine = MyISAM" | tee -a $dbconfig
 service mysqld stop
 rm -f /tmp/mysql/ibdata1
 rm -f /tmp/mysql/ib_logfile*
