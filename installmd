@@ -954,7 +954,7 @@ rmdir majordomo
 #установка расширенной конфигурации
 case "$mdconfig" in
 "2" )
-wget https://github.com/immortalserg/installmd/raw/master/mdbackup.tar.gz
+wget -q https://github.com/immortalserg/installmd/raw/master/mdbackup.tar.gz
 tar -xf mdbackup.tar.gz
 rm mdbackup.tar.gz
 sudo cp -rp ~/mdbackup/* /var/www
