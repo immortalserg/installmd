@@ -249,6 +249,42 @@ sudo apt-get -qq install -y apache2-data
 sudo apt-get -qq install -y apache2-utils  
 echo -e "\033[1;32m установлено\033[0m"
 echo -n -e "\033[1;36mУстанавливаю php пакеты... \033[0m"
+#установка php5 если система DietPi
+ifdietpi=$(uname -a)
+if echo $ifdietpi | grep -q -s -F "DietPi"
+then
+echo -e "\033[1;36m Система DietPi, устанавливаю php5 ... \033[0m"
+sudo apt-get -qq install -y php5
+sudo apt-get -qq install -y php5-bz2 
+sudo apt-get -qq install -y php5-cli 
+sudo apt-get -qq install -y php5-common 
+sudo apt-get -qq install -y php5-curl 
+sudo apt-get -qq install -y php5-gd 
+sudo apt-get -qq install -y php5-json 
+sudo apt-get -qq install -y php5-mbstring 
+sudo apt-get -qq install -y php5-mcrypt 
+sudo apt-get -qq install -y php5-mysql 
+sudo apt-get -qq install -y php5-opcache 
+sudo apt-get -qq install -y php5-readline
+sudo apt-get -qq install -y php5-xml 
+sudo apt-get -qq install -y php5-mysql 
+sudo apt-get -qq install -y php5-pear
+sudo apt-get -qq install -y php5-idn 
+sudo apt-get -qq install -y php5-imagick 
+sudo apt-get -qq install -y php5-imap 
+sudo apt-get -qq install -y php5-memcache 
+sudo apt-get -qq install -y php5-mhash 
+sudo apt-get -qq install -y php5-ming 
+sudo apt-get -qq install -y php5-ps 
+sudo apt-get -qq install -y php5-pspell 
+sudo apt-get -qq install -y php5-recode 
+sudo apt-get -qq install -y php5-snmp 
+sudo apt-get -qq install -y php5-tidy 
+sudo apt-get -qq install -y php5-xmlrpc 
+sudo apt-get -qq install -y php5-xsl 
+sudo apt-get -qq install -y php5-json
+sudo apt-get -qq install -y libapache2-mod-php5
+else
 sudo apt-get -qq install -y php-bz2 
 sudo apt-get -qq install -y php-cli 
 sudo apt-get -qq install -y php-common 
@@ -278,6 +314,10 @@ sudo apt-get -qq install -y php-xmlrpc
 sudo apt-get -qq install -y php-xsl 
 sudo apt-get -qq install -y php-json
 sudo apt-get -qq install -y libapache2-mod-php 
+
+
+fi
+
 echo -e "\033[1;32m установлено\033[0m"
 echo -e "\033[1;36mУстановка пакетов поддержки звука и видео (vlc, mpd, ffmpeg, alsa и т.п.)... \033[0m"
 sudo apt-get -qq install -y vlc
