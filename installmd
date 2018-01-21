@@ -314,10 +314,7 @@ sudo apt-get -qq install -y php-xmlrpc
 sudo apt-get -qq install -y php-xsl 
 sudo apt-get -qq install -y php-json
 sudo apt-get -qq install -y libapache2-mod-php 
-
-
 fi
-
 echo -e "\033[1;32m установлено\033[0m"
 echo -e "\033[1;36mУстановка пакетов поддержки звука и видео (vlc, mpd, ffmpeg, alsa и т.п.)... \033[0m"
 sudo apt-get -qq install -y vlc
@@ -1414,6 +1411,19 @@ sudo sed -i 's/None/All/g' /etc/apache2/apache2.conf
 echo "ServerName localhost" | sudo tee -a /etc/apache2/apache2.conf
 sudo sed -i 's/\/html//' /etc/apache2/sites-available/000-default.conf
 # Настраиваем PHP для Apache
+if echo $ifdietpi | grep -q -s -F "DietPi"
+then
+sudo sed -i '/short_open_tag/s/Off/On/' /etc/php5/apache2/php.ini
+sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php5/apache2/php.ini
+sudo sed -i '/max_execution_time/s/30/90/' /etc/php5/apache2/php.ini
+sudo sed -i '/max_input_time/s/60/180/' /etc/php5/apache2/php.ini
+sudo sed -i '/post_max_size/s/8/200/' /etc/php5/apache2/php.ini
+sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php5/apache2/php.ini
+sudo sed -i '/max_file_uploads/s/20/150/' /etc/php5/apache2/php.ini
+# Настраиваем PHP для коммандной строки
+sudo sed -i '/short_open_tag/s/Off/On/' /etc/php5/cli/php.ini
+sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php5/cli/php.ini
+else
 sudo sed -i '/short_open_tag/s/Off/On/' /etc/php/7.0/apache2/php.ini
 sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php/7.0/apache2/php.ini
 sudo sed -i '/max_execution_time/s/30/90/' /etc/php/7.0/apache2/php.ini
@@ -1424,6 +1434,8 @@ sudo sed -i '/max_file_uploads/s/20/150/' /etc/php/7.0/apache2/php.ini
 # Настраиваем PHP для коммандной строки
 sudo sed -i '/short_open_tag/s/Off/On/' /etc/php/7.0/cli/php.ini
 sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php/7.0/cli/php.ini
+fi
+
 # Обновляем и перезапускаем службы
 sudo systemctl daemon-reload
 sudo apache2ctl restart
