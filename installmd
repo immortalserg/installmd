@@ -1538,10 +1538,16 @@ sudo chmod 755 /etc/init.d/prepare-dirs
 sudo update-rc.d prepare-dirs defaults 01 99
 
 sudo sed -i '/\/tmp /s/tmpfs \/tmp/\#tmpfs \/tmp/' /etc/fstab
+
+if echo $ifdietpi | grep -q -s -F "DietPi"
+then
+echo "DietPi /tmp уже есть"
+else
 echo "tmpfs /tmp tmpfs defaults,noatime,nosuid,size=250m 0 0" | tee -a /etc/fstab
+echo "tmpfs   /var/log                tmpfs   size=20M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
+fi
 echo "tmpfs /var/tmp tmpfs defaults,noatime,nosuid,size=200m 0 0" | tee -a /etc/fstab
 echo "tmpfs /run tmpfs defaults,noatime,nosuid,mode=0755,size=2m 0 0" | tee -a /etc/fstab
-echo "tmpfs   /var/log                tmpfs   size=20M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
 echo "tmpfs   /var/cache/apt/archives tmpfs   size=200M,defaults,noexec,nosuid,nodev,mode=0755 0 0" | tee -a /etc/fstab
 echo "tmpfs   /var/www/cached                tmpfs   size=100M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
 
