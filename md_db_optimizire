@@ -8,8 +8,9 @@ WHERE 1=1
   AND table_schema NOT IN ('mysql', 'performance_schema');
 EOF
 
-echo "innodb=OFF" | tee -a /etc/mysql/mariadb.conf.d/50-server.cnf
-echo "default-storage-engine = MyISAM" | tee -a /etc/mysql/mariadb.conf.d/50-server.cnf
+dbconfig=$(grep -iRIl "datadir" /etc/mysql)
+echo "innodb=OFF" | tee -a $dbconfig
+echo "default-storage-engine = MyISAM" | tee -a $dbconfig
 
 
 service mysqld stop
