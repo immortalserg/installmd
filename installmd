@@ -251,7 +251,8 @@ echo -e "\033[1;32m установлено\033[0m"
 echo -n -e "\033[1;36mУстанавливаю php пакеты... \033[0m"
 #установка php5 если система DietPi
 ifdietpi=$(uname -a)
-if echo $ifdietpi | grep -q -s -F "DietPi"
+raspb=$(cat /etc/issue.net)
+if echo $raspb | grep -q -s -F "Raspbian" || echo $ifdietpi | grep -q -s -F "DietPi"
 then
 echo -e "\033[1;36m Система DietPi, устанавливаю php5 ... \033[0m"
 sudo apt-get -qq install -y php5
@@ -1411,7 +1412,7 @@ sudo sed -i 's/None/All/g' /etc/apache2/apache2.conf
 echo "ServerName localhost" | sudo tee -a /etc/apache2/apache2.conf
 sudo sed -i 's/\/html//' /etc/apache2/sites-available/000-default.conf
 # Настраиваем PHP для Apache
-if echo $ifdietpi | grep -q -s -F "DietPi"
+if echo $raspb | grep -q -s -F "Raspbian" || echo $ifdietpi | grep -q -s -F "DietPi"
 then
 sudo sed -i '/short_open_tag/s/Off/On/' /etc/php5/apache2/php.ini
 sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php5/apache2/php.ini
