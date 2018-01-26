@@ -328,8 +328,16 @@ sudo apt-get -qq install -y alsa-utils
 sudo apt-get -qq install -y alsa-tools
 sudo apt-get -qq install -y libav-tools
 echo -n -e "\033[1;36mУстановка базы данных MariaDB... \033[0m"
+
+
+if echo $raspb | grep -q -s -F "Raspbian"
+then
+sudo apt-get -qq install -y mysql-server
+sudo apt-get -qq install -y mysql-client
+else
 sudo apt-get -qq install -y mariadb-server
 sudo apt-get -qq install -y mariadb-client
+fi
 echo -e "\033[1;32m установлено\033[0m"
 #скрипт настройки базы данных ----------------------------------------------------------------------------------
 #/usr/bin/mysql_secure_installation
