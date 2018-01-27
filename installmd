@@ -156,7 +156,14 @@ reply='Y'
 #создать пользователя pi
 echo -e -n "\033[0;36mСоздать пользователя pi (если нету необходимо создать)? (y/n) \033[0m"
 read piuser
-echo  -e -n "\033[1;31mВНИМАНИЕ!!! ВНИМАНИЕ!!! ВНИМАНИЕ!!! далее нигде пароли на базу данных не вводить!!! если спросит то оставлять поле пароля пустым \033[0m"
+echo  -e"\033[1;31mВНИМАНИЕ!!! ВНИМАНИЕ!!! ВНИМАНИЕ!!! далее нигде пароли на базу данных не вводить!!! если спросит то оставлять поле пароля пустым \033[0m"
+raspb=$(cat /etc/issue.net)
+if echo $raspb | grep -q -s -F "Raspbian"
+then
+#добавляем в распбиан пакеты php7 и mariadb
+echo "deb http://mirrordirector.raspbian.org/raspbian/ stretch main contrib non-free rpi" | tee -a /etc/apt/sources.list
+fi
+
 #добавляем пользователя
 case "$piuser" in
 "y" )
@@ -251,7 +258,6 @@ echo -e "\033[1;32m установлено\033[0m"
 echo -n -e "\033[1;36mУстанавливаю php пакеты... \033[0m"
 #установка php5 если система DietPi
 ifdietpi=$(uname -a)
-raspb=$(cat /etc/issue.net)
 if echo $raspb | grep -q -s -F "Raspbian" || echo $ifdietpi | grep -q -s -F "DietPi"
 then
 echo -e "\033[1;36m Система DietPi, устанавливаю php5 ... \033[0m"
