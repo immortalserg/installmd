@@ -1586,12 +1586,12 @@ EOF
 
 echo "innodb=OFF" | tee -a $dbconfig
 echo "default-storage-engine = MyISAM" | tee -a $dbconfig
-service mysqld stop
+service mysql stop
 rm -f /tmp/mysql/ibdata1
 rm -f /tmp/mysql/ib_logfile*
 rm -f /var/lib/mysql/ibdata1
 rm -f /var/lib/mysql/ib_logfile*  
-service mysqld start
+service mysql start
 ;;
 esac
 
