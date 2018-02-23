@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.3.4\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.3.5\033[0m"
 a_apt_p=$(ps -A | grep apt)
 if [ "$a_apt_p" != "" ];
 then
@@ -241,6 +241,7 @@ sudo apt-get -qq install -y webmin
 ;;
 esac
 echo -e "\033[1;32m установлено\033[0m"
+#установка mqtt сервера Mosquitto
 echo -n -e "\033[1;36mУстанавливаю MQTT сервер Mosquitto... \033[0m"
 sudo apt-get -qq install -y mosquitto 
 sudo apt-get -qq install -y mosquitto-clients
@@ -253,8 +254,6 @@ sudo apt-get -qq install -y owfs
 echo -e "\033[1;32m установлено\033[0m"
 ;;
 esac
-
-
 case "$mdwwwserver" in
 "1" )
 echo -n -e "\033[1;36mУстанавливаю web сервер Apache... \033[0m"
@@ -272,11 +271,46 @@ sudo apt-get install lighttpd
 ;;
 esac
 echo -n -e "\033[1;36mУстанавливаю php пакеты... \033[0m"
-#установка php5 если система DietPi
-ifdietpi=$(uname -a)
-if echo $raspb | grep -q -s -F "Raspbian" || echo $ifdietpi | grep -q -s -F "DietPi"
+#проверка наличия php
+phpif=$(apt-cache search php-common)
+phpif70=$(apt-cache search php7.0-common)
+phpif5=$(apt-cache search php5-common)
+
+if [ "$phpif" = "" ]; 
 then
-echo -e "\033[1;36m Система DietPi, устанавливаю php5 ... \033[0m"
+    if [ "$phpif70" = "" ]; 
+    then
+sudo apt-get -qq install -y php7.0
+sudo apt-get -qq install -y php7.0-bz2 
+sudo apt-get -qq install -y php7.0-cli 
+sudo apt-get -qq install -y php7.0-common 
+sudo apt-get -qq install -y php7.0-curl 
+sudo apt-get -qq install -y php7.0-gd 
+sudo apt-get -qq install -y php7.0-json 
+sudo apt-get -qq install -y php7.0-mbstring 
+sudo apt-get -qq install -y php7.0-mcrypt 
+sudo apt-get -qq install -y php7.0-mysql 
+sudo apt-get -qq install -y php7.0-opcache 
+sudo apt-get -qq install -y php7.0-readline
+sudo apt-get -qq install -y php7.0-xml 
+sudo apt-get -qq install -y php7.0-mysql 
+sudo apt-get -qq install -y php7.0-pear
+sudo apt-get -qq install -y php7.0-idn 
+sudo apt-get -qq install -y php7.0-imagick 
+sudo apt-get -qq install -y php7.0-imap 
+sudo apt-get -qq install -y php7.0-memcache 
+sudo apt-get -qq install -y php7.0-mhash 
+sudo apt-get -qq install -y php7.0-ming 
+sudo apt-get -qq install -y php7.0-ps 
+sudo apt-get -qq install -y php7.0-pspell 
+sudo apt-get -qq install -y php7.0-recode 
+sudo apt-get -qq install -y php7.0-snmp 
+sudo apt-get -qq install -y php7.0-tidy 
+sudo apt-get -qq install -y php7.0-xmlrpc 
+sudo apt-get -qq install -y php7.0-xsl 
+sudo apt-get -qq install -y php7.0-json
+sudo apt-get -qq install -y libapache2-mod-php7.0
+    else
 sudo apt-get -qq install -y php5
 sudo apt-get -qq install -y php5-bz2 
 sudo apt-get -qq install -y php5-cli 
@@ -307,7 +341,9 @@ sudo apt-get -qq install -y php5-xmlrpc
 sudo apt-get -qq install -y php5-xsl 
 sudo apt-get -qq install -y php5-json
 sudo apt-get -qq install -y libapache2-mod-php5
+    fi
 else
+sudo apt-get -qq install -y php
 sudo apt-get -qq install -y php-bz2 
 sudo apt-get -qq install -y php-cli 
 sudo apt-get -qq install -y php-common 
@@ -338,6 +374,7 @@ sudo apt-get -qq install -y php-xsl
 sudo apt-get -qq install -y php-json
 sudo apt-get -qq install -y libapache2-mod-php 
 fi
+ifdietpi=$(uname -a)
 echo -e "\033[1;32m установлено\033[0m"
 echo -e "\033[1;36mУстановка пакетов поддержки звука и видео (vlc, mpd, ffmpeg, alsa и т.п.)... \033[0m"
 sudo apt-get -qq install -y vlc
@@ -351,8 +388,8 @@ sudo apt-get -qq install -y alsa-tools
 sudo apt-get -qq install -y libav-tools
 echo -n -e "\033[1;36mУстановка базы данных MariaDB... \033[0m"
 
-
-if echo $raspb | grep -q -s -F "Raspbian"
+mdbif=$(apt-cache search mariadb-server)
+if [ "$mdbif" = "" ]; 
 then
 sudo apt-get -qq install -y mysql-server
 sudo apt-get -qq install -y mysql-client
