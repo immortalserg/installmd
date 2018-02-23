@@ -44,7 +44,7 @@ echo -e "\033[1;33mВыберите web сервер\033[0m"
 echo -e "\033[0;36m1 - Apache\033[0m"
 echo -e "\033[0;36m2 - nginx\033[0m"
 echo -e "\033[0;36m3 - lighttp\033[0m"
-echo -e -n "\033[0;36mВаш выбор: \033[0m"
+echo -e -n "\033[0;36mВаш выбор (введите 1, пока не доработано): \033[0m"
 read mdwwwserver
 echo -e "\033[1;33mВыберите конфигурацию MajorDoMo\033[0m"
 echo -e "\033[0;36m1 - Базовая конфигурация\033[0m"
@@ -224,6 +224,9 @@ sudo apt-get -qq install -y libboost-python-dev
 sudo apt-get -qq install -y python-pip
 sudo apt-get -qq install -y lshw
 echo -e "\033[1;32m установлено\033[0m"
+echo -n -e "\033[1;36mУстанавливаю openvpn... \033[0m"
+sudo apt-get -qq install -y openvpn
+echo -e "\033[1;32m установлено\033[0m"
 case "$instwebmin" in
 "y" )
 echo -n -e "\033[0;36mУстанавливаю webmin... \033[0m"
@@ -242,6 +245,7 @@ echo -n -e "\033[1;36mУстанавливаю MQTT сервер Mosquitto... \0
 sudo apt-get -qq install -y mosquitto 
 sudo apt-get -qq install -y mosquitto-clients
 echo -e "\033[1;32m установлено\033[0m"
+#установка owfs если выбрано
 case "$vibor7" in
 "y" )
 echo -n -e "\033[1;36mУстанавливаю owfs... \033[0m"
@@ -249,15 +253,24 @@ sudo apt-get -qq install -y owfs
 echo -e "\033[1;32m установлено\033[0m"
 ;;
 esac
-echo -n -e "\033[1;36mУстанавливаю openvpn... \033[0m"
-sudo apt-get -qq install -y openvpn
-echo -e "\033[1;32m установлено\033[0m"
+
+
+case "$mdwwwserver" in
+"1" )
 echo -n -e "\033[1;36mУстанавливаю web сервер Apache... \033[0m"
 sudo apt-get -qq install -y apache2 
 sudo apt-get -qq install -y apache2-bin 
 sudo apt-get -qq install -y apache2-data 
 sudo apt-get -qq install -y apache2-utils  
 echo -e "\033[1;32m установлено\033[0m"
+;;
+"2" )
+sudo apt-get -qq install -y nginx nginx-extras
+;;
+"3" )
+sudo apt-get install lighttpd
+;;
+esac
 echo -n -e "\033[1;36mУстанавливаю php пакеты... \033[0m"
 #установка php5 если система DietPi
 ifdietpi=$(uname -a)
