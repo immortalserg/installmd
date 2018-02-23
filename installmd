@@ -127,6 +127,8 @@ echo -e -n "\033[0;36mЗаписать текущее время системы 
 read realtimeset2
 ;;
 esac
+echo -e -n "\033[0;36mСделать оптимизацию базы (базу и логи в tmpfs)? (y/n) \033[0m"
+read optbd
 #отображать пароли?
 echo -e -n "\033[0;36mОтображать пароли? (y/n) \033[0m"
 read vibor8
@@ -1458,8 +1460,6 @@ sudo service mysql restart
 # Запускаем основной цикл
 sudo service majordomo start
 #загружаем бэкап системы и устанавливаем
-
-
 #обновляем систему
 wget -q http://localhost/modules/saverestore/update_iframe.php
 wget -q http://localhost/modules/market/update_iframe.php?mode2=update_all
@@ -1482,6 +1482,8 @@ echo -e "\033[1;32m установлено\033[0m"
 ;;
 esac
 #оптимизация работы с базой данных
+case "$optbd" in
+"y" )
 sudo service majordomo stop
 sudo service mysql stop
 cd /var/www
@@ -1551,9 +1553,7 @@ esac
 EOF
 sudo chmod 755 /etc/init.d/prepare-dirs
 sudo update-rc.d prepare-dirs defaults 01 99
-
 sudo sed -i '/\/tmp /s/tmpfs \/tmp/\#tmpfs \/tmp/' /etc/fstab
-
 if echo $ifdietpi | grep -q -s -F "DietPi"
 then
 echo "DietPi /tmp уже есть"
@@ -1565,15 +1565,11 @@ echo "tmpfs /var/tmp tmpfs defaults,noatime,nosuid,size=200m 0 0" | tee -a /etc/
 echo "tmpfs /run tmpfs defaults,noatime,nosuid,mode=0755,size=2m 0 0" | tee -a /etc/fstab
 echo "tmpfs   /var/cache/apt/archives tmpfs   size=200M,defaults,noexec,nosuid,nodev,mode=0755 0 0" | tee -a /etc/fstab
 echo "tmpfs   /var/www/cached                tmpfs   size=100M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
-
-
 dbconfig=$(grep -iRIl "datadir" /etc/mysql)
-
-
 sudo sed -i '/datadir/s/\/var\/lib\/mysql/\/tmp\/mysql/' $dbconfig
-
+;;
+esac
 #конвертация таблиц из InnoDB в MyISAM
-
 case "$convtable" in
 "y" )
 mysql -u root << EOF
@@ -1583,7 +1579,6 @@ WHERE 1=1
   AND engine = 'InnoDB'
   AND table_schema NOT IN ('mysql', 'performance_schema');
 EOF
-
 echo "innodb=OFF" | tee -a $dbconfig
 echo "default-storage-engine = MyISAM" | tee -a $dbconfig
 service mysql stop
@@ -1594,8 +1589,7 @@ rm -f /var/lib/mysql/ib_logfile*
 service mysql start
 ;;
 esac
-
-
+#---------------------------------------
 echo
 echo -e "\033[1;32m XXXXX  XXX   XXXXX  XXX  XXXX   XXX \033[0m"
 echo -e "\033[1;32m X     X   X    X   X   X X   X X   X\033[0m"
