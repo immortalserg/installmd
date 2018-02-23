@@ -40,11 +40,12 @@ echo -e "\033[0;36m0 - Другая\033[0m"
 echo -e -n "\033[0;36mВаш выбор: \033[0m"
 read vibor2
 
-#echo -e "\033[1;33mВыберите web сервер\033[0m"
-#echo -e "\033[0;36m1 - Apache\033[0m"
-#echo -e "\033[0;36m2 - nginx\033[0m"
-#echo -e -n "\033[0;36mВаш выбор: \033[0m"
-#read mdwwwserver
+echo -e "\033[1;33mВыберите web сервер\033[0m"
+echo -e "\033[0;36m1 - Apache\033[0m"
+echo -e "\033[0;36m2 - nginx\033[0m"
+echo -e "\033[0;36m3 - lighttp\033[0m"
+echo -e -n "\033[0;36mВаш выбор: \033[0m"
+read mdwwwserver
 echo -e "\033[1;33mВыберите конфигурацию MajorDoMo\033[0m"
 echo -e "\033[0;36m1 - Базовая конфигурация\033[0m"
 echo -e "\033[0;36m2 - Расширенная конфигурация\033[0m"
