@@ -1526,6 +1526,7 @@ echo "hwclock -s" | tee -a /etc/rc.local
 echo "exit 0" | tee -a /etc/rc.local
 case "$realtimeset2" in
 "y" )
+ntpdate -s ntp.ubuntu.com
 hwclock -w
 ;;
 esac
