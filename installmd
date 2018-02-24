@@ -280,37 +280,6 @@ if [ "$phpif" = "" ];
 then
     if [ "$phpif70" = "" ]; 
     then
-sudo apt-get -qq install -y php7.0
-sudo apt-get -qq install -y php7.0-bz2 
-sudo apt-get -qq install -y php7.0-cli 
-sudo apt-get -qq install -y php7.0-common 
-sudo apt-get -qq install -y php7.0-curl 
-sudo apt-get -qq install -y php7.0-gd 
-sudo apt-get -qq install -y php7.0-json 
-sudo apt-get -qq install -y php7.0-mbstring 
-sudo apt-get -qq install -y php7.0-mcrypt 
-sudo apt-get -qq install -y php7.0-mysql 
-sudo apt-get -qq install -y php7.0-opcache 
-sudo apt-get -qq install -y php7.0-readline
-sudo apt-get -qq install -y php7.0-xml 
-sudo apt-get -qq install -y php7.0-mysql 
-sudo apt-get -qq install -y php7.0-pear
-sudo apt-get -qq install -y php7.0-idn 
-sudo apt-get -qq install -y php7.0-imagick 
-sudo apt-get -qq install -y php7.0-imap 
-sudo apt-get -qq install -y php7.0-memcache 
-sudo apt-get -qq install -y php7.0-mhash 
-sudo apt-get -qq install -y php7.0-ming 
-sudo apt-get -qq install -y php7.0-ps 
-sudo apt-get -qq install -y php7.0-pspell 
-sudo apt-get -qq install -y php7.0-recode 
-sudo apt-get -qq install -y php7.0-snmp 
-sudo apt-get -qq install -y php7.0-tidy 
-sudo apt-get -qq install -y php7.0-xmlrpc 
-sudo apt-get -qq install -y php7.0-xsl 
-sudo apt-get -qq install -y php7.0-json
-sudo apt-get -qq install -y libapache2-mod-php7.0
-    else
 sudo apt-get -qq install -y php5
 sudo apt-get -qq install -y php5-bz2 
 sudo apt-get -qq install -y php5-cli 
@@ -341,6 +310,37 @@ sudo apt-get -qq install -y php5-xmlrpc
 sudo apt-get -qq install -y php5-xsl 
 sudo apt-get -qq install -y php5-json
 sudo apt-get -qq install -y libapache2-mod-php5
+    else
+sudo apt-get -qq install -y php7.0
+sudo apt-get -qq install -y php7.0-bz2 
+sudo apt-get -qq install -y php7.0-cli 
+sudo apt-get -qq install -y php7.0-common 
+sudo apt-get -qq install -y php7.0-curl 
+sudo apt-get -qq install -y php7.0-gd 
+sudo apt-get -qq install -y php7.0-json 
+sudo apt-get -qq install -y php7.0-mbstring 
+sudo apt-get -qq install -y php7.0-mcrypt 
+sudo apt-get -qq install -y php7.0-mysql 
+sudo apt-get -qq install -y php7.0-opcache 
+sudo apt-get -qq install -y php7.0-readline
+sudo apt-get -qq install -y php7.0-xml 
+sudo apt-get -qq install -y php7.0-mysql 
+sudo apt-get -qq install -y php7.0-pear
+sudo apt-get -qq install -y php7.0-idn 
+sudo apt-get -qq install -y php7.0-imagick 
+sudo apt-get -qq install -y php7.0-imap 
+sudo apt-get -qq install -y php7.0-memcache 
+sudo apt-get -qq install -y php7.0-mhash 
+sudo apt-get -qq install -y php7.0-ming 
+sudo apt-get -qq install -y php7.0-ps 
+sudo apt-get -qq install -y php7.0-pspell 
+sudo apt-get -qq install -y php7.0-recode 
+sudo apt-get -qq install -y php7.0-snmp 
+sudo apt-get -qq install -y php7.0-tidy 
+sudo apt-get -qq install -y php7.0-xmlrpc 
+sudo apt-get -qq install -y php7.0-xsl 
+sudo apt-get -qq install -y php7.0-json
+sudo apt-get -qq install -y libapache2-mod-php7.0    
     fi
 else
 sudo apt-get -qq install -y php
