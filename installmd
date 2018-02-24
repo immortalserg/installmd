@@ -223,6 +223,20 @@ sudo apt-get -qq install -y python-dev
 sudo apt-get -qq install -y libboost-python-dev 
 sudo apt-get -qq install -y python-pip
 sudo apt-get -qq install -y lshw
+sudo apt-get -qq install -y libusb-dev
+sudo apt-get -qq install -y libtool
+sudo apt-get -qq install -y autoconf
+sudo apt-get -qq install -y libfuse-dev
+sudo apt-get -qq install -y make
+sudo apt-get -qq install -y ed
+sudo apt-get -qq install -y libusb-dev
+sudo apt-get -qq install -y php-dev
+sudo apt-get -qq install -y libavahi-common
+sudo apt-get -qq install -y libftdi-dev
+sudo apt-get -qq install -y libudev-dev
+sudo apt-get -qq install -y libavahi-common-dev
+sudo apt-get -qq install -y libavahi-client-dev
+
 echo -e "\033[1;32m установлено\033[0m"
 echo -n -e "\033[1;36mУстанавливаю openvpn... \033[0m"
 sudo apt-get -qq install -y openvpn
