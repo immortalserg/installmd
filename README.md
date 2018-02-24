@@ -10,6 +10,8 @@ apt-get update
 
 apt-get upgrade 
 
+rm ./installmd
+
 wget https://raw.githubusercontent.com/immortalserg/installmd/master/installmd 
 
 chmod +x ./installmd
