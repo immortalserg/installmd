@@ -406,9 +406,11 @@ echo -n -e "\033[1;36mУстановка базы данных MariaDB... \033[0
 mdbif=$(apt-cache search mariadb-server)
 if [ "$mdbif" = "" ]; 
 then
+echo -n -e "\033[1;36mУстановка базы данных MySQL... \033[0m"
 sudo apt-get -qq install -y mysql-server
 sudo apt-get -qq install -y mysql-client
 else
+echo -n -e "\033[1;36mУстановка базы данных MariaDB... \033[0m"
 sudo apt-get -qq install -y mariadb-server
 sudo apt-get -qq install -y mariadb-client
 fi
