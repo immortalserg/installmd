@@ -401,7 +401,6 @@ sudo apt-get -qq install -y alsa
 sudo apt-get -qq install -y alsa-utils 
 sudo apt-get -qq install -y alsa-tools
 sudo apt-get -qq install -y libav-tools
-echo -n -e "\033[1;36mУстановка базы данных MariaDB... \033[0m"
 
 mdbif=$(apt-cache search mariadb-server)
 if [ "$mdbif" = "" ]; 
