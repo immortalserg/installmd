@@ -292,6 +292,20 @@ echo -n -e "\033[1;36mУстанавливаю MQTT сервер Mosquitto... \0
 sudo apt-get -qq install -y mosquitto 
 sudo apt-get -qq install -y mosquitto-clients
 echo -e "\033[1;32m установлено\033[0m"
+
+case "$inszigbee" in
+"y" )
+echo -n -e "\033[1;36mПока установка zigbee невозможна\033[0m"
+
+
+
+
+#echo -e "\033[1;32m установлено\033[0m"
+;;
+esac
+
+
+
 #установка owfs если выбрано
 case "$vibor7" in
 "y" )
