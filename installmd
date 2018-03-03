@@ -95,8 +95,8 @@ case "$inszigbee" in
 "y" )
 #Выбор zigbee адаптера
 echo -e "\033[1;33mВыберите zigbee адаптер\033[0m"
-echo -e "\033[0;36m1 - USB адаптер DS9490R\033[0m"
-echo -e "\033[0;36m2 - UART адаптер DS2480\033[0m"
+echo -e "\033[0;36m1 - USB адаптер сс2531\033[0m"
+echo -e "\033[0;36m2 - UART адаптер сс2530\033[0m"
 echo -e -n "\033[0;36mВаш выбор: \033[0m"
 read mdzigbee
 
