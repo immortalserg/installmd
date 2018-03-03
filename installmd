@@ -87,7 +87,38 @@ read vibor5
 #выбор установки pi-switch-python
 echo -e -n "\033[0;36mУстанавливать pi-switch-python? (y/n) \033[0m"
 read vibor6
-#выбор установки pi-switch-python
+
+#выбор установки zigbee
+echo -e -n "\033[0;36mУстанавливать zigbee (сс2530, сс2531)? (y/n) \033[0m"
+read inszigbee
+case "$inszigbee" in
+"y" )
+#Выбор zigbee адаптера
+echo -e "\033[1;33mВыберите zigbee адаптер\033[0m"
+echo -e "\033[0;36m1 - USB адаптер DS9490R\033[0m"
+echo -e "\033[0;36m2 - UART адаптер DS2480\033[0m"
+echo -e -n "\033[0;36mВаш выбор: \033[0m"
+read mdzigbee
+
+case "$mdzigbee" in
+"2" )
+echo -e "\033[1;33mВыберите порт 1-wire адаптера DS2480\033[0m"
+echo -e "\033[0;36m0 - /dev/ttyS0\033[0m"
+echo -e "\033[0;36m1 - /dev/ttyS1\033[0m"
+echo -e "\033[0;36m2 - /dev/ttyS2\033[0m"
+echo -e "\033[0;36m3 - /dev/ttyS3\033[0m"
+echo -e "\033[0;36m4 - /dev/ttyS4\033[0m"
+echo -e "\033[0;36m5 - /dev/ttyUSB0\033[0m"
+echo -e "\033[0;36m6 - /dev/ttyUSB1\033[0m"
+echo -e -n "\033[0;36mВаш выбор: \033[0m"
+read mdzigbee2
+;;
+esac
+;;
+esac
+
+
+#выбор установки owfs
 echo -e -n "\033[0;36mУстанавливать owfs для 1-wire? (y/n) \033[0m"
 read vibor7
 case "$vibor7" in
