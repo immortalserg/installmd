@@ -65,8 +65,12 @@ esac
 ;;
 esac
 #конвертировать таблицы из InnoDB в MyISAM
+case "$mdconfig" in
+"2")
 echo -e -n "\033[0;36mКонвертировать таблицы из InnoDB в MyISAM? (y/n)\033[0m"
 read convtable
+;;
+esac
 #Установка webmin
 echo -e -n "\033[0;36mУстановить Webmin? (y/n)\033[0m"
 read instwebmin
