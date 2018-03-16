@@ -1451,6 +1451,7 @@ sudo tee /etc/init.d/majordomo << EOF
 # Description:       Enable service provided by daemon.
 ### END INIT INFO
 
+sleep 10
 dir="/var/www/"
 user="root"
 cmd="php /var/www/cycle.php"
@@ -1624,8 +1625,7 @@ sudo sed -i 's/None/All/g' /etc/apache2/apache2.conf
 echo "ServerName localhost" | sudo tee -a /etc/apache2/apache2.conf
 sudo sed -i 's/\/html//' /etc/apache2/sites-available/000-default.conf
 # Настраиваем PHP для Apache
-if echo $raspb | grep -q -s -F "Raspbian" || echo $ifdietpi | grep -q -s -F "DietPi"
-then
+if [ -f "/etc/php5/apache2/php.ini" ]; then 
 sudo sed -i '/short_open_tag/s/Off/On/' /etc/php5/apache2/php.ini
 sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php5/apache2/php.ini
 sudo sed -i '/max_execution_time/s/30/90/' /etc/php5/apache2/php.ini
@@ -1633,10 +1633,14 @@ sudo sed -i '/max_input_time/s/60/180/' /etc/php5/apache2/php.ini
 sudo sed -i '/post_max_size/s/8/200/' /etc/php5/apache2/php.ini
 sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php5/apache2/php.ini
 sudo sed -i '/max_file_uploads/s/20/150/' /etc/php5/apache2/php.ini
+fi
+if [ -f "/etc/php5/cli/php.ini" ]; then 
 # Настраиваем PHP для коммандной строки
 sudo sed -i '/short_open_tag/s/Off/On/' /etc/php5/cli/php.ini
 sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php5/cli/php.ini
-else
+fi
+
+if [ -f "/etc/php/7.0/apache2/php.ini" ]; then 
 sudo sed -i '/short_open_tag/s/Off/On/' /etc/php/7.0/apache2/php.ini
 sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php/7.0/apache2/php.ini
 sudo sed -i '/max_execution_time/s/30/90/' /etc/php/7.0/apache2/php.ini
@@ -1644,6 +1648,8 @@ sudo sed -i '/max_input_time/s/60/180/' /etc/php/7.0/apache2/php.ini
 sudo sed -i '/post_max_size/s/8/200/' /etc/php/7.0/apache2/php.ini
 sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php/7.0/apache2/php.ini
 sudo sed -i '/max_file_uploads/s/20/150/' /etc/php/7.0/apache2/php.ini
+fi
+if [ -f "/etc/php/7.0/cli/php.ini" ]; then 
 # Настраиваем PHP для коммандной строки
 sudo sed -i '/short_open_tag/s/Off/On/' /etc/php/7.0/cli/php.ini
 sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php/7.0/cli/php.ini
@@ -1719,6 +1725,7 @@ DIR[14]=/var/www/debmes
 DIR[15]=/var/log/mpd
 DIR[16]=/var/www/cached/urls
 DIR[17]=/var/www/cached/voice
+DIR[18]=/var/log/mosquitto
 case "\${1:-''}" in
   start)
         typeset -i i=0 max=\${#DIR[*]}
