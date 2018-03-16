@@ -914,6 +914,8 @@ echo -e "\033[1;32m установлено\033[0m"
 ;;
 esac
 
+case "$$vibor3" in
+"y" )
 #скачиваем WiringPi -----------------------------------------------------------
 case "$vibor2" in
 "1" )
@@ -989,7 +991,8 @@ echo -e "\033[1;36mWiringPi не устанавливается \033[0m"
 
 ;;
 esac
-
+;;
+esac
 
 #MySensors
 case "$vibor4" in
