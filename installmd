@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.3.7\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.3.8\033[0m"
 a_apt_p=$(ps -A | grep apt)
 if [ "$a_apt_p" != "" ];
 then
@@ -62,13 +62,6 @@ case "$pathconf" in
 $pathconf="/root/backup.tgz"
 ;;
 esac
-;;
-esac
-#конвертировать таблицы из InnoDB в MyISAM
-case "$mdconfig" in
-"2")
-echo -e -n "\033[0;36mКонвертировать таблицы из InnoDB в MyISAM? (y/n)\033[0m"
-read convtable
 ;;
 esac
 #Установка webmin
@@ -1087,7 +1080,8 @@ rmdir majordomo
 #установка расширенной конфигурации
 case "$mdconfig" in
 "2" )
-wget -q https://github.com/immortalserg/installmd/raw/master/mdbackup.tar.gz
+rm mdbackup.tar.gz
+wget -q http://kusheev.com/wp-content/uploads/mdbackup.tar.gz
 tar -xf mdbackup.tar.gz
 rm mdbackup.tar.gz
 sudo cp -rp ~/mdbackup/* /var/www
@@ -1199,38 +1193,7 @@ ctl.mixer0 {
 EOF
 ;;
 "3" )
-sudo tee /etc/asound.conf << EOF
-pcm.!default {
-    type plug
-    slave.pcm "dmixer"
-}
 
-pcm.dsp0 {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dmixer  {
-    type dmix
-    ipc_key 1024
-    slave {
-        pcm "hw:0,2"
-        period_time 0
-        period_size 1024
-        buffer_size 8192
-        rate 44100
-    }
-    bindings {
-        0 0
-        1 1
-    }
-}
-
-ctl.mixer0 { 
-    type hw
-    card 0
-}
-EOF
 ;;
 "4" )
 sudo tee /etc/asound.conf << EOF
@@ -1777,24 +1740,11 @@ dbconfig=$(grep -iRIl "datadir" /etc/mysql)
 sudo sed -i '/datadir/s/\/var\/lib\/mysql/\/tmp\/mysql/' $dbconfig
 ;;
 esac
-#конвертация таблиц из InnoDB в MyISAM
-case "$convtable" in
-"y" )
-mysql -u root << EOF
-SELECT CONCAT('ALTER TABLE ',table_schema,'.',table_name,' ENGINE=MyISAM;')
-FROM information_schema.tables
-WHERE 1=1
-  AND engine = 'InnoDB'
-  AND table_schema NOT IN ('mysql', 'performance_schema');
-EOF
+#все таблицы в MyISAM для расширенной конфигурации
+case "$mdconfig" in
+"2")
 echo "innodb=OFF" | tee -a $dbconfig
 echo "default-storage-engine = MyISAM" | tee -a $dbconfig
-service mysql stop
-rm -f /tmp/mysql/ibdata1
-rm -f /tmp/mysql/ib_logfile*
-rm -f /var/lib/mysql/ibdata1
-rm -f /var/lib/mysql/ib_logfile*  
-service mysql start
 ;;
 esac
 #---------------------------------------
