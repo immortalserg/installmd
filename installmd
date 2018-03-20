@@ -1600,11 +1600,13 @@ sudo sed -i '/max_input_time/s/60/180/' /etc/php5/apache2/php.ini
 sudo sed -i '/post_max_size/s/8/200/' /etc/php5/apache2/php.ini
 sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php5/apache2/php.ini
 sudo sed -i '/max_file_uploads/s/20/150/' /etc/php5/apache2/php.ini
+sudo sed -i '/log_errors/s/On/Off/' /etc/php5/apache2/php.ini
 fi
 if [ -f "/etc/php5/cli/php.ini" ]; then 
 # Настраиваем PHP для коммандной строки
 sudo sed -i '/short_open_tag/s/Off/On/' /etc/php5/cli/php.ini
 sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php5/cli/php.ini
+sudo sed -i '/log_errors/s/On/Off/' /etc/php5/cli/php.ini
 fi
 
 if [ -f "/etc/php/7.0/apache2/php.ini" ]; then 
@@ -1615,11 +1617,13 @@ sudo sed -i '/max_input_time/s/60/180/' /etc/php/7.0/apache2/php.ini
 sudo sed -i '/post_max_size/s/8/200/' /etc/php/7.0/apache2/php.ini
 sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php/7.0/apache2/php.ini
 sudo sed -i '/max_file_uploads/s/20/150/' /etc/php/7.0/apache2/php.ini
+sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.0/apache2/php.ini
 fi
 if [ -f "/etc/php/7.0/cli/php.ini" ]; then 
 # Настраиваем PHP для коммандной строки
 sudo sed -i '/short_open_tag/s/Off/On/' /etc/php/7.0/cli/php.ini
 sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php/7.0/cli/php.ini
+sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.0/cli/php.ini
 fi
 
 # Обновляем и перезапускаем службы
