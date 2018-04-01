@@ -1755,6 +1755,10 @@ echo "innodb=OFF" | tee -a $dbconfig
 echo "default-storage-engine = MyISAM" | tee -a $dbconfig
 ;;
 esac
+#добавляем в /etc/rc.local паузу старта базы данных
+sudo sed -i "/exit 0/s/exit 0//" /etc/rc.local
+echo "#/bin/sleep 20 && service mysql start" | tee -a /etc/rc.local
+echo "exit 0" | tee -a /etc/rc.local
 #---------------------------------------
 echo
 echo -e "\033[1;32m XXXXX  XXX   XXXXX  XXX  XXXX   XXX \033[0m"
