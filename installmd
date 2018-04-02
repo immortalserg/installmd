@@ -36,6 +36,7 @@ echo -e "\033[0;36m5 - NanoPi NEO/NEO2\033[0m"
 echo -e "\033[0;36m6 - Cubieboard2\033[0m"
 echo -e "\033[0;36m7 - BananaPro\033[0m"
 echo -e "\033[0;36m8 - NanoPi M1\033[0m"
+echo -e "\033[0;36m9 - x86-AMD64 (Ubuntu, Debian и т.п.)\033[0m"
 echo -e "\033[0;36m0 - Другая\033[0m"
 echo -e -n "\033[0;36mВаш выбор: \033[0m"
 read vibor2
@@ -156,8 +157,11 @@ echo -e -n "\033[0;36mЗаписать текущее время системы 
 read realtimeset2
 ;;
 esac
+if [[ $vibor2 != 9 ]]
+then
 echo -e -n "\033[0;36mСделать оптимизацию базы (базу и логи в tmpfs)? (y/n) \033[0m"
 read optbd
+fi
 #отображать пароли?
 echo -e -n "\033[0;36mОтображать пароли? (y/n) \033[0m"
 read vibor8
@@ -1741,7 +1745,7 @@ echo "tmpfs /tmp tmpfs defaults,noatime,nosuid,size=250m 0 0" | tee -a /etc/fsta
 echo "tmpfs   /var/log                tmpfs   size=20M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
 fi
 echo "tmpfs /var/tmp tmpfs defaults,noatime,nosuid,size=200m 0 0" | tee -a /etc/fstab
-echo "tmpfs /run tmpfs defaults,noatime,nosuid,mode=0755,size=2m 0 0" | tee -a /etc/fstab
+echo "tmpfs /run tmpfs defaults,noatime,nosuid,mode=0755,size=4M 0 0" | tee -a /etc/fstab
 echo "tmpfs   /var/cache/apt/archives tmpfs   size=200M,defaults,noexec,nosuid,nodev,mode=0755 0 0" | tee -a /etc/fstab
 echo "tmpfs   /var/www/cached                tmpfs   size=100M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
 dbconfig=$(grep -iRIl "datadir" /etc/mysql)
