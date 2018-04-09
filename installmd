@@ -1424,7 +1424,7 @@ sudo tee /etc/init.d/majordomo << EOF
 
 sleep 10
 dir="/var/www/"
-user="root"
+user="www-data"
 cmd="php /var/www/cycle.php"
 name=\`basename \$0\`
 pid_file="/var/run/\$name.pid"
