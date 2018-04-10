@@ -880,6 +880,8 @@ echo -n -e "\033[1;36mДобавляю запуск vlc http в сrontab: \033[0
 sudo sed -i "/exit 0/s/exit 0//" /etc/rc.local
 echo "sudo -u www-data /usr/bin/vlc -I http --http-password 12345 --http-port 7070" | tee -a /etc/rc.local
 echo "exit 0" | tee -a /etc/rc.local
+#патчим vlc чтобы запускался от root
+sed -i 's/geteuid/getppid/' /usr/bin/vlc
 # Включаем мод rewrite для Apache
 sudo a2enmod rewrite
 #запускаем mosquitto в качестве сервиса
