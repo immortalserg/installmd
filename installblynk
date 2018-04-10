@@ -1,4 +1,5 @@
 #!/bin/bash
+wget https://github.com/blynkkk/blynk-server/releases
 st1="https://github.com"$(grep -A 1 -o "/blynkkk/blynk-server/releases/download/\(.*\)-java8.jar" ./releases -m 1)
 echo $st1
 mkdir /home/pi/blynk
