@@ -1780,7 +1780,7 @@ sudo sed -i "/exit 0/s/exit 0//" /etc/rc.local
 echo "#/bin/sleep 20 && service mysql start" | tee -a /etc/rc.local
 echo "exit 0" | tee -a /etc/rc.local
 #---------------------------------------
-echo -e "\033[1;31mВНИМАНИЕ!!! Если дальше страницы с выбором языка не идет значит не запустилсь база данных, раскомментируйте строку запуска базы mysql с паузой в файле /etc/rc/local  \033[0m"
+echo -e "\033[1;31mВНИМАНИЕ!!! Если дальше страницы с выбором языка не идет значит не запустилсь база данных, раскомментируйте строку запуска базы mysql с паузой в файле /etc/rc.local  \033[0m"
 echo
 echo -e "\033[1;32m XXXXX  XXX   XXXXX  XXX  XXXX   XXX \033[0m"
 echo -e "\033[1;32m X     X   X    X   X   X X   X X   X\033[0m"
