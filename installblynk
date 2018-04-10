@@ -6,3 +6,4 @@ echo $st1
 mkdir /home/pi/blynk
 wget -P /home/pi/ $st1
 chmod 777 /home/pi/$st2
+chmod 777 /home/pi/blynk
