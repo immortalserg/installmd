@@ -1481,6 +1481,7 @@ done)>> "\$stdout_log" 2>> "\$stderr_log" &
                 rm "\$pid_file"
             fi
         fi
+	cp -rf /tmp/mysql/* /var/lib/mysql
     else
         echo "Not running"
         sudo killall php
