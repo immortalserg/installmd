@@ -336,11 +336,15 @@ echo -n -e "\033[1;36mУстанавливаю php пакеты... \033[0m"
 phpif=$(apt-cache search php-common)
 phpif70=$(apt-cache search php7.0-common)
 phpif5=$(apt-cache search php5-common)
+phpif72=$(apt-cache search php7.2-common)
 
-if [ "$phpif" = "" ]; 
+if [ "$phpif72" = "" ]; 
 then
-    if [ "$phpif70" = "" ]; 
+// если php не версии 7.2
+    if [ "$phpif" = "" ]; 
     then
+        if [ "$phpif70" = "" ]; 
+        then
 sudo apt-get -qq install -y php5
 sudo apt-get -qq install -y php5-bz2 
 sudo apt-get -qq install -y php5-cli 
@@ -371,7 +375,7 @@ sudo apt-get -qq install -y php5-xmlrpc
 sudo apt-get -qq install -y php5-xsl 
 sudo apt-get -qq install -y php5-json
 sudo apt-get -qq install -y libapache2-mod-php5
-    else
+        else
 sudo apt-get -qq install -y php7.0
 sudo apt-get -qq install -y php7.0-bz2 
 sudo apt-get -qq install -y php7.0-cli 
@@ -402,8 +406,8 @@ sudo apt-get -qq install -y php7.0-xmlrpc
 sudo apt-get -qq install -y php7.0-xsl 
 sudo apt-get -qq install -y php7.0-json
 sudo apt-get -qq install -y libapache2-mod-php7.0    
-    fi
-else
+        fi
+    else
 sudo apt-get -qq install -y php
 sudo apt-get -qq install -y php-bz2 
 sudo apt-get -qq install -y php-cli 
@@ -434,7 +438,41 @@ sudo apt-get -qq install -y php-xmlrpc
 sudo apt-get -qq install -y php-xsl 
 sudo apt-get -qq install -y php-json
 sudo apt-get -qq install -y libapache2-mod-php 
+    fi
+else
+sudo apt-get -qq install -y php7.2
+sudo apt-get -qq install -y php7.2-bz2 
+sudo apt-get -qq install -y php7.2-cli 
+sudo apt-get -qq install -y php7.2-common 
+sudo apt-get -qq install -y php7.2-curl 
+sudo apt-get -qq install -y php7.2-gd 
+sudo apt-get -qq install -y php7.2-json 
+sudo apt-get -qq install -y php7.2-mbstring 
+sudo apt-get -qq install -y php7.2-mcrypt 
+sudo apt-get -qq install -y php7.2-mysql 
+sudo apt-get -qq install -y php7.2-opcache 
+sudo apt-get -qq install -y php7.2-readline
+sudo apt-get -qq install -y php7.2-xml 
+sudo apt-get -qq install -y php7.2-mysql 
+sudo apt-get -qq install -y php7.2-pear
+sudo apt-get -qq install -y php7.2-idn 
+sudo apt-get -qq install -y php7.2-imagick 
+sudo apt-get -qq install -y php7.2-imap 
+sudo apt-get -qq install -y php7.2-memcache 
+sudo apt-get -qq install -y php7.2-mhash 
+sudo apt-get -qq install -y php7.2-ming 
+sudo apt-get -qq install -y php7.2-ps 
+sudo apt-get -qq install -y php7.2-pspell 
+sudo apt-get -qq install -y php7.2-recode 
+sudo apt-get -qq install -y php7.2-snmp 
+sudo apt-get -qq install -y php7.2-tidy 
+sudo apt-get -qq install -y php7.2-xmlrpc 
+sudo apt-get -qq install -y php7.2-xsl 
+sudo apt-get -qq install -y php7.2-json
+sudo apt-get -qq install -y libapache2-mod-php7.2    
 fi
+    
+    
 ifdietpi=$(uname -a)
 echo -e "\033[1;32m установлено\033[0m"
 echo -e "\033[1;36mУстановка пакетов поддержки звука и видео (vlc, mpd, ffmpeg, alsa и т.п.)... \033[0m"
