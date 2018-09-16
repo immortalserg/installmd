@@ -731,6 +731,7 @@ while [ $# -ge 1 ] ; do
     shift
 done
 if [ -z $NOROOTPW ]; then
+get_root_password
     if [ $hadpass -eq 0 ]; then
         echo " ... skipping."
     fi
