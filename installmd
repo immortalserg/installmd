@@ -732,8 +732,7 @@ while [ $# -ge 1 ] ; do
 done
 if [ -z $NOROOTPW ]; then
     if [ $hadpass -eq 0 ]; then
-        echo $echo_n "Set root password? [Y/n] $echo_c"
-
+        echo " ... skipping."
     fi
     #read reply
     if [ "$reply" = "n" ]; then
@@ -760,10 +759,12 @@ else
 fi
 echo
 if [ -z $YES ] ; then
+echo " ... skipping."
 else
     reply='Y'
 fi
 if [ "$reply" = "n" ]; then
+echo " ... skipping."
 else
     remove_remote_root
 fi
