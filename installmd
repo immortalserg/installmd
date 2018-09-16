@@ -733,8 +733,7 @@ done
 if [ -z $NOROOTPW ]; then
     if [ $hadpass -eq 0 ]; then
         echo $echo_n "Set root password? [Y/n] $echo_c"
-    else
-    #---
+
     fi
     #read reply
     if [ "$reply" = "n" ]; then
