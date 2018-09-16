@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.3.11 от 09.04.2018\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.3.12 от 16.09.2018\033[0m"
 
     #проверка не запущен ли процесс apt
 	a_apt_p=$(ps -A | grep apt)
@@ -29,7 +29,8 @@ echo -e "\033[1;33mВерсия скрипта 0.3.11 от 09.04.2018\033[0m"
 	sudo rm /var/lib/apt/lists/lock
 	sudo rm /var/cache/apt/archives/lock
 	fi
-
+    #добавление репов Universe в Ubuntu server
+	add-apt-repository universe
 #выбор параметров установки
     #выбор платы для установки WiringPi
 	echo -e "\033[1;33mВыберете вашу плату\033[0m"
