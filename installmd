@@ -486,6 +486,8 @@ esac
 	sudo apt-get -qq install -y alsa-tools
 	sudo apt-get -qq install -y libav-tools
     #установка базы данных
+#!!!!!!!для исключения ошибки отключаем репы
+add-apt-repository -r universe
 	#проверяем есть ли пакеты mariadb-server в репах
 	mdbif=$(apt-cache search mariadb-server)
 		if [ "$mdbif" = "" ]; 
@@ -508,6 +510,9 @@ esac
 	sudo apt-get -qq install -y mariadb-client
 	fi
 	echo -e "\033[1;32m установлено\033[0m"
+#!!!!!!!подключаем репы обратно
+add-apt-repository universe
+	
 #скрипт настройки базы данных ----------------------------------------------------------------------------------
 #/usr/bin/mysql_secure_installation
 # Copyright (C) 2002 MySQL AB and Jeremy Cole
