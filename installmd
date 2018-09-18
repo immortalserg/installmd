@@ -72,6 +72,11 @@ echo -e "\033[1;33mВерсия скрипта 0.3.13 от 18.09.2018\033[0m"
 	esac
 	;;
 	esac
+	
+	
+    #Установка RHVoice
+	echo -e -n "\033[0;36mУстановить RHVoice? (y/n)\033[0m"
+	read insrhvoice	
     #Установка webmin
 	echo -e -n "\033[0;36mУстановить Webmin? (y/n)\033[0m"
 	read instwebmin
@@ -275,6 +280,14 @@ esac
 	sudo apt-get -qq install -y libudev-dev
 	sudo apt-get -qq install -y libavahi-common-dev
 	sudo apt-get -qq install -y libavahi-client-dev
+	sudo apt-get -qq install -y gcc
+	sudo apt-get -qq install -y g++
+	sudo apt-get -qq install -y git
+	sudo apt-get -qq install -y pkg-config
+	sudo apt-get -qq install -y scons
+	sudo apt-get -qq install -y libao4
+	sudo apt-get -qq install -y libao-common
+	sudo apt-get -qq install -y libao-dev
 	echo -e "\033[1;32m установлено\033[0m"
     #установка OpenVPN
 	echo -n -e "\033[1;36mУстанавливаю openvpn... \033[0m"
@@ -485,6 +498,32 @@ esac
 	sudo apt-get -qq install -y alsa-utils 
 	sudo apt-get -qq install -y alsa-tools
 	sudo apt-get -qq install -y libav-tools
+    #установка RHVoice
+	case "$insrhvoice" in
+	"y" )
+	echo -n -e "\033[0;36mУстанавливаю RHVoice... \033[0m"
+sudo tee -a /etc/pulse/daemon.conf << EOF
+high-priority = no
+nice-level = -1
+realtime-scheduling = yes
+realtime-priority = 5
+flat-volumes = no
+resample-method = speex-float-1
+default-sample-rate = 48000
+default-fragments = 4
+default-fragment-size-msec = 25
+EOF
+# Устанавливаем RHVoice
+cd /usr/src
+sudo git clone https://github.com/Olga-Yakovleva/RHVoice
+cd RHVoice
+sudo scons
+sudo scons install
+sudo ldconfig
+	echo -e "\033[1;32m установлено\033[0m"	
+	;;
+	esac
+
     #установка базы данных
 #!!!!!!!для исключения ошибки отключаем репы
 add-apt-repository -r universe
