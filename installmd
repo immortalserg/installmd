@@ -973,10 +973,30 @@ chmod +x /etc/rc.local
 systemctl enable rc-local
 fi
 
-echo -n -e "\033[1;36mДобавляю запуск vlc http в сrontab: \033[0m"
-sudo sed -i "/exit 0/s/exit 0//" /etc/rc.local
-echo "sudo -u www-data /usr/bin/vlc -I http --http-password 12345 --http-port 7070" | tee -a /etc/rc.local
-echo "exit 0" | tee -a /etc/rc.local
+#echo -n -e "\033[1;36mДобавляю запуск vlc http в сrontab: \033[0m"
+#sudo sed -i "/exit 0/s/exit 0//" /etc/rc.local
+#echo "sudo -u www-data /usr/bin/vlc -I http --http-password 12345 --http-port 7070" | tee -a /etc/rc.local
+#echo "exit 0" | tee -a /etc/rc.local
+
+#делаем службу запуска vlc
+echo -n -e "\033[1;36mДобавляю запуск vlc http: \033[0m"
+sudo tee /etc/systemd/system/vlcd.service << EOF
+[Unit]
+Description=VLCDaemon
+[Service]
+Requires=majordomo.service
+Type=simple
+WorkingDirectory=/var/www
+ExecStart=/usr/bin/vlc -I http --http-password=12345 --http-port 7070
+Restart=always
+User=www-data
+Group=www-data
+[Install]
+WantedBy=multi-user.target
+EOF
+#добавляем vlc в автозагрузку
+sudo systemctl daemon-reload
+sudo systemctl enable vlcd
 #патчим vlc чтобы запускался от root
 sed -i 's/geteuid/getppid/' /usr/bin/vlc
 # Включаем мод rewrite для Apache
