@@ -35,10 +35,10 @@ echo -e "\033[1;33mВерсия скрипта 0.3.13 от 18.09.2018\033[0m"
 if [ -n "$1" ]
 then
 echo "c параметрами"
-vibor2 = 	$1 # плата для установки
+vibor2 = 	$1 # плата для установки (1 - OrangePi, 2 - Asus tinker board, 3 - RaspberryPi, 4 - BananaPi, 5 - NanoPi NEO/NEO2, 6 - Cubieboard2, 7 - BananaPro, 8 - NanoPi M1, 9 - x86-AMD64 (Ubuntu, Debian и т.п.), 0 - Другая)
 mdwwwserver = 	$2 # вэб сервер (1- Apsche2)
 mdconfig = 	$3 # конфигурация (1 - базовая, 2 - расширенная, 3 - своя)
-pathconf = 	$4 # путь к своей конфигурации
+pathconf = 	$4 # путь к своей конфигурации (путь или n)
 pass = 		$5 # пароль root к базе данных
 pass2 = 	$6 # пароль пользователя pi
 piuser = 	$7 # создать пользователя pi для системы (y/n)
