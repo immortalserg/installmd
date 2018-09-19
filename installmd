@@ -35,31 +35,31 @@ echo -e "\033[1;33mВерсия скрипта 0.3.13 от 18.09.2018\033[0m"
 if [ -n "$1" ]
 then
 echo "c параметрами"
-vibor2 = 	$1 # плата для установки (1 - OrangePi, 2 - Asus tinker board, 3 - RaspberryPi, 4 - BananaPi, 5 - NanoPi NEO/NEO2, 6 - Cubieboard2, 7 - BananaPro, 8 - NanoPi M1, 9 - x86-AMD64 (Ubuntu, Debian и т.п.), 0 - Другая)
-mdwwwserver = 	$2 # вэб сервер (1- Apsche2)
-mdconfig = 	$3 # конфигурация (1 - базовая, 2 - расширенная, 3 - своя)
-pathconf = 	$4 # путь к своей конфигурации (путь или n)
-pass = 		$5 # пароль root к базе данных
-pass2 = 	$6 # пароль пользователя pi
-piuser = 	$7 # создать пользователя pi для системы (y/n)
-insrhvoice = 	$8 # установить RHVoice (y/n)
-instwebmin = 	$9 # установить vebmin (y/n)
-vibor = 	${10} # установить Java (y/n)
-vibornode = 	${11} # установить node.js (y/n)
-vibor3 = 	${12} # установить WiringPi (y/n)
-vibor4 = 	${13} # установить MySensors (y/n)
-vibor5 = 	${14} # установить 433Utils (y/n)
-vibor6 = 	${15} # установить pi-switch-python (y/n)
-inszigbee = 	${16} # устанавливать zigbee (y/n)
-mdzigbee = 	${17} # тип zigbee
-mdzigbee2 = 	${18} # порт zigbee 
-vibor7 = 	${19} # устанавливать owfs (y/n)
-mdowfs = 	${20} # тип 1-wire адаптера
-mdowfs2 = 	${21} # порт 1-wire адаптера
-dellocale = 	${22} # удалить локали (y/n)
-realtimeset = 	${23} # установлены часы реального времени на i2c0 (y/n)
-realtimeset2 = 	${24} # записать текущее время в часы (y/n)
-optbd = 	${25} # оптимизировать базу данных (y/n)
+vibor2=$1 # плата для установки (1 - OrangePi, 2 - Asus tinker board, 3 - RaspberryPi, 4 - BananaPi, 5 - NanoPi NEO/NEO2, 6 - Cubieboard2, 7 - BananaPro, 8 - NanoPi M1, 9 - x86-AMD64 (Ubuntu, Debian и т.п.), 0 - Другая)
+mdwwwserver=$2 # вэб сервер (1- Apsche2)
+mdconfig=$3 # конфигурация (1 - базовая, 2 - расширенная, 3 - своя)
+pathconf=$4 # путь к своей конфигурации (путь или n)
+pass=$5 # пароль root к базе данных
+pass2=$6 # пароль пользователя pi
+piuser=$7 # создать пользователя pi для системы (y/n)
+insrhvoice=$8 # установить RHVoice (y/n)
+instwebmin=$9 # установить vebmin (y/n)
+vibor=${10} # установить Java (y/n)
+vibornode=${11} # установить node.js (y/n)
+vibor3=${12} # установить WiringPi (y/n)
+vibor4=${13} # установить MySensors (y/n)
+vibor5=${14} # установить 433Utils (y/n)
+vibor6=${15} # установить pi-switch-python (y/n)
+inszigbee=${16} # устанавливать zigbee (y/n)
+mdzigbee=${17} # тип zigbee
+mdzigbee2=${18} # порт zigbee 
+vibor7=${19} # устанавливать owfs (y/n)
+mdowfs=${20} # тип 1-wire адаптера
+mdowfs2=${21} # порт 1-wire адаптера
+dellocale=${22} # удалить локали (y/n)
+realtimeset=${23} # установлены часы реального времени на i2c0 (y/n)
+realtimeset2=${24} # записать текущее время в часы (y/n)
+optbd=${25} # оптимизировать базу данных (y/n)
 
 else
 
