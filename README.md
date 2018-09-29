@@ -16,9 +16,32 @@ wget https://raw.githubusercontent.com/immortalserg/installmd/master/installmd
 
 chmod +x ./installmd
 
-./installmd
+./installmd параметры
 
-Исправления.
+###Параметры:
+
+нет параметров - справка.
+-h - справка
+-t [db_root_password] [pi_password] - установка базовой системы MAjorDoMo, если пароль db_root_password не задан то пароль спросит при установке, если pi_password не задан, но задан db_root_password то pi_password=db_root_password
+-c [path] - альтернативная конфигурация, параметр не обязательный, если не указан, то конфигурация базовая, path - путь к своей конфигурации (если путь не задан то устанавливается расширенная конфигурация)
+-j - установка Java
+-a - установить webmin
+-n - установить node.js из исходников (установка долгая 2-3 часа)
+-o [type [port]]  - установить owfs. type - тип 1-wire адаптера (usb, uart, i2c), port - порт uart 1-wire адаптера без /dev/ (ttyS2*, ttyUSB...)
+-r - установить RHVoice
+-w [type] - установить WiringPi. [type] - тип платы: 1 - OrangePi, 2 - Asus tinker board, 3 - RaspberryPi, 4 - BananaPi, 5 - NanoPi, 6 - Cubieboard2, 7 - BananaPro
+-s - установить MySensors
+-v - VPN клиент OpenVPN
+-m - MQTT сервер и клиент Mosquitto
+-u - 433Utils
+
+Возможна установка компонентов по отдельности
+
+###Исправления.
+
+v.0.4.1 от 29.09.2018
+- скрипт работает с параметрами коммандной строки
+- исправлена ошибка неудовлетворенных зависимостей при установке mariadb-server
 
 v.0.3.13 от 18.09.2018
 - запуск vlc сервисом
