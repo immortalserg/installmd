@@ -1,7 +1,8 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.3.13 от 18.09.2018\033[0m"
-
+echo -e "\033[1;33mВерсия скрипта 0.4.1 от 29.09.2018\033[0m"
+#функция проверки не занят ли установщик
+label1(){
     #проверка не запущен ли процесс apt
 	a_apt_p=$(ps -A | grep apt)
 	if [ "$a_apt_p" != "" ];
@@ -29,278 +30,45 @@ echo -e "\033[1;33mВерсия скрипта 0.3.13 от 18.09.2018\033[0m"
 	sudo rm /var/lib/apt/lists/lock
 	sudo rm /var/cache/apt/archives/lock
 	fi
-    #добавление репов Universe в Ubuntu server
+}
+#функция установки базовых пакетов
+inst_base(){
+	#добавление репов Universe в Ubuntu server
 	add-apt-repository universe
-
-if [ -n "$1" ]
-then
-echo "c параметрами"
-vibor2=$1 # плата для установки (1 - OrangePi, 2 - Asus tinker board, 3 - RaspberryPi, 4 - BananaPi, 5 - NanoPi NEO/NEO2, 6 - Cubieboard2, 7 - BananaPro, 8 - NanoPi M1, 9 - x86-AMD64 (Ubuntu, Debian и т.п.), 0 - Другая)
-mdwwwserver=$2 # вэб сервер (1- Apsche2)
-mdconfig=$3 # конфигурация (1 - базовая, 2 - расширенная, 3 - своя)
-pathconf=$4 # путь к своей конфигурации (путь или n)
-pass=$5 # пароль root к базе данных
-pass2=$6 # пароль пользователя pi
-piuser=$7 # создать пользователя pi для системы (y/n)
-insrhvoice=$8 # установить RHVoice (y/n)
-instwebmin=$9 # установить vebmin (y/n)
-vibor=${10} # установить Java (y/n)
-vibornode=${11} # установить node.js (y/n)
-vibor3=${12} # установить WiringPi (y/n)
-vibor4=${13} # установить MySensors (y/n)
-vibor5=${14} # установить 433Utils (y/n)
-vibor6=${15} # установить pi-switch-python (y/n)
-inszigbee=${16} # устанавливать zigbee (y/n)
-mdzigbee=${17} # тип zigbee
-mdzigbee2=${18} # порт zigbee 
-vibor7=${19} # устанавливать owfs (y/n)
-mdowfs=${20} # тип 1-wire адаптера
-mdowfs2=${21} # порт 1-wire адаптера
-dellocale=${22} # удалить локали (y/n)
-realtimeset=${23} # установлены часы реального времени на i2c0 (y/n)
-realtimeset2=${24} # записать текущее время в часы (y/n)
-optbd=${25} # оптимизировать базу данных (y/n)
-
-else
-
-
-#выбор параметров установки
-    #выбор платы для установки WiringPi
-	echo -e "\033[1;33mВыберете вашу плату\033[0m"
-	echo -e "\033[0;36m1 - OrangePi\033[0m"
-	echo -e "\033[0;36m2 - Asus tinker board\033[0m"
-	echo -e "\033[0;36m3 - RaspberryPi\033[0m"
-	echo -e "\033[0;36m4 - BananaPi\033[0m"
-	echo -e "\033[0;36m5 - NanoPi NEO/NEO2\033[0m"
-	echo -e "\033[0;36m6 - Cubieboard2\033[0m"
-	echo -e "\033[0;36m7 - BananaPro\033[0m"
-	echo -e "\033[0;36m8 - NanoPi M1\033[0m"
-	echo -e "\033[0;36m9 - x86-AMD64 (Ubuntu, Debian и т.п.)\033[0m"
-	echo -e "\033[0;36m0 - Другая\033[0m"
-	echo -e -n "\033[0;36mВаш выбор: \033[0m"
-	read vibor2
-    #выбор web сервера для установки
-	echo -e "\033[1;33mВыберите web сервер\033[0m"
-	echo -e "\033[0;36m1 - Apache\033[0m"
-	echo -e "\033[0;36m2 - nginx\033[0m"
-	echo -e "\033[0;36m3 - lighttp\033[0m"
-	echo -e -n "\033[0;36mВаш выбор (введите 1, пока не доработано): \033[0m"
-	read mdwwwserver
-    #выбор конфогурации для установки
-	echo -e "\033[1;33mВыберите конфигурацию MajorDoMo\033[0m"
-	echo -e "\033[0;36m1 - Базовая конфигурация\033[0m"
-	echo -e "\033[0;36m2 - Расширенная конфигурация\033[0m"
-	echo -e "\033[0;36m3 - Собственная конфигурация\033[0m"
-	echo -e -n "\033[0;36mВаш выбор: \033[0m"
-	read mdconfig
-    #если собственная конфигурация то диалог выбора пути к конфигурации
-	case "$mdconfig" in
-	"3" )
-	echo -e "\033[0;36m1 - Путь к файлу бэкапа базы данных (по умолчанию /root/backup.tgz)\033[0m"
-	read pathconf
-	case "$pathconf" in
-	"" )
-	$pathconf="/root/backup.tgz"
-	;;
-	esac
-	;;
-	esac
-	
-	
-    #Установка RHVoice
-	echo -e -n "\033[0;36mУстановить RHVoice? (y/n)\033[0m"
-	read insrhvoice	
-    #Установка webmin
-	echo -e -n "\033[0;36mУстановить Webmin? (y/n)\033[0m"
-	read instwebmin
-    #установка Java и node.js
-	echo -e -n "\033[0;36mУстановить Java? (y/n)\033[0m"
-	read vibor
-	echo -e -n "\033[0;36mУстановить node.js (установка из исходников около 2-3 часов, можно установить позже отдельным скриптом)(y/n)\033[0m"
-	read vibornode
-    #выбор установки WiringPi
-	echo -e -n "\033[0;36mУстанавливать WiringPi? (у/n) \033[0m"
-	read vibor3
-    #выбор установки MySensors
-	echo -e -n "\033[0;36mУстанавливать MySensors? (y/n) \033[0m"
-	read vibor4
-    #выбор установки 433Utils
-	echo -e -n "\033[0;36mУстанавливать 433Utils? (y/n) \033[0m"
-	read vibor5
-    #выбор установки pi-switch-python
-	echo -e -n "\033[0;36mУстанавливать pi-switch-python? (y/n) \033[0m"
-	read vibor6
-    #выбор установки zigbee
-	echo -e -n "\033[0;36mУстанавливать zigbee (сс2530, сс2531)? (y/n) \033[0m"
-	read inszigbee
-	case "$inszigbee" in
-	"y" )
-    #Выбор zigbee адаптера
-	echo -e "\033[1;33mВыберите zigbee адаптер\033[0m"
-	echo -e "\033[0;36m1 - USB адаптер сс2531\033[0m"
-	echo -e "\033[0;36m2 - UART адаптер сс2530\033[0m"
-	echo -e -n "\033[0;36mВаш выбор: \033[0m"
-	read mdzigbee
-	case "$mdzigbee" in
-	"2" )
-	echo -e "\033[1;33mВыберите порт zigbee адаптера DS2480\033[0m"
-	echo -e "\033[0;36m0 - /dev/ttyS0\033[0m"
-	echo -e "\033[0;36m1 - /dev/ttyS1\033[0m"
-	echo -e "\033[0;36m2 - /dev/ttyS2\033[0m"
-	echo -e "\033[0;36m3 - /dev/ttyS3\033[0m"
-	echo -e "\033[0;36m4 - /dev/ttyS4\033[0m"
-	echo -e "\033[0;36m5 - /dev/ttyUSB0\033[0m"
-	echo -e "\033[0;36m6 - /dev/ttyUSB1\033[0m"
-	echo -e -n "\033[0;36mВаш выбор: \033[0m"
-	read mdzigbee2
-	;;
-	esac
-	;;
-	esac
-    #выбор установки owfs
-	echo -e -n "\033[0;36mУстанавливать owfs для 1-wire? (y/n) \033[0m"
-	read vibor7
-	case "$vibor7" in
-	"y" )
-    #Выбор 1-wire адаптера
-	echo -e "\033[1;33mВыберите 1-wire адаптер\033[0m"
-	echo -e "\033[0;36m1 - USB адаптер DS9490R\033[0m"
-	echo -e "\033[0;36m2 - UART адаптер DS2480\033[0m"
-	echo -e "\033[0;36m3 - i2c адаптер DS2482\033[0m"
-	echo -e -n "\033[0;36mВаш выбор: \033[0m"
-	read mdowfs
-    #выбор порта 1-wire адаптера
-	case "$mdowfs" in
-	"2" )
-	echo -e "\033[1;33mВыберите порт 1-wire адаптера DS2480\033[0m"
-	echo -e "\033[0;36m0 - /dev/ttyS0\033[0m"
-	echo -e "\033[0;36m1 - /dev/ttyS1\033[0m"
-	echo -e "\033[0;36m2 - /dev/ttyS2 (OrangePi shield D6MG)\033[0m"
-	echo -e "\033[0;36m3 - /dev/ttyS3\033[0m"
-	echo -e "\033[0;36m4 - /dev/ttyS4 (Asus Tinker Board shield D6MG)\033[0m"
-	echo -e "\033[0;36m5 - /dev/ttyUSB0\033[0m"
-	echo -e "\033[0;36m6 - /dev/ttyUSB1\033[0m"
-	echo -e -n "\033[0;36mВаш выбор: \033[0m"
-	read mdowfs2
-	;;
-	esac
-	;;
-	esac
-    #удалить локали
-	echo -e -n "\033[0;36mУдалить локали? (y/n) \033[0m"
-	read dellocale
-    #установить часы реального времени ds3231 на i2c0
-	echo -e -n "\033[0;36mУстановить часы реального времени ds3231 на i2c0? (y/n) \033[0m"
-	read realtimeset
-	case "$realtimeset" in
-	"y" )
-	echo -e -n "\033[0;36mЗаписать текущее время системы в часы ds3132? (y/n) \033[0m"
-	read realtimeset2
-	;;
-	esac
-    #оптимизация базы данных (проверка не установливается ли на ББ)
-	if [[ $vibor2 != 9 ]]
-	then
-	echo -e -n "\033[0;36mСделать оптимизацию базы (базу и логи в tmpfs)? (y/n) \033[0m"
-	read optbd
-	fi
-    #отображать пароли?
-	echo -e -n "\033[0;36mОтображать пароли? (y/n) \033[0m"
-	read vibor8
-	stty echo
-	case "$vibor8" in
-	"n" )
-	stty -echo
-	;;
-	esac
-    #задаем пароль root для MySQL
-	echo -e -n "\033[1;33mВведите пароль root для MariaDB (MySQL) > \033[0m"
-		read pass
-	stty echo
-	case "$vibor8" in
-	"n" )
-	stty -echo
-	;;
-	esac
-    #задаем пароль пользователя pi
-	echo
-	echo -e -n "\033[1;33mВведите пароль пользователя pi (для пользователя системы и пользователя базы данных MajorDoMo) > \033[0m"
-	read pass2
-	stty echo
-	password1=$pass
-	password2=$pass
-	reply='Y'
-    #создать пользователя pi
-	echo -e -n "\033[0;36mСоздать пользователя pi (если нету необходимо создать) пользователь pi для базы данных создается независимо от выбора? (y/n) \033[0m"
-	read piuser
-
-
-fi
-	echo  -e "\033[1;31mВНИМАНИЕ!!! ВНИМАНИЕ!!! ВНИМАНИЕ!!! далее нигде пароли на базу данных не вводить!!! если спросит то оставлять поле пароля пустым \033[0m"
-	time22=$(date +%s)
-
-#установка
-    #проверка системы raspbian и добавление репов php7 и mariadb
-	ifdietpi=$(uname -a)
+	#проверка системы raspbian и добавление репов php7 и mariadb
 	raspb=$(cat /etc/issue.net)
 	if echo $raspb | grep -q -s -F "Raspbian"
-	then
-	#добавляем в распбиан пакеты php7 и mariadb
-	echo "deb http://mirrordirector.raspbian.org/raspbian/ stretch main contrib non-free rpi" | tee -a /etc/apt/sources.list
+		then
+		#добавляем в распбиан пакеты php7 и mariadb
+		echo "deb http://mirrordirector.raspbian.org/raspbian/ stretch main contrib non-free rpi" | tee -a /etc/apt/sources.list
 	fi
-
-    #добавляем пользователя
-	case "$piuser" in
-	"y" )
-	sudo useradd -m -d /home/pi pi -p $pass2
-	;;
-	esac
-    #добавляем репы webmin
+  # Обновляем информацию о пакетах
+	sudo apt-get -qq update
 	sudo apt-get -qq install -y python-software-properties
 	sudo apt-get -qq install -y software-properties-common
-    # Обновляем информацию о пакетах
-	sudo apt-get -qq update
-    #удаление локалей если такой пункт был выбран
-	case "$dellocale" in
-	"y" )
-sudo tee /etc/locale.nopurge << EOF
-en
-en_US
-en_US.ISO-8859-15
-en_US.UTF-8
-ru
-ru_RU
-ru_RU.CP1251
-ru_RU.KOI8-R
-ru_RU.UTF-8
-EOF
-sudo apt-get -qq install -y localepurge 
-;;
-esac
-
-    # Устанавливаем необходимые пакеты
+	# Устанавливаем необходимые пакеты
 	echo -n -e "\033[1;36mУстанавливаю необходимые утилиты и библиотеки... \033[0m"
 	sudo apt-get -qq install -y ntpdate
-	sudo apt-get -qq install -y libusb-1.0-0 
+	sudo apt-get -qq install -y libusb-1.0-0
 	sudo apt-get -qq install -y libusb-1.0-0-dev
 	sudo apt-get -qq install -y mc
-	sudo apt-get -qq install -y git 
+	sudo apt-get -qq install -y git
 	sudo apt-get -qq install -y git-core
-	sudo apt-get -qq install -y dbconfig-mysql 
-	sudo apt-get -qq install -y i2c-tools 
-	sudo apt-get -qq install -y perl 
-	sudo apt-get -qq install -y libnet-ssleay-perl 
-	sudo apt-get -qq install -y openssl 
-	sudo apt-get -qq install -y libauthen-pam-perl 
-	sudo apt-get -qq install -y libpam-runtime 
-	sudo apt-get -qq install -y libio-pty-perl 
-	sudo apt-get -qq install -y libdigest-md5-perl 
-	sudo apt-get -qq install -y util-linux 
-	sudo apt-get -qq install -y unzip 
-	sudo apt-get -qq install -y zip 
+	sudo apt-get -qq install -y dbconfig-mysql
+	sudo apt-get -qq install -y i2c-tools
+	sudo apt-get -qq install -y perl
+	sudo apt-get -qq install -y libnet-ssleay-perl
+	sudo apt-get -qq install -y openssl
+	sudo apt-get -qq install -y libauthen-pam-perl
+	sudo apt-get -qq install -y libpam-runtime
+	sudo apt-get -qq install -y libio-pty-perl
+	sudo apt-get -qq install -y libdigest-md5-perl
+	sudo apt-get -qq install -y util-linux
+	sudo apt-get -qq install -y unzip
+	sudo apt-get -qq install -y zip
 	sudo apt-get -qq install -y sunxi-tools
-	sudo apt-get -qq install -y python-dev 
-	sudo apt-get -qq install -y libboost-python-dev 
+	sudo apt-get -qq install -y python-dev
+	sudo apt-get -qq install -y libboost-python-dev
 	sudo apt-get -qq install -y python-pip
 	sudo apt-get -qq install -y lshw
 	sudo apt-get -qq install -y libusb-dev
@@ -324,14 +92,17 @@ esac
 	sudo apt-get -qq install -y libao4
 	sudo apt-get -qq install -y libao-common
 	sudo apt-get -qq install -y libao-dev
+	sudo useradd -m -d /home/pi pi -p $pass2
 	echo -e "\033[1;32m установлено\033[0m"
-    #установка OpenVPN
+}
+#функция установки OpenVPN
+inst_ovpn(){
 	echo -n -e "\033[1;36mУстанавливаю openvpn... \033[0m"
 	sudo apt-get -qq install -y openvpn
 	echo -e "\033[1;32m установлено\033[0m"
-    #установка webmin
-	case "$instwebmin" in
-	"y" )
+}
+#функция установки webmin
+inst_webmin(){
 	echo -n -e "\033[0;36mУстанавливаю webmin... \033[0m"
 	sudo sed -i '/deb http:\/\/download.webmin.com\/download\/repository sarge contrib/s/deb http:\/\/download.webmin.com\/download\/repository sarge contrib//' /etc/apt/sources.list
 	echo "deb http://download.webmin.com/download/repository sarge contrib" | tee -a /etc/apt/sources.list
@@ -341,1648 +112,1579 @@ esac
 	sudo apt-key add jcameron-key.asc
 	sudo apt-get -qq update
 	sudo apt-get -qq install -y webmin
-	;;
-	esac
 	echo -e "\033[1;32m установлено\033[0m"
-    #установка mqtt сервера Mosquitto
+}
+#функция установки mqtt сервера Mosquitto
+inst_mqtt(){
 	echo -n -e "\033[1;36mУстанавливаю MQTT сервер Mosquitto... \033[0m"
-	sudo apt-get -qq install -y mosquitto 
+	sudo apt-get -qq install -y mosquitto
 	sudo apt-get -qq install -y mosquitto-clients
+	#запускаем mosquitto в качестве сервиса
+	mosquitto -d
+	sudo systemctl enable mosquitto.service
 	echo -e "\033[1;32m установлено\033[0m"
-    #установка zigbee
-	case "$inszigbee" in
-	"y" )
-	echo -n -e "\033[1;36mПока установка zigbee невозможна\033[0m"
-	#echo -e "\033[1;32m установлено\033[0m"
-	;;
-	esac
-    #установка owfs если выбрано
-	case "$vibor7" in
-	"y" )
+}
+#функция установки owfs
+inst_owfs(){
 	echo -n -e "\033[1;36mУстанавливаю owfs... \033[0m"
+		if [ -z "$flag_o2" ]; then flag_o2="usb" ; fi
+		if [ -z "$flag_o3" ]; then flag_o3="ttyS2" ; fi
 	sudo apt-get -qq install -y owfs
+	#настройка owfs
+	sudo sed -i "/ONEWIRE_SERVER/s/\/\///" /var/www/config.php
+	sudo sed -i "/server: port/s/localhost:4304/8234/" /etc/owfs.conf
+	#USB адаптер DS9490R
+	if [ "$flag_o2" = "usb"]; then sudo sed -i "/server: usb/s/\#//" /etc/owfs.conf; fi
+	#UART адаптер DS2480
+	if [ "$flag_o2" = "uart"]; then
+		sudo sed -i "/server: device/s/\#//" /etc/owfs.conf
+		sudo sed -i "/server: device/s/ttyS1/$flag_o3/" /etc/owfs.conf
+	fi
+	#i2c адаптер DS2482
+	if [ "$flag_o2" = "i2c"]; then	echo "server: i2c = ALL:ALL" | tee -a /etc/owfs.conf; fi
 	echo -e "\033[1;32m установлено\033[0m"
-	;;
-	esac
-    #установка web сервера
-	case "$mdwwwserver" in
-	"1" )
+}
+#функция установки apache2
+inst_apache2(){
 	echo -n -e "\033[1;36mУстанавливаю web сервер Apache... \033[0m"
-	sudo apt-get -qq install -y apache2 
-	sudo apt-get -qq install -y apache2-bin 
-	sudo apt-get -qq install -y apache2-data 
-	sudo apt-get -qq install -y apache2-utils  
+	sudo apt-get -qq install -y apache2
+	sudo apt-get -qq install -y apache2-bin
+	sudo apt-get -qq install -y apache2-data
+	sudo apt-get -qq install -y apache2-utils
+	# Включаем мод rewrite для Apache
+	sudo a2enmod rewrite
+	sudo sed -i 's/None/All/g' /etc/apache2/apache2.conf
+	echo "ServerName localhost" | sudo tee -a /etc/apache2/apache2.conf
+	sudo sed -i 's/\/html//' /etc/apache2/sites-available/000-default.conf
 	echo -e "\033[1;32m установлено\033[0m"
-	;;
-	"2" )
-	sudo apt-get -qq install -y nginx nginx-extras
-	;;
-	"3" )
-	sudo apt-get install lighttpd
-	;;
-	esac
-    #установка php
+}
+#функция установки php пакетов
+inst_php(){
+	#установка php
 	echo -n -e "\033[1;36mУстанавливаю php пакеты... \033[0m"
-    #проверка наличия php
+	#проверка наличия php
 	phpif=$(apt-cache search php-common)
 	phpif70=$(apt-cache search php7.0-common)
 	phpif5=$(apt-cache search php5-common)
 	phpif72=$(apt-cache search php7.2-common)
 
-	if [ "$phpif72" = "" ]; 
+	if [ "$phpif72" = "" ];
 	then
-	// если php не версии 7.2
-		if [ "$phpif" = "" ]; 
+		// если php не версии 7.2
+		if [ "$phpif" = "" ];
 		then
-        		if [ "$phpif70" = "" ]; 
-        		then
-			sudo apt-get -qq install -y php5
-			sudo apt-get -qq install -y php5-bz2 
-			sudo apt-get -qq install -y php5-cli 
-			sudo apt-get -qq install -y php5-common 
-			sudo apt-get -qq install -y php5-curl 
-			sudo apt-get -qq install -y php5-gd 
-			sudo apt-get -qq install -y php5-json 
-			sudo apt-get -qq install -y php5-mbstring 
-			sudo apt-get -qq install -y php5-mcrypt 
-			sudo apt-get -qq install -y php5-mysql 
-			sudo apt-get -qq install -y php5-opcache 
-			sudo apt-get -qq install -y php5-readline
-			sudo apt-get -qq install -y php5-xml 
-			sudo apt-get -qq install -y php5-mysql 
-			sudo apt-get -qq install -y php5-pear
-			sudo apt-get -qq install -y php5-idn 
-			sudo apt-get -qq install -y php5-imagick 
-			sudo apt-get -qq install -y php5-imap 
-			sudo apt-get -qq install -y php5-memcache 
-			sudo apt-get -qq install -y php5-mhash 
-			sudo apt-get -qq install -y php5-ming 
-			sudo apt-get -qq install -y php5-ps 
-			sudo apt-get -qq install -y php5-pspell 
-			sudo apt-get -qq install -y php5-recode 
-			sudo apt-get -qq install -y php5-snmp 
-			sudo apt-get -qq install -y php5-tidy 
-			sudo apt-get -qq install -y php5-xmlrpc 
-			sudo apt-get -qq install -y php5-xsl 
-			sudo apt-get -qq install -y php5-json
-			sudo apt-get -qq install -y libapache2-mod-php5
-        		else
-			sudo apt-get -qq install -y php7.0
-			sudo apt-get -qq install -y php7.0-bz2 
-			sudo apt-get -qq install -y php7.0-cli 
-			sudo apt-get -qq install -y php7.0-common 
-			sudo apt-get -qq install -y php7.0-curl 
-			sudo apt-get -qq install -y php7.0-gd 
-			sudo apt-get -qq install -y php7.0-json 
-			sudo apt-get -qq install -y php7.0-mbstring 
-			sudo apt-get -qq install -y php7.0-mcrypt 
-			sudo apt-get -qq install -y php7.0-mysql 
-			sudo apt-get -qq install -y php7.0-opcache 
-			sudo apt-get -qq install -y php7.0-readline
-			sudo apt-get -qq install -y php7.0-xml 
-			sudo apt-get -qq install -y php7.0-mysql 
-			sudo apt-get -qq install -y php7.0-pear
-			sudo apt-get -qq install -y php7.0-idn 
-			sudo apt-get -qq install -y php7.0-imagick 
-			sudo apt-get -qq install -y php7.0-imap 
-			sudo apt-get -qq install -y php7.0-memcache 
-			sudo apt-get -qq install -y php7.0-mhash 
-			sudo apt-get -qq install -y php7.0-ming 
-			sudo apt-get -qq install -y php7.0-ps 
-			sudo apt-get -qq install -y php7.0-pspell 
-			sudo apt-get -qq install -y php7.0-recode 
-			sudo apt-get -qq install -y php7.0-snmp 
-			sudo apt-get -qq install -y php7.0-tidy 
-			sudo apt-get -qq install -y php7.0-xmlrpc 
-			sudo apt-get -qq install -y php7.0-xsl 
-			sudo apt-get -qq install -y php7.0-json
-			sudo apt-get -qq install -y libapache2-mod-php7.0    
+					if [ "$phpif70" = "" ];
+					then
+						sudo apt-get -qq install -y php5
+						sudo apt-get -qq install -y php5-bz2
+						sudo apt-get -qq install -y php5-cli
+						sudo apt-get -qq install -y php5-common
+						sudo apt-get -qq install -y php5-curl
+						sudo apt-get -qq install -y php5-gd
+						sudo apt-get -qq install -y php5-json
+						sudo apt-get -qq install -y php5-mbstring
+						sudo apt-get -qq install -y php5-mcrypt
+						sudo apt-get -qq install -y php5-mysql
+						sudo apt-get -qq install -y php5-opcache
+						sudo apt-get -qq install -y php5-readline
+						sudo apt-get -qq install -y php5-xml
+						sudo apt-get -qq install -y php5-mysql
+						sudo apt-get -qq install -y php5-pear
+						sudo apt-get -qq install -y php5-idn
+						sudo apt-get -qq install -y php5-imagick
+						sudo apt-get -qq install -y php5-imap
+						sudo apt-get -qq install -y php5-memcache
+						sudo apt-get -qq install -y php5-mhash
+						sudo apt-get -qq install -y php5-ming
+						sudo apt-get -qq install -y php5-ps
+						sudo apt-get -qq install -y php5-pspell
+						sudo apt-get -qq install -y php5-recode
+						sudo apt-get -qq install -y php5-snmp
+						sudo apt-get -qq install -y php5-tidy
+						sudo apt-get -qq install -y php5-xmlrpc
+						sudo apt-get -qq install -y php5-xsl
+						sudo apt-get -qq install -y php5-json
+						sudo apt-get -qq install -y libapache2-mod-php5
+					else
+						sudo apt-get -qq install -y php7.0
+						sudo apt-get -qq install -y php7.0-bz2
+						sudo apt-get -qq install -y php7.0-cli
+						sudo apt-get -qq install -y php7.0-common
+						sudo apt-get -qq install -y php7.0-curl
+						sudo apt-get -qq install -y php7.0-gd
+						sudo apt-get -qq install -y php7.0-json
+						sudo apt-get -qq install -y php7.0-mbstring
+						sudo apt-get -qq install -y php7.0-mcrypt
+						sudo apt-get -qq install -y php7.0-mysql
+						sudo apt-get -qq install -y php7.0-opcache
+						sudo apt-get -qq install -y php7.0-readline
+						sudo apt-get -qq install -y php7.0-xml
+						sudo apt-get -qq install -y php7.0-mysql
+						sudo apt-get -qq install -y php7.0-pear
+						sudo apt-get -qq install -y php7.0-idn
+						sudo apt-get -qq install -y php7.0-imagick
+						sudo apt-get -qq install -y php7.0-imap
+						sudo apt-get -qq install -y php7.0-memcache
+						sudo apt-get -qq install -y php7.0-mhash
+						sudo apt-get -qq install -y php7.0-ming
+						sudo apt-get -qq install -y php7.0-ps
+						sudo apt-get -qq install -y php7.0-pspell
+						sudo apt-get -qq install -y php7.0-recode
+						sudo apt-get -qq install -y php7.0-snmp
+						sudo apt-get -qq install -y php7.0-tidy
+						sudo apt-get -qq install -y php7.0-xmlrpc
+						sudo apt-get -qq install -y php7.0-xsl
+						sudo apt-get -qq install -y php7.0-json
+						sudo apt-get -qq install -y libapache2-mod-php7.0
+					fi
+				else
+					sudo apt-get -qq install -y php
+					sudo apt-get -qq install -y php-bz2
+					sudo apt-get -qq install -y php-cli
+					sudo apt-get -qq install -y php-common
+					sudo apt-get -qq install -y php-curl
+					sudo apt-get -qq install -y php-gd
+					sudo apt-get -qq install -y php-json
+					sudo apt-get -qq install -y php-mbstring
+					sudo apt-get -qq install -y php-mcrypt
+					sudo apt-get -qq install -y php-mysql
+					sudo apt-get -qq install -y php-opcache
+					sudo apt-get -qq install -y php-readline
+					sudo apt-get -qq install -y php-xml
+					sudo apt-get -qq install -y php-mysql
+					sudo apt-get -qq install -y php-pear
+					sudo apt-get -qq install -y php-idn
+					sudo apt-get -qq install -y php-imagick
+					sudo apt-get -qq install -y php-imap
+					sudo apt-get -qq install -y php-memcache
+					sudo apt-get -qq install -y php-mhash
+					sudo apt-get -qq install -y php-ming
+					sudo apt-get -qq install -y php-ps
+					sudo apt-get -qq install -y php-pspell
+					sudo apt-get -qq install -y php-recode
+					sudo apt-get -qq install -y php-snmp
+					sudo apt-get -qq install -y php-tidy
+					sudo apt-get -qq install -y php-xmlrpc
+					sudo apt-get -qq install -y php-xsl
+					sudo apt-get -qq install -y php-json
+					sudo apt-get -qq install -y libapache2-mod-php
+				fi
+			else
+				sudo apt-get -qq install -y php7.2
+				sudo apt-get -qq install -y php7.2-bz2
+				sudo apt-get -qq install -y php7.2-cli
+				sudo apt-get -qq install -y php7.2-common
+				sudo apt-get -qq install -y php7.2-curl
+				sudo apt-get -qq install -y php7.2-gd
+				sudo apt-get -qq install -y php7.2-json
+				sudo apt-get -qq install -y php7.2-mbstring
+				sudo apt-get -qq install -y php7.2-mcrypt
+				sudo apt-get -qq install -y php7.2-mysql
+				sudo apt-get -qq install -y php7.2-opcache
+				sudo apt-get -qq install -y php7.2-readline
+				sudo apt-get -qq install -y php7.2-xml
+				sudo apt-get -qq install -y php7.2-mysql
+				sudo apt-get -qq install -y php7.2-pear
+				sudo apt-get -qq install -y php7.2-idn
+				sudo apt-get -qq install -y php7.2-imagick
+				sudo apt-get -qq install -y php7.2-imap
+				sudo apt-get -qq install -y php7.2-memcache
+				sudo apt-get -qq install -y php7.2-mhash
+				sudo apt-get -qq install -y php7.2-ming
+				sudo apt-get -qq install -y php7.2-ps
+				sudo apt-get -qq install -y php7.2-pspell
+				sudo apt-get -qq install -y php7.2-recode
+				sudo apt-get -qq install -y php7.2-snmp
+				sudo apt-get -qq install -y php7.2-tidy
+				sudo apt-get -qq install -y php7.2-xmlrpc
+				sudo apt-get -qq install -y php7.2-xsl
+				sudo apt-get -qq install -y php7.2-json
+				sudo apt-get -qq install -y libapache2-mod-php7.2
 			fi
-		else
-		sudo apt-get -qq install -y php
-		sudo apt-get -qq install -y php-bz2 
-		sudo apt-get -qq install -y php-cli 
-		sudo apt-get -qq install -y php-common 
-		sudo apt-get -qq install -y php-curl 
-		sudo apt-get -qq install -y php-gd 
-		sudo apt-get -qq install -y php-json 
-		sudo apt-get -qq install -y php-mbstring 
-		sudo apt-get -qq install -y php-mcrypt 
-		sudo apt-get -qq install -y php-mysql 
-		sudo apt-get -qq install -y php-opcache 
-		sudo apt-get -qq install -y php-readline
-		sudo apt-get -qq install -y php-xml 
-		sudo apt-get -qq install -y php-mysql 
-		sudo apt-get -qq install -y php-pear
-		sudo apt-get -qq install -y php-idn 
-		sudo apt-get -qq install -y php-imagick 
-		sudo apt-get -qq install -y php-imap 
-		sudo apt-get -qq install -y php-memcache 
-		sudo apt-get -qq install -y php-mhash 
-		sudo apt-get -qq install -y php-ming 
-		sudo apt-get -qq install -y php-ps 
-		sudo apt-get -qq install -y php-pspell 
-		sudo apt-get -qq install -y php-recode 
-		sudo apt-get -qq install -y php-snmp 
-		sudo apt-get -qq install -y php-tidy 
-		sudo apt-get -qq install -y php-xmlrpc 
-		sudo apt-get -qq install -y php-xsl 
-		sudo apt-get -qq install -y php-json
-		sudo apt-get -qq install -y libapache2-mod-php 
-		fi
-	else
-	sudo apt-get -qq install -y php7.2
-	sudo apt-get -qq install -y php7.2-bz2 
-	sudo apt-get -qq install -y php7.2-cli 
-	sudo apt-get -qq install -y php7.2-common 
-	sudo apt-get -qq install -y php7.2-curl 
-	sudo apt-get -qq install -y php7.2-gd 
-	sudo apt-get -qq install -y php7.2-json 
-	sudo apt-get -qq install -y php7.2-mbstring 
-	sudo apt-get -qq install -y php7.2-mcrypt 
-	sudo apt-get -qq install -y php7.2-mysql 
-	sudo apt-get -qq install -y php7.2-opcache 
-	sudo apt-get -qq install -y php7.2-readline
-	sudo apt-get -qq install -y php7.2-xml 
-	sudo apt-get -qq install -y php7.2-mysql 
-	sudo apt-get -qq install -y php7.2-pear
-	sudo apt-get -qq install -y php7.2-idn 
-	sudo apt-get -qq install -y php7.2-imagick 
-	sudo apt-get -qq install -y php7.2-imap 
-	sudo apt-get -qq install -y php7.2-memcache 
-	sudo apt-get -qq install -y php7.2-mhash 
-	sudo apt-get -qq install -y php7.2-ming 
-	sudo apt-get -qq install -y php7.2-ps 
-	sudo apt-get -qq install -y php7.2-pspell 
-	sudo apt-get -qq install -y php7.2-recode 
-	sudo apt-get -qq install -y php7.2-snmp 
-	sudo apt-get -qq install -y php7.2-tidy 
-	sudo apt-get -qq install -y php7.2-xmlrpc 
-	sudo apt-get -qq install -y php7.2-xsl 
-	sudo apt-get -qq install -y php7.2-json
-	sudo apt-get -qq install -y libapache2-mod-php7.2    
+	# Настраиваем PHP
+	# Настраиваем PHP для apache2
+	if [ -f "/etc/php5/apache2/php.ini" ]; then
+		sudo sed -i '/short_open_tag/s/Off/On/' /etc/php5/apache2/php.ini
+		sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php5/apache2/php.ini
+		sudo sed -i '/max_execution_time/s/30/90/' /etc/php5/apache2/php.ini
+		sudo sed -i '/max_input_time/s/60/180/' /etc/php5/apache2/php.ini
+		sudo sed -i '/post_max_size/s/8/200/' /etc/php5/apache2/php.ini
+		sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php5/apache2/php.ini
+		sudo sed -i '/max_file_uploads/s/20/150/' /etc/php5/apache2/php.ini
+		sudo sed -i '/log_errors/s/On/Off/' /etc/php5/apache2/php.ini
+	fi
+	if [ -f "/etc/php/7.0/apache2/php.ini" ]; then
+		sudo sed -i '/short_open_tag/s/Off/On/' /etc/php/7.0/apache2/php.ini
+		sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php/7.0/apache2/php.ini
+		sudo sed -i '/max_execution_time/s/30/90/' /etc/php/7.0/apache2/php.ini
+		sudo sed -i '/max_input_time/s/60/180/' /etc/php/7.0/apache2/php.ini
+		sudo sed -i '/post_max_size/s/8/200/' /etc/php/7.0/apache2/php.ini
+		sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php/7.0/apache2/php.ini
+		sudo sed -i '/max_file_uploads/s/20/150/' /etc/php/7.0/apache2/php.ini
+		sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.0/apache2/php.ini
+	fi
+	# Настраиваем PHP для коммандной строки
+	if [ -f "/etc/php5/cli/php.ini" ]; then
+		sudo sed -i '/short_open_tag/s/Off/On/' /etc/php5/cli/php.ini
+		sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php5/cli/php.ini
+		sudo sed -i '/log_errors/s/On/Off/' /etc/php5/cli/php.ini
+	fi
+	if [ -f "/etc/php/7.0/cli/php.ini" ]; then
+		sudo sed -i '/short_open_tag/s/Off/On/' /etc/php/7.0/cli/php.ini
+		sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php/7.0/cli/php.ini
+		sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.0/cli/php.ini
 	fi
 	echo -e "\033[1;32m установлено\033[0m"
-    #установка поддержки звука и т.п.
+}
+#функция установки поддержки звука vlc, mpd, alsa ...
+inst_sound(){
+	#установка поддержки звука и т.п.
 	echo -e "\033[1;36mУстановка пакетов поддержки звука и видео (vlc, mpd, ffmpeg, alsa и т.п.)... \033[0m"
 	sudo apt-get -qq install -y vlc
-	sudo apt-get -qq install -y mpd  
-	sudo apt-get -qq install -y mplayer 
-	sudo apt-get -qq install -y ffmpeg 
-	sudo apt-get -qq install -y pulseaudio 
-	sudo apt-get -qq install -y alsa 
-	sudo apt-get -qq install -y alsa-utils 
+	sudo apt-get -qq install -y mpd
+	sudo apt-get -qq install -y mplayer
+	sudo apt-get -qq install -y ffmpeg
+	sudo apt-get -qq install -y pulseaudio
+	sudo apt-get -qq install -y alsa
+	sudo apt-get -qq install -y alsa-utils
 	sudo apt-get -qq install -y alsa-tools
 	sudo apt-get -qq install -y libav-tools
-    #установка RHVoice
-	case "$insrhvoice" in
-	"y" )
-	echo -n -e "\033[0;36mУстанавливаю RHVoice... \033[0m"
-sudo tee -a /etc/pulse/daemon.conf << EOF
-high-priority = no
-nice-level = -1
-realtime-scheduling = yes
-realtime-priority = 5
-flat-volumes = no
-resample-method = speex-float-1
-default-sample-rate = 48000
-default-fragments = 4
-default-fragment-size-msec = 25
+	echo -n -e "\033[1;36mДобавляю запуск vlc http: \033[0m"
+	sudo tee /etc/systemd/system/vlcd.service << EOF
+	[Unit]
+	Description=VLCDaemon
+	[Service]
+	Requires=majordomo.service
+	Type=simple
+	WorkingDirectory=/var/www
+	ExecStart=/usr/bin/vlc -I http --http-password=12345 --http-port 7070
+	Restart=always
+	User=www-data
+	Group=www-data
+	[Install]
+	WantedBy=multi-user.target
 EOF
-# Устанавливаем RHVoice
-cd /usr/src
-sudo git clone https://github.com/Olga-Yakovleva/RHVoice
-cd RHVoice
-sudo scons
-sudo scons install
-sudo ldconfig
-	echo -e "\033[1;32m установлено\033[0m"	
+	#добавляем vlc в автозагрузку
+	sudo systemctl daemon-reload
+	sudo systemctl enable vlcd
+	#патчим vlc чтобы запускался от root
+	sed -i 's/geteuid/getppid/' /usr/bin/vlc
+	#исправляем pulse проглатывание начала фраз
+	sudo sed -i '/load-module module-suspend-on-idle/s/load-module module-suspend-on-idle/\#load-module module-suspend-on-idle/' /etc/pulse/default.pa
+	#создание файла asound.conf
+	func_hw
+	if [ "$type_system" = "arm" ]; then
+		hw_device=0
+		hw_port=2
+		if echo "$type_pr2" | grep -i "Orange Pi" >/dev/null; then hw_port=0; fi
+		asound_conf
+	fi
+}
+#функция установки RHVoice
+inst_rhvoice(){
+	echo -n -e "\033[0;36mУстанавливаю RHVoice... \033[0m"
+	sudo tee -a /etc/pulse/daemon.conf << EOF
+	high-priority = no
+	nice-level = -1
+	realtime-scheduling = yes
+	realtime-priority = 5
+	flat-volumes = no
+	resample-method = speex-float-1
+	default-sample-rate = 48000
+	default-fragments = 4
+	default-fragment-size-msec = 25
+EOF
+	# Устанавливаем RHVoice
+	cd /usr/src
+	sudo git clone https://github.com/Olga-Yakovleva/RHVoice
+	cd RHVoice
+	sudo scons
+	sudo scons install
+	sudo ldconfig
+	echo -e "\033[1;32m установлено\033[0m"
+}
+#функция установки базы данных
+inst_db(){
+		#проверяем есть ли пакеты mariadb-server в репах
+		mdbif=$(apt-cache search mariadb-server)
+			if [ "$mdbif" = "" ];
+			then
+			#добавляем репы mariadb-server и устнавливаем
+			sudo apt-get -qq install -y software-properties-common
+			sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
+			sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mirror.ehv.weppel.nl/mariadb/repo/10.2/ubuntu xenial main'
+			sudo apt-get -qq update
+			sudo apt-get -qq install -y mariadb-server
+			sudo apt-get -qq install -y mariadb-client
+			#проверяем установилась ли mariadb-server
+			mdbif2=$(dpkg --get-selections mariadb-server)
+			else
+			#пытаемся установить
+			sudo apt-get -qq install -y mariadb-server
+			sudo apt-get -qq install -y mariadb-client
+			#проверяем установилась ли mariadb-server
+			mdbif3=$(dpkg --get-selections mariadb-server)
+				if [ "$mdbif3" = "" ];
+				then
+					#из стандартных репов mariadb-server не установилась, отключаем стандартные репы и подключаем репы mariadb-server и устанавливаем
+					add-apt-repository -r universe
+					apt-get -qq install -y software-properties-common
+					apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
+					add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mirror.ehv.weppel.nl/mariadb/repo/10.2/ubuntu xenial main'
+					apt-get -qq update
+					apt-get -qq install -y mariadb-server
+					apt-get -qq install -y mariadb-client
+					#проверяем установилась ли mariadb-server
+					mdbif2=$(dpkg --get-selections mariadb-server)
+					if [ "$mdbif2" = "" ]; then
+						apt-get -qq update
+						apt-get -qq install -y mariadb-client-10.1
+						apt-get -qq install -y mariadb-server-10.1
+						apt-get -qq update
+						apt-get -qq install -y mariadb-server
+						apt-get -qq install -y mariadb-client
+						mdbif2=$(dpkg --get-selections mariadb-server)
+					fi
+				fi
+			fi
+		if [ "$mdbif2" = "" ];
+		then
+		echo -n -e "\033[1;36mУстановка базы данных MySQL... \033[0m"
+		sudo apt-get -qq install -y mysql-server
+		sudo apt-get -qq install -y mysql-client
+		fi
+		echo -e "\033[1;32m установлено\033[0m"
+	#подключаем репы обратно
+	add-apt-repository universe
+	sudo tee /etc/mysql/conf.d/disable_strict_mode.cnf << EOF
+	[mysqld]
+	sql_mode=IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+EOF
+	#добавляем в /etc/rc.local паузу старта базы данных
+	sudo sed -i "/exit 0/s/exit 0//" /etc/rc.local
+	echo "#/bin/sleep 20 && service mysql start" | tee -a /etc/rc.local
+	echo "exit 0" | tee -a /etc/rc.local
+}
+#функция настройки базы данных
+setting_db(){
+	#/usr/bin/mysql_secure_installation
+	# Copyright (C) 2002 MySQL AB and Jeremy Cole
+	#
+	# This program is free software; you can redistribute it and/or modify
+	# it under the terms of the GNU General Public License as published by
+	# the Free Software Foundation; version 2 of the License.
+	#
+	# This program is distributed in the hope that it will be useful,
+	# but WITHOUT ANY WARRANTY; without even the implied warranty of
+	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	# GNU General Public License for more details.
+	#
+	# You should have received a copy of the GNU General Public License
+	# along with this program; if not, write to the Free Software
+	# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+	config=".my.cnf.$$"
+	command=".mysql.$$"
+	mysql_client=""
+
+	trap "interrupt" 2
+
+	rootpass=""
+	echo_n=
+	echo_c=
+
+	YES=
+	NOROOTPW=
+
+	set_echo_compat() {
+	    case `echo "testing\c"`,`echo -n testing` in
+		*c*,-n*) echo_n=   echo_c=     ;;
+		*c*,*)   echo_n=-n echo_c=     ;;
+		*)       echo_n=   echo_c='\c' ;;
+	    esac
+	}
+
+	prepare() {
+	    touch $config $command
+	    chmod 600 $config $command
+	}
+
+	find_mysql_client()
+	{
+	  for n in ./bin/mysql mysql
+	  do
+	    $n --no-defaults --help > /dev/null 2>&1
+	    status=$?
+	    if test $status -eq 0
+	    then
+	      mysql_client=$n
+	      return
+	    fi
+	  done
+	  echo "Can't find a 'mysql' client in PATH or ./bin"
+	  exit 1
+	}
+
+	do_query() {
+	    echo "$1" >$command
+	    #sed 's,^,> ,' < $command  # Debugging
+	    $mysql_client --defaults-file=$config <$command
+	    return $?
+	}
+
+	# Simple escape mechanism (\-escape any ' and \), suitable for two contexts:
+	# - single-quoted SQL strings
+	# - single-quoted option values on the right hand side of = in my.cnf
+	#
+	# These two contexts don't handle escapes identically.  SQL strings allow
+	# quoting any character (\C => C, for any C), but my.cnf parsing allows
+	# quoting only \, ' or ".  For example, password='a\b' quotes a 3-character
+	# string in my.cnf, but a 2-character string in SQL.
+	#
+	# This simple escape works correctly in both places.
+	basic_single_escape () {
+	    # The quoting on this sed command is a bit complex.  Single-quoted strings
+	    # don't allow *any* escape mechanism, so they cannot contain a single
+	    # quote.  The string sed gets (as argv[1]) is:  s/\(['\]\)/\\\1/g
+	    #
+	    # Inside a character class, \ and ' are not special, so the ['\] character
+	    # class is balanced and contains two characters.
+	    echo "$1" | sed 's/\(['"'"'\]\)/\\\1/g'
+	}
+
+	make_config() {
+	    echo "# mysql_secure_installation config file" >$config
+	    echo "[mysql]" >>$config
+	    echo "user=root" >>$config
+	    esc_pass=`basic_single_escape "$rootpass"`
+	    echo "password='$esc_pass'" >>$config
+	    #sed 's,^,> ,' < $config  # Debugging
+	}
+
+	get_root_password() {
+	    status=1
+	    while [ $status -eq 1 ]; do
+		stty -echo
+		echo $echo_n "Enter current password for root (enter for none): $echo_c"
+		#read password
+		echo
+		stty echo
+		if [ "x$password" = "x" ]; then
+		    hadpass=0
+		else
+		    hadpass=1
+		fi
+		rootpass=$password
+		make_config
+		do_query ""
+		status=$?
+	    done
+	    echo "OK, successfully used password, moving on..."
+	    echo
+	}
+
+	set_root_password() {
+	    stty -echo
+	    echo $echo_n "New password: $echo_c"
+	    #read password1
+	    echo
+	    echo $echo_n "Re-enter new password: $echo_c"
+	    #read password2
+	    echo
+	    stty echo
+
+	    if [ "$password1" != "$password2" ]; then
+		echo "Sorry, passwords do not match."
+		echo
+		return 1
+	    fi
+
+	    if [ "$password1" = "" ]; then
+		echo "Sorry, you can't use an empty password here."
+		echo
+		return 1
+	    fi
+
+	    esc_pass=`basic_single_escape "$password1"`
+	    do_query "UPDATE mysql.user SET Password=PASSWORD('$esc_pass') WHERE User='root';"
+	    if [ $? -eq 0 ]; then
+		echo "Password updated successfully!"
+		echo "Reloading privilege tables.."
+		reload_privilege_tables || exit 1
+		echo
+		rootpass=$password1
+		make_config
+	    else
+		echo "Password update failed!"
+		exit 1
+	    fi
+
+	    return 0
+	}
+
+	remove_anonymous_users() {
+	    do_query "DELETE FROM mysql.user WHERE User='';"
+	    if [ $? -eq 0 ]; then
+		echo " ... Success!"
+	    else
+		echo " ... Failed!"
+		exit 1
+	    fi
+
+	    return 0
+	}
+
+	remove_remote_root() {
+	    do_query "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
+	    if [ $? -eq 0 ]; then
+		echo " ... Success!"
+	    else
+		echo " ... Failed!"
+	    fi
+	}
+
+	remove_test_database() {
+	    echo " - Dropping test database..."
+	    do_query "DROP DATABASE test;"
+	    if [ $? -eq 0 ]; then
+		echo " ... Success!"
+	    else
+		echo " ... Failed!  Not critical, keep moving..."
+	    fi
+
+	    echo " - Removing privileges on test database..."
+	    do_query "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+	    if [ $? -eq 0 ]; then
+		echo " ... Success!"
+	    else
+		echo " ... Failed!  Not critical, keep moving..."
+	    fi
+
+	    return 0
+	}
+
+	reload_privilege_tables() {
+	    do_query "FLUSH PRIVILEGES;"
+	    if [ $? -eq 0 ]; then
+		echo " ... Success!"
+		return 0
+	    else
+		echo " ... Failed!"
+		return 1
+	    fi
+	}
+
+	interrupt() {
+	    echo
+	    echo "Aborting!"
+	    echo
+	    cleanup
+	    stty echo
+	    exit 1
+	}
+
+	cleanup() {
+	    echo "Cleaning up..."
+	    rm -f $config $command
+	}
+
+	print_help() {
+	exit 0
+	}
+	# The actual script starts here
+
+	prepare
+	find_mysql_client
+	set_echo_compat
+
+	# Get params
+	while [ $# -ge 1 ] ; do
+	    case $1 in
+	        -h | --help) print_help;;
+	        -y | --yes)  YES=1;;
+	        -n | --norootpw)    NOROOTPW=1;;
+	        *)  echo "Error: Invalid option $1"; exit 1
+	    esac
+	    shift
+	done
+
+	echo
+	echo
+	echo
+	echo
+	echo "NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL"
+	echo "      SERVERS IN PRODUCTION USE!  PLEASE READ EACH STEP CAREFULLY!"
+	echo
+	echo
+
+	if [ -z $NOROOTPW ]; then
+
+	    echo "In order to log into MySQL to secure it, we'll need the current"
+	    echo "password for the root user.  If you've just installed MySQL, and"
+	    echo "you haven't set the root password yet, the password will be blank,"
+	    echo "so you should just press enter here."
+	    echo
+
+	    get_root_password
+
+
+	    #
+	    # Set the root password
+	    #
+
+	    echo "Setting the root password ensures that nobody can log into the MySQL"
+	    echo "root user without the proper authorisation."
+	    echo
+
+	    if [ $hadpass -eq 0 ]; then
+	        echo $echo_n "Set root password? [Y/n] $echo_c"
+	    else
+	        echo "You already have a root password set, so you can safely answer 'n'."
+	        echo
+	        echo $echo_n "Change the root password? [Y/n] $echo_c"
+	    fi
+
+	    #read reply
+	    if [ "$reply" = "n" ]; then
+	        echo " ... skipping."
+	    else
+	        status=1
+	        while [ $status -eq 1 ]; do
+	    	set_root_password
+	    	status=$?
+	        done
+	    fi
+	    echo
+
+	fi  # end of NOROOTPW
+
+	#
+	# Remove anonymous users
+	#
+
+	echo "By default, a MySQL installation has an anonymous user, allowing anyone"
+	echo "to log into MySQL without having to have a user account created for"
+	echo "them.  This is intended only for testing, and to make the installation"
+	echo "go a bit smoother.  You should remove them before moving into a"
+	echo "production environment."
+	echo
+
+	if [ -z $YES ] ; then
+	    echo $echo_n "Remove anonymous users? [Y/n] $echo_c"
+	    #read reply
+	else
+	    reply='Y'
+	fi
+
+	if [ "$reply" = "n" ]; then
+	    echo " ... skipping."
+	else
+	    remove_anonymous_users
+	fi
+	echo
+
+
+	#
+	# Disallow remote root login
+	#
+
+	echo "Normally, root should only be allowed to connect from 'localhost'.  This"
+	echo "ensures that someone cannot guess at the root password from the network."
+	echo
+
+	if [ -z $YES ] ; then
+	    echo $echo_n "Disallow root login remotely? [Y/n] $echo_c"
+	    #read reply
+	else
+	    reply='Y'
+	fi
+
+	if [ "$reply" = "n" ]; then
+	    echo " ... skipping."
+	else
+	    remove_remote_root
+	fi
+	echo
+
+
+	#
+	# Remove test database
+	#
+
+	echo "By default, MySQL comes with a database named 'test' that anyone can"
+	echo "access.  This is also intended only for testing, and should be removed"
+	echo "before moving into a production environment."
+	echo
+
+	if [ -z $YES ] ; then
+	    echo $echo_n "Remove test database and access to it? [Y/n] $echo_c"
+	    #read reply
+	else
+	    reply='Y'
+	fi
+
+	if [ "$reply" = "n" ]; then
+	    echo " ... skipping."
+	else
+	    remove_test_database
+	fi
+	echo
+
+
+	#
+	# Reload privilege tables
+	#
+
+	echo "Reloading the privilege tables will ensure that all changes made so far"
+	echo "will take effect immediately."
+	echo
+
+	if [ -z $YES ] ; then
+	    echo $echo_n "Reload privilege tables now? [Y/n] $echo_c"
+	    #read reply
+	else
+	    reply='Y'
+	fi
+
+	if [ "$reply" = "n" ]; then
+	    echo " ... skipping."
+	else
+	    reload_privilege_tables
+	fi
+	echo
+
+	cleanup
+
+	echo
+	echo
+	echo
+	echo "All done!  If you've completed all of the above steps, your MySQL"
+	echo "installation should now be secure."
+	echo
+	echo "Thanks for using MySQL!"
+	echo
+	echo
+}
+#функция установки базоваой конфигурация
+inst_config0(){
+	mysql -u root -p$pass db_terminal < /var/www/db_terminal.sql
+}
+#функция установки расширенной конфигурации
+inst_config1(){
+	rm mdbackup.tar.gz
+	wget -q http://kusheev.com/wp-content/uploads/mdbackup.tar.gz
+	tar -xf mdbackup.tar.gz
+	rm mdbackup.tar.gz
+	sudo cp -rp ~/mdbackup/* /var/www
+	rm -r ~/mdbackup/*
+	rmdir mdbackup
+	mysql -u root -p$pass db_terminal < /var/www/dump.sql
+	mysql -u root << EOF
+	SELECT CONCAT('ALTER TABLE ',table_schema,'.',table_name,' ENGINE=MyISAM;')
+	FROM information_schema.tables
+	WHERE 1=1
+	  AND engine = 'InnoDB'
+	  AND table_schema NOT IN ('mysql', 'performance_schema');
+EOF
+	dbconfig=$(grep -iRIl "datadir" /etc/mysql)
+	echo "innodb=OFF" | tee -a $dbconfig
+	echo "default-storage-engine = MyISAM" | tee -a $dbconfig
+	service mysql stop
+	rm -f /tmp/mysql/ibdata1
+	rm -f /tmp/mysql/ib_logfile*
+	rm -f /var/lib/mysql/ibdata1
+	rm -f /var/lib/mysql/ib_logfile*
+	service mysql start
+}
+#функция установки своей конфигурации
+inst_config2(){
+	mkdir backup
+	tar -zxf $pathconf -C ./backup
+	rm $pathconf
+	sudo cp -rp ~/backup/* /var/www
+	rm -r ~/backup/*
+	rmdir backup
+	mysql -u root -p$pass db_terminal < /var/www/dump.sql
+}
+#функция обновления и включаения системы МД (запуск после установки БД)
+inst_md2(){
+	# Обновляем и перезапускаем службы
+	sudo systemctl daemon-reload
+	sudo apache2ctl restart
+	sudo service mysql restart
+	# Запускаем основной цикл
+	sudo service majordomo start
+	#загружаем бэкап системы и устанавливаем
+	#обновляем систему
+	wget -q http://localhost/modules/saverestore/update_iframe.php
+	wget -q http://localhost/modules/market/update_iframe.php?mode2=update_all
+	echo -e "\033[1;36mСистема \033[1;32mMajorDoMo \033[1;36mнастроена полностью\033[0m "
+}
+#функция установки Java
+inst_java(){
+	echo -e "\033[1;36mУстанавливаю Java...\033[0m"
+	#добавляем репы java
+	sudo apt-add-repository ppa:webupd8team/java -y
+	sudo apt-get -qq update
+	sudo apt-get -qq install -y oracle-java8-jdk
+	echo -e "\033[1;32m установлено\033[0m"
+}
+#функция установки node.js
+inst_node(){
+	#установка node.js из исходников
+	echo -e "\033[1;36mУстанавливаю node.js из исходников, можно попить чайку... литра 2 :-)\033[0m"
+	cd ~
+	wget -q https://nodejs.org/dist/index.tab
+	ver=$(grep -E -o "v([0-9]+\\.[0-9]+\\.[0-9]+)" ./index.tab | sed -n '1,1p')
+	echo -e "\033[1;36mпоследняя версия node.js \033[0;31m"$ver"\033[0m"
+	wget -q https://nodejs.org/dist/$ver/node-$ver.tar.gz
+	tar -xf node-$ver.tar.gz
+	rm node-$ver.tar.gz
+	cd node-$ver
+	echo -n -e "\033[1;36mустановка продлиться продолжительное время (возможно 2-3 часа), подождите завершения...\033[0m"
+	./configure
+	make -s
+	make -s install
+	echo -e "\033[1;32m установлено\033[0m"
+}
+#!!!!!!функция проверки наличия и настройки rc.local
+inst_rclocal(){
+	#проверяем наличие файла rc.local
+	if test -f /etc/rc.local
+	then
+	echo yes
+	else
+	#файла rc.local нет, добавляем файл и включаем в автозапуск
+	sudo tee /etc/rc.local << EOF
+	#!/bin/sh -e
+	#
+	# rc.local
+	#
+	# This script is executed at the end of each multiuser runlevel.
+	# Make sure that the script will "exit 0" on success or any other
+	# value on error.
+	#
+	# In order to enable or disable this script just change the execution
+	# bits.
+	#
+	# By default this script does nothing.
+
+	exit 0
+EOF
+
+	sudo tee /etc/systemd/system/rc-local.service << EOF
+	[Unit]
+	 Description=/etc/rc.local Compatibility
+	 ConditionPathExists=/etc/rc.local
+
+	[Service]
+	 Type=forking
+	 ExecStart=/etc/rc.local start
+	 TimeoutSec=0
+	 StandardOutput=tty
+	 RemainAfterExit=yes
+	 SysVStartPriority=99
+
+	[Install]
+	 WantedBy=multi-user.target
+EOF
+
+	chmod +x /etc/rc.local
+	systemctl enable rc-local
+	fi
+}
+#функции установки WiringPi
+inst_wiring(){
+	if [ -z "$flag_w2" ]; then
+	echo "пытаюсь определить тип платы"
+	func_hw
+	flag_w2=0
+	if echo "$type_pr2" | grep -i "Orange Pi" >/dev/null; then flag_w2=1; fi
+	if echo "$type_pr2" | grep -i "Asus" >/dev/null; then flag_w2=2; fi
+	if echo "$type_pr2" | grep -i "Raspberry Pi" >/dev/null; then flag_w2=3; fi
+	if echo "$type_pr2" | grep -i "Banana Pi" >/dev/null; then flag_w2=4; fi
+	if echo "$type_pr2" | grep -i "Nano" >/dev/null; then flag_w2=5; fi
+	if echo "$type_pr2" | grep -i "Cubie" >/dev/null; then flag_w2=6; fi
+	if echo "$type_pr2" | grep -i "Banana Pi Pro" >/dev/null; then flag_w2=7; fi
+	fi
+	if [ "$flag_w2" = "0"]; then
+	echo "невозможно определить тип платы, установка WiringPi невозможна, задайте тип платы вручную"
+	else
+		if [ "$flag_w2" = "1"]; then inst_wiringop; fi
+		if [ "$flag_w2" = "2"]; then inst_wiringpi_asus; fi
+		if [ "$flag_w2" = "3"]; then inst_wiringpi; fi
+		if [ "$flag_w2" = "4"]; then inst_wiringbp; fi
+		if [ "$flag_w2" = "5"]; then inst_wiringnp; fi
+		if [ "$flag_w2" = "6"]; then inst_wiringcb; fi
+		if [ "$flag_w2" = "7"]; then inst_wiringbp_pro; fi
+	fi
+}
+inst_wiringop(){
+	echo -n -e "\033[1;36mУстановка WiringOP для OrangePi...\033[0m"
+	cd ~
+	git clone -q https://github.com/zhaolei/WiringOP.git -b h3
+	cd WiringOP
+	chmod +x ./build
+	sudo ./build
+	echo -e "\033[1;32m WiringOP установлен\033[0m"
+}
+inst_wiringpi_asus(){
+	echo -e "\033[1;36mУстановка WiringPi для Asus tinker board\033[0m"
+	cd ~
+	wget -q http://dlcdnet.asus.com/pub/ASUS/mb/Linux/Tinker_Board_2GB/GPIO_API_for_C.ZIP
+	unzip -qq GPIO_API_for_C.ZIP -d WiringPi
+	cd ~/WiringPi
+	chmod +x ./build
+	./build
+	echo -e "\033[1;32m WiringPi установлен\033[0m"
+}
+inst_wiringpi(){
+	echo -e "\033[1;36mУстановка WiringPi для RaspberryPi\033[0m"
+	cd ~
+	git clone -q git://git.drogon.net/wiringPi
+	cd ~/wiringPi
+	git pull origin
+	cd ~/wiringPi
+	chmod +x ./build
+	./build
+	echo -e "\033[1;32m WiringPi установлен\033[0m"
+}
+inst_wiringbp(){
+	echo -e "\033[1;36mУстановка WiringBP для BananaPi\033[0m"
+	git clone https://github.com/LeMaker/WiringBP.git -b bananapi
+	cd WiringBP
+	chmod +x ./build
+	sudo ./build
+	echo -e "\033[1;32m WiringPi установлен\033[0m"
+}
+inst_wiringnp(){
+	echo -e "\033[1;36mУстановка WiringPi для NanoPi\033[0m"
+	git clone -q https://github.com/friendlyarm/WiringNP
+	cd WiringNP/
+	chmod +x ./build
+	./build
+	echo -e "\033[1;32m WiringPi установлен\033[0m"
+}
+inst_wiringbp_pro(){
+	echo -e "\033[1;36mУстановка WiringBP для BananaPro\033[0m"
+	git clone -q https://github.com/LeMaker/WiringBP.git -b bananapro
+	cd WiringBP
+	chmod +x ./build
+	sudo ./build
+	echo -e "\033[1;32m WiringPi установлен\033[0m"
+}
+inst_wiringcb(){
+	echo -e "\033[1;36mУстановка WiringPi для Cubieboard2\033[0m"
+	git clone https://github.com/friendlyarm/WiringNP
+	cd WiringNP/
+	git checkout nanopi-m1
+	chmod +x ./build
+	./build
+	echo -e "\033[1;32m WiringPi установлен\033[0m"
+}
+inst_mysensors(){
+	sudo modprobe gpio-sunxi
+	echo "gpio-sunxi" >> /etc/modules
+	echo -n -e "\033[1;36mУстанавливаю Mysensors...\033[0m"
+	cd ~
+	git clone -q https://github.com/mysensors/MySensors.git
+	echo -e "\033[1;32m установлен\033[0m"
+}
+inst_piswitchpython(){
+	echo -e "\033[1;36mУстанавливаю pi-switch-python...\033[0m"
+	cd ~
+	git clone -q https://github.com/lexruee/pi-switch-python.git
+	cd pi-switch-python
+	sudo python setup.py install
+	sudo tee ~/pi-switch-python/pyswitch.py << EOF
+	#!/usr/bin/python
+	#for python3:
+	#import requests
+	#for python2.7
+	import urllib
+	#---------------
+	from pi_switch import RCSwitchReceiver
+	import time
+
+	receiver = RCSwitchReceiver()
+	#порт приемника
+	receiver.enableReceive(7)
+
+	num = 0
+
+
+	while True:
+	      time.sleep( 0.1 )
+	      if receiver.available():
+	         received_value = receiver.getReceivedValue()
+
+	         if received_value:
+	            num += 1
+	            #for python3
+	            #url = 'http://192.168.1.20/objects/?object=RCSwitch&op=set&p=code'
+	            #payload = {'v':received_value }
+	            #r = requests.get(url, params=payload)
+	            #print(r.url)
+	            #for python2.7
+	            rec_code = str(received_value)
+	            url = "http://localhost/objects/?script=RCSwitch&rcswitch=" + rec_code
+	            page = urllib.urlopen(url)
+	            text = page.read()
+	            page.close()
+	            #------------------
+	            print("Received[%s]:" % num)
+	            print(received_value)
+	            print("%s / %s bit" % (received_value, receiver.getReceivedBitlength()))
+	            print("Protocol: %s" % receiver.getReceivedProtocol())
+	            print("")
+	            receiver.resetAvailable()
+	time.sleep (0.2)
+EOF
+	echo -e "\033[1;32m pi-switch-python установлен\033[0m"
+}
+#функция установки 433Utils
+inst_433utils(){
+	echo -e "\033[1;36mУстанавливаю 433 Utils...\033[0m"
+	cd ~
+	git clone -q --recursive git://github.com/ninjablocks/433Utils.git
+	echo -e "\033[1;32m установлен\033[0m"
+}
+#функция установки системы MajorDoMo
+inst_md(){
+	# Скачиваем систему MajorDoMo с GitHab
+	echo -e "\033[1;36mУстанавливаю систему \033[1;32mMajorDoMo... \033[0m"
+	cd ~
+	git clone -q https://github.com/sergejey/majordomo.git
+	# Переносим систему в директорию WEB-сервера
+	sudo cp -rp ~/majordomo/* /var/www
+	sudo cp -rp ~/majordomo/.htaccess /var/www
+	rm -r ~/majordomo/*
+	rmdir majordomo
+	# Создаем описание сервиса для запуска основного цикла системы
+	sudo tee /etc/init.d/majordomo << EOF
+	#!/bin/sh
+	### BEGIN INIT INFO
+	# Provides: SmartLiving
+	# Required-Start:    $remote_fs $syslog
+	# Required-Stop:     $remote_fs $syslog
+	# Default-Start:     2 3 4 5
+	# Default-Stop:      0 1 6
+	# Short-Description: Start daemon at boot time
+	# Description:       Enable service provided by daemon.
+	### END INIT INFO
+
+	sleep 10
+	dir="/var/www/"
+	user="www-data"
+	cmd="php /var/www/cycle.php"
+	name=\`basename \$0\`
+	pid_file="/var/run/\$name.pid"
+	stdout_log="/var/log/\$name.log"
+	stderr_log="/var/log/\$name.err"
+	get_pid() {
+	    cat "\$pid_file"
+	}
+	is_running() {
+	    [ -f "\$pid_file" ] && ps \`get_pid\` > /dev/null 2>&1
+	}
+	case "\$1" in
+	    start)
+	    if is_running; then
+	        echo "Already started"
+	    else
+	        echo "Starting \$name"
+	        cd "\$dir"
+	(while true; do
+	    sudo -u "\$user" \$cmd
+	done)>> "\$stdout_log" 2>> "\$stderr_log" &
+
+	        echo \$! > "\$pid_file"
+	        if ! is_running; then
+	            echo "Unable to start, see \$stdout_log and \$stderr_log"
+	            exit 1
+	        fi
+	    fi
+	    ;;
+	    stop)
+	    if is_running; then
+	        echo -n "Stopping \$name.."
+	        kill \`get_pid\`
+	        sudo killall php
+	        for i in {1..10}
+	        do
+	            if ! is_running; then
+	                break
+	            fi
+
+	            echo -n "."
+	            sleep 1
+	        done
+	        echo
+
+	        if is_running; then
+	            echo "Not stopped; may still be shutting down or shutdown may have failed"
+	            exit 1
+	        else
+	            echo "Stopped"
+	            if [ -f "\$pid_file" ]; then
+	                rm "\$pid_file"
+	            fi
+	        fi
+	    else
+	        echo "Not running"
+	        sudo killall php
+	    fi
+	    ;;
+	    restart)
+	    \$0 stop
+	    if is_running; then
+	        echo "Unable to stop, will not attempt to start"
+	        exit 1
+	    fi
+	    \$0 start
+	    ;;
+	    status)
+	    if is_running; then
+	        echo "Running"
+	    else
+	        echo "Stopped"
+	        exit 1
+	    fi
+	    ;;
+	    *)
+	    echo "Usage: \$0 {start|stop|restart|status}"
+	    exit 1
+	    ;;
+	esac
+	exit 0
+EOF
+	echo -e "\033[1;32mготово\033[0m"
+	# Добавляем главный цикл системы в автозагрузку
+	sudo chmod 0755 /etc/init.d/majordomo
+	sudo update-rc.d majordomo defaults
+	echo -e "\033[1;36mСистема \033[1;32mMajorDoMo \033[0;36mскопирована, добавляю базу данных...\033[0m "
+	# Настраиваем подключение к БД для системы
+	sudo sed -i "/DB_USER/s/'root'/'pi'/" /var/www/config.php
+	sudo sed -i "/DB_PASSWORD/s/''/'$pass2'/" /var/www/config.php
+	# Создаем БД db_terminal и импортируем содержимое из дистрибутива
+	mysql -u root -p$pass << EOF
+	CREATE DATABASE db_terminal;
+	USE db_terminal;
+	EOF
+	#добавляем mysql пользователя и даем ему привилегии
+	mysql -u root -p$pass << EOF
+	CREATE USER 'pi'@'localhost' IDENTIFIED BY '$pass2';
+	GRANT ALL PRIVILEGES ON * . * TO 'pi'@'localhost';
+	FLUSH PRIVILEGES;
+EOF
+	sudo cp /var/www/config.php.sample /var/www/config.php
+	# Назначаем права и владельца для директории с системой
+	sudo chown -R www-data:www-data /var/www
+	find /var/www/ -type f -exec sudo chmod 0666 {} \;
+	find /var/www/ -type d -exec sudo chmod 0777 {} \;
+	# Добавляем пользователя www-data в группы
+	sudo usermod -a -G audio www-data
+	sudo usermod -a -G i2c www-data
+	sudo usermod -a -G tty www-data
+	sudo usermod -a -G dialup www-data
+}
+#функция установки phpMyAdmin
+inst_phpmyadmin(){
+	echo -e "\033[1;36mУстанавливаю phpMyAdmin \033[0m"
+	cd ~
+	wget -q https://files.phpmyadmin.net/phpMyAdmin/4.7.7/phpMyAdmin-4.7.7-all-languages.tar.gz
+	tar -xf phpMyAdmin-4.7.7-all-languages.tar.gz
+	rm phpMyAdmin-4.7.7-all-languages.tar.gz
+	cp -a phpMyAdmin-4.7.7-all-languages /var/www/phpmyadmin
+	rm -r ~/phpMyAdmin-4.7.7-all-languages/*
+	rmdir phpMyAdmin-4.7.7-all-languages
+	echo -e "\033[1;32mphpMyAdmin установлен\033[0m"
+}
+#функция установки часов реального времени на i2c0
+install_realtime(){
+	sudo sed -i "/exit 0/s/exit 0//" /etc/rc.local
+	echo "echo ds3231 0x68 > /sys/class/i2c-adapter/i2c-0/new_device" | tee -a /etc/rc.local
+	echo "rm /dev/rtc" | tee -a /etc/rc.local
+	echo "ln -s /dev/rtc1 /dev/rtc" | tee -a /etc/rc.local
+	echo "hwclock -s" | tee -a /etc/rc.local
+	echo "exit 0" | tee -a /etc/rc.local
+	ntpdate -s ntp.ubuntu.com
+	hwclock -w
+	echo -e "\033[1;32m установлено\033[0m"
+}
+#функция оптимизация карты памяти
+sd_optimizire(){
+	sudo service majordomo stop
+	sudo service mysql stop
+	cd /var/www
+	mkdir database_backup
+	chmod 0777 database_backup
+	cp /var/www/scripts/periodical_db_save.php /var/www/scripts/cycle_db_save.php
+	sudo swapoff --all
+	sudo apt-get remove dphys-swapfile
+	sudo tee /etc/init.d/prepare-dirs << EOF
+	#!/bin/bash
+	### BEGIN INIT INFO
+	# Provides:          prepare-dirs
+	# Default-Start:     2 3 4 5
+	# Default-Stop:      0 1 6
+	# Required-Start:
+	# Required-Stop:
+	# Short-Description: Create needed directories on /var/log/ for tmpfs at startup
+	# Description:       Create needed directories on /var/log/ for tmpfs at startup
+	### END INIT INFO
+
+	DIR[0]=/var/log/apache2
+	DIR[1]=/var/log/cups
+	DIR[2]=/var/log/apt
+	DIR[3]=/var/log/ConsoleKit
+	DIR[4]=/var/log/fsck
+	DIR[5]=/var/log/mysql
+	DIR[6]=/var/log/news
+	DIR[7]=/var/log/ntpstats
+	DIR[8]=/var/log/samba
+	DIR[9]=/var/log/lastlog
+	DIR[10]=/var/log/exim
+	DIR[11]=/var/log/watchdog
+	DIR[12]=/tmp/mysql
+	DIR[13]=/var/www/cached
+	DIR[14]=/var/www/debmes
+	DIR[15]=/var/log/mpd
+	DIR[16]=/var/www/cached/urls
+	DIR[17]=/var/www/cached/voice
+	DIR[18]=/var/log/mosquitto
+	case "\${1:-''}" in
+	  start)
+	        typeset -i i=0 max=\${#DIR[*]}
+	        while (( i < max ))
+	        do
+	                mkdir  \${DIR[\$i]}
+	                chmod 777 \${DIR[\$i]}
+	                i=i+1
+	        done
+	        # set rights
+	        chown pi:pi \${DIR[0]}
+	        cp -R /var/lib/mysql/* /tmp/mysql/
+	        chown -Rf mysql:mysql /tmp/mysql/*
+	        chown mysql:mysql /tmp/mysql
+	    ;;
+	  stop)
+	    ;;
+	  restart)
+	   ;;
+	  reload|force-reload)
+	   ;;
+	  status)
+	   ;;
+	  *)
+	   echo "Usage: \$SELF start"
+	   exit 1
+	   ;;
+	esac
+EOF
+	sudo chmod 755 /etc/init.d/prepare-dirs
+	sudo update-rc.d prepare-dirs defaults 01 99
+	sudo sed -i '/\/tmp /s/tmpfs \/tmp/\#tmpfs \/tmp/' /etc/fstab
+	ifdietpi=$(uname -a)
+	if echo $ifdietpi | grep -q -s -F "DietPi"
+		then
+		echo "DietPi /tmp уже есть"
+		else
+		echo "tmpfs /tmp tmpfs defaults,noatime,nosuid,size=250m 0 0" | tee -a /etc/fstab
+		echo "tmpfs /var/log tmpfs size=20M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
+	fi
+	echo "tmpfs /var/tmp tmpfs defaults,noatime,nosuid,size=200m 0 0" | tee -a /etc/fstab
+	echo "tmpfs /run tmpfs defaults,noatime,nosuid,mode=0755,size=6M 0 0" | tee -a /etc/fstab
+	echo "tmpfs /var/cache/apt/archives tmpfs size=200M,defaults,noexec,nosuid,nodev,mode=0755 0 0" | tee -a /etc/fstab
+	echo "tmpfs /var/www/cached tmpfs size=100M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
+	dbconfig=$(grep -iRIl "datadir" /etc/mysql)
+	sudo sed -i '/datadir/s/\/var\/lib\/mysql/\/tmp\/mysql/' $dbconfig
+}
+inst_end(){
+	echo -e "\033[1;31mВНИМАНИЕ!!! Если дальше страницы с выбором языка не идет значит не запустилсь база данных, раскомментируйте строку запуска базы mysql с паузой в файле /etc/rc.local  \033[0m"
+	echo
+	echo -e "\033[1;32m XXXXX  XXX   XXXXX  XXX  XXXX   XXX \033[0m"
+	echo -e "\033[1;32m X     X   X    X   X   X X   X X   X\033[0m"
+	echo -e "\033[1;32m X     X   X    X   X   X XXXX  X   X\033[0m"
+	echo -e "\033[1;32m X     X   X    X   X   X X   X X   X\033[0m"
+	echo -e "\033[1;32m X      XXX     X    XXX  XXXX   XXX \033[0m"
+	echo
+	echo $(($(date +%s)-$time22))
+	echo -e "\033[1;32m Система установлена, перезагрузите зверька \033[0m"
+
+}
+#!!!!функция создания файла /etc/asound.conf
+asound_conf(){
+	#OrangePiPC - 0,0
+	#other - 0,2
+	sudo tee /etc/asound.conf << EOF
+	pcm.!default {
+	   type plug
+	   slave.pcm "dmixer"
+	}
+
+	pcm.dsp0 {
+	   type plug
+	   slave.pcm "dmixer"
+	}
+
+	pcm.dmixer  {
+	   type dmix
+	   ipc_key 1024
+	   slave {
+	     pcm "hw:$hw_device,$hw_port"
+	     period_time 0
+	     period_size 1024
+	     buffer_size 8192
+	     rate 44100
+	    }
+	   bindings {
+	     0 0
+	     1 1
+	   }
+	}
+
+	ctl.mixer0 {
+	  type hw
+	  card 0
+	}
+EOF
+}
+#функция определения оборудования
+func_hw(){
+	type_pr=$(uname -m)
+	if [ ${type_pr:0:3} = "x86" ]; then
+	echo "Система x86"
+	type_system="x86"
+	else
+	echo "Система arm"
+	type_system="arm"
+	type_pr2=$(cat /proc/device-tree/model)
+	#Raspberry Pi 3 Model B Plus Rev 1.3
+	#Xunlong Orange Pi PC
+	fi
+}
+#функция вывода справки
+func_help(){
+	echo "Список опций коммандной строки:"
+	echo "-t [db_root_password] [pi_password] - установка базовой системы MAjorDoMo, если пароль db_root_password не задан то пароль спросит при установке, если pi_password не задан, но задан db_root_password то pi_password=db_root_password"
+	echo "-c [path] - альтернативная конфигурация, параметр не обязательный, если не указан, то конфигурация базовая, path - путь к своей конфигурации (если путь не задан то устанавливается расширенная конфигурация)"
+	echo "-b - установка Blynk Server"
+	echo "-j - установка Java"
+	echo "-a - установить webmin"
+	echo "-n - установить node.js из исходников (установка долгая 2-3 часа)"
+	echo "-o [type [port]]  - установить owfs. type - тип 1-wire адаптера (usb, uart, i2c), port - порт uart 1-wire адаптера без /dev/ (ttyS2*, ttyUSB...)"
+	echo "-r - установить RHVoice"
+	echo "-w [type] - установить WiringPi. [type] - тип платы: 1 - OrangePi, 2 - Asus tinker board, 3 - RaspberryPi, 4 - BananaPi, 5 - NanoPi, 6 - Cubieboard2, 7 - BananaPro"
+	echo "-s - установить MySensors"
+	echo "-v - VPN клиент OpenVPN"
+	echo "-m - MQTT сервер и клиент Mosquitto"
+	echo "-u - 433Utils"
+	echo ""
+}
+#функция установки с диалогом (не доделана)
+inst_start (){
+	#выбор параметров установки
+	#выбор конфогурации для установки
+	echo -e "\033[1;33mВыберите конфигурацию MajorDoMo\033[0m"
+	echo -e "\033[0;36m1 - Базовая конфигурация\033[0m"
+	echo -e "\033[0;36m2 - Расширенная конфигурация\033[0m"
+	echo -e "\033[0;36m3 - Собственная конфигурация\033[0m"
+	echo -e -n "\033[0;36mВаш выбор: \033[0m"
+	read mdconfig
+	#если собственная конфигурация то диалог выбора пути к конфигурации
+	case "$mdconfig" in
+	"3" )
+	echo -e "\033[0;36m1 - Путь к файлу бэкапа базы данных (по умолчанию /root/backup.tgz)\033[0m"
+	read pathconf
+	case "$pathconf" in
+	"" )
+	$pathconf="/root/backup.tgz"
 	;;
 	esac
-
-    #установка базы данных
-#!!!!!!!для исключения ошибки отключаем репы
-add-apt-repository -r universe
-	#проверяем есть ли пакеты mariadb-server в репах
-	mdbif=$(apt-cache search mariadb-server)
-		if [ "$mdbif" = "" ]; 
-		then
-		sudo apt-get -qq install -y software-properties-common
-		sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
-		sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mirror.ehv.weppel.nl/mariadb/repo/10.2/ubuntu xenial main'
-		sudo apt-get -qq update
-		#проверяем удалось ли добавить пакеты в репы
-		mdbif=$(apt-cache search mariadb-server)
-		fi
-	if [ "$mdbif" = "" ]; 
+	;;
+	esac
+	#Установка RHVoice
+	echo -e -n "\033[0;36mУстановить RHVoice? (y/n)\033[0m"
+	read insrhvoice
+	#Установка webmin
+	echo -e -n "\033[0;36mУстановить Webmin? (y/n)\033[0m"
+	read instwebmin
+	#установка Java и node.js
+	echo -e -n "\033[0;36mУстановить Java? (y/n)\033[0m"
+	read vibor
+	echo -e -n "\033[0;36mУстановить node.js (установка из исходников около 2-3 часов, можно установить позже отдельным скриптом)(y/n)\033[0m"
+	read vibornode
+	#выбор установки WiringPi
+	echo -e -n "\033[0;36mУстанавливать WiringPi? (у/n) \033[0m"
+	read vibor3
+	#выбор установки MySensors
+	echo -e -n "\033[0;36mУстанавливать MySensors? (y/n) \033[0m"
+	read vibor4
+	#выбор установки 433Utils
+	echo -e -n "\033[0;36mУстанавливать 433Utils? (y/n) \033[0m"
+	read vibor5
+	#выбор установки owfs
+	echo -e -n "\033[0;36mУстанавливать owfs для 1-wire? (y/n) \033[0m"
+	read vibor7
+	case "$vibor7" in
+	"y" )
+	#Выбор 1-wire адаптера
+	echo -e "\033[1;33mВыберите 1-wire адаптер\033[0m"
+	echo -e "\033[0;36m1 - USB адаптер DS9490R\033[0m"
+	echo -e "\033[0;36m2 - UART адаптер DS2480\033[0m"
+	echo -e "\033[0;36m3 - i2c адаптер DS2482\033[0m"
+	echo -e -n "\033[0;36mВаш выбор: \033[0m"
+	read mdowfs
+	array2=(usb uart i2c)
+	owfstype=${array2[$mdowfs]}
+	echo $owfstype
+	#выбор порта 1-wire адаптера
+	case "$mdowfs" in
+	"2" )
+	echo -e "\033[1;33mВыберите порт 1-wire адаптера DS2480\033[0m"
+	echo -e "\033[0;36m0 - /dev/ttyS0\033[0m"
+	echo -e "\033[0;36m1 - /dev/ttyS1\033[0m"
+	echo -e "\033[0;36m2 - /dev/ttyS2 (OrangePi shield D6MG)\033[0m"
+	echo -e "\033[0;36m3 - /dev/ttyS3\033[0m"
+	echo -e "\033[0;36m4 - /dev/ttyS4 (Asus Tinker Board shield D6MG)\033[0m"
+	echo -e "\033[0;36m5 - /dev/ttyUSB0\033[0m"
+	echo -e "\033[0;36m6 - /dev/ttyUSB1\033[0m"
+	echo -e -n "\033[0;36mВаш выбор: \033[0m"
+	read mdowfs2
+	;;
+	esac
+	;;
+	esac
+	#установить часы реального времени ds3231 на i2c0
+	echo -e -n "\033[0;36mУстановить часы реального времени ds3231 на i2c0? (y/n) \033[0m"
+	read realtimeset
+	case "$realtimeset" in
+	"y" )
+	echo -e -n "\033[0;36mЗаписать текущее время системы в часы ds3132? (y/n) \033[0m"
+	read realtimeset2
+	;;
+	esac
+	#оптимизация базы данных (проверка не установливается ли на ББ)
+	if [[ $vibor2 != 9 ]]
 	then
-	echo -n -e "\033[1;36mУстановка базы данных MySQL... \033[0m"
-	sudo apt-get -qq install -y mysql-server
-	sudo apt-get -qq install -y mysql-client
-	else
-	echo -n -e "\033[1;36mУстановка базы данных MariaDB... \033[0m"
-	sudo apt-get -qq install -y mariadb-server
-	sudo apt-get -qq install -y mariadb-client
+	echo -e -n "\033[0;36mСделать оптимизацию базы (базу и логи в tmpfs)? (y/n) \033[0m"
+	read optbd
 	fi
-	echo -e "\033[1;32m установлено\033[0m"
-#!!!!!!!подключаем репы обратно
-add-apt-repository universe
-	
-#скрипт настройки базы данных ----------------------------------------------------------------------------------
-#/usr/bin/mysql_secure_installation
-# Copyright (C) 2002 MySQL AB and Jeremy Cole
-# 
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; version 2 of the License.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-config=".my.cnf.$$"
-command=".mysql.$$"
-mysql_client=""
-
-trap "interrupt" 2
-
-rootpass=""
-echo_n=
-echo_c=
-
-YES=
-NOROOTPW=
-
-set_echo_compat() {
-    case `echo "testing\c"`,`echo -n testing` in
-	*c*,-n*) echo_n=   echo_c=     ;;
-	*c*,*)   echo_n=-n echo_c=     ;;
-	*)       echo_n=   echo_c='\c' ;;
-    esac
-}
-
-prepare() {
-    touch $config $command
-    chmod 600 $config $command
-}
-
-find_mysql_client()
-{
-  for n in ./bin/mysql mysql
-  do  
-    $n --no-defaults --help > /dev/null 2>&1
-    status=$?
-    if test $status -eq 0
-    then
-      mysql_client=$n
-      return
-    fi  
-  done
-  echo "Can't find a 'mysql' client in PATH or ./bin"
-  exit 1
-}
-
-do_query() {
-    echo "$1" >$command
-    #sed 's,^,> ,' < $command  # Debugging
-    $mysql_client --defaults-file=$config <$command
-    return $?
-}
-
-# Simple escape mechanism (\-escape any ' and \), suitable for two contexts:
-# - single-quoted SQL strings
-# - single-quoted option values on the right hand side of = in my.cnf
-#
-# These two contexts don't handle escapes identically.  SQL strings allow
-# quoting any character (\C => C, for any C), but my.cnf parsing allows
-# quoting only \, ' or ".  For example, password='a\b' quotes a 3-character
-# string in my.cnf, but a 2-character string in SQL.
-#
-# This simple escape works correctly in both places.
-basic_single_escape () {
-    # The quoting on this sed command is a bit complex.  Single-quoted strings
-    # don't allow *any* escape mechanism, so they cannot contain a single
-    # quote.  The string sed gets (as argv[1]) is:  s/\(['\]\)/\\\1/g
-    #
-    # Inside a character class, \ and ' are not special, so the ['\] character
-    # class is balanced and contains two characters.
-    echo "$1" | sed 's/\(['"'"'\]\)/\\\1/g'
-}
-
-make_config() {
-    echo "# mysql_secure_installation config file" >$config
-    echo "[mysql]" >>$config
-    echo "user=root" >>$config
-    esc_pass=`basic_single_escape "$rootpass"`
-    echo "password='$esc_pass'" >>$config
-    #sed 's,^,> ,' < $config  # Debugging
-}
-
-get_root_password() {
-    status=1
-    while [ $status -eq 1 ]; do
-	stty -echo
-	echo $echo_n "Enter current password for root (enter for none): $echo_c"
-	#read password
-	echo
+	#отображать пароли?
+	echo -e -n "\033[0;36mОтображать пароли? (y/n) \033[0m"
+	read vibor8
 	stty echo
-	if [ "x$password" = "x" ]; then
-	    hadpass=0
-	else
-	    hadpass=1
+	case "$vibor8" in
+	"n" )
+	stty -echo
+	;;
+	esac
+	#задаем пароль root для MySQL
+	echo -e -n "\033[1;33mВведите пароль root для MariaDB (MySQL) > \033[0m"
+	read pass
+	stty echo
+	case "$vibor8" in
+	"n" )
+	stty -echo
+	;;
+	esac
+	#задаем пароль пользователя pi
+	echo
+	echo -e -n "\033[1;33mВведите пароль пользователя pi (для пользователя системы и пользователя базы данных MajorDoMo) > \033[0m"
+	read pass2
+	stty echo
+	password1=$pass
+	password2=$pass
+	reply='Y'
+	#создать пользователя pi
+	echo -e -n "\033[0;36mСоздать пользователя pi (если нету необходимо создать) пользователь pi для базы данных создается независимо от выбора? (y/n) \033[0m"
+	read piuser
+	echo  -e "\033[1;31mВНИМАНИЕ!!! ВНИМАНИЕ!!! ВНИМАНИЕ!!! далее нигде пароли на базу данных не вводить!!! если спросит то оставлять поле пароля пустым \033[0m"
+	time22=$(date +%s)
+	flag_t=1
+	if [[ $insrhvoice = "y" ]]; then flag_r=1; fi
+	if [[ $instwebmin = "y" ]]; then flag_a=1; fi
+	if [[ $vibor = "y" ]]; then flag_j=1; fi
+	if [[ $vibornode = "y" ]]; then flag_n=1; fi
+	if [[ $vibor3 = "y" ]]; then flag_w=1; fi
+	if [[ $vibor4 = "y" ]]; then flag_s=1; fi
+	if [[ $vibor5 = "y" ]]; then flag_u=1; fi
+	if [[ $vibor7 = "y" ]]; then flag_o=1 ; fi
+	if [[ $realtimeset = "y" ]]; then flag_d=1 ; fi
+
+}
+#функция установки
+func_install(){
+	label1
+	if [ -n "$flag_t" ]; then
+		if [ -z "$flag_t2" ]; then
+			stty -echo
+			echo -e -n "\033[1;33mВведите пароль root для MariaDB (MySQL) > \033[0m"
+			read pass
+			#задаем пароль пользователя pi
+			echo -e -n "\033[1;33mВведите пароль пользователя pi (для пользователя системы и пользователя базы данных MajorDoMo) > \033[0m"
+			read pass2
+		else
+			pass=$flag_t2
+			if [ -z "$flag_t3" ]; then pass2=$pass; else pass=$flag_t3; fi
+		fi
+		echo ""
+	password1=$pass
+	password2=$pass
+	reply='Y'
+	inst_base
+	inst_sound
+	inst_apache2
+	inst_php
+	inst_db
+	setting_db
+	inst_md
+		if [ -n "$flag_c" ]; then
+			if [ -z "$flag_c2" ]; then inst_config1 ; else inst_config2 ; fi
+		else
+			inst_config0
+		fi
+	inst_md2
 	fi
-	rootpass=$password
-	make_config
-	do_query ""
-	status=$?
-    done
-    echo "OK, successfully used password, moving on..."
-    echo
+	if [ -n "$flag_j" ]; then inst_java;	fi
+	if [ -n "$flag_a" ]; then inst_webmin;	fi
+	if [ -n "$flag_n" ]; then inst_node;	fi
+	if [ -n "$flag_r" ]; then inst_rhvoice;	fi
+	if [ -n "$flag_v" ]; then inst_ovpn;	fi
+	if [ -n "$flag_m" ]; then inst_mqtt;	fi
+	if [ -n "$flag_o" ]; then inst_owfs;	fi
+	if [ -n "$flag_s" ]; then inst_mysensors;	fi
+	if [ -n "$flag_p" ]; then inst_phpmyadmin;	fi
+	if [ -n "$flag_w" ]; then inst_wiring;	fi
+	if [ -n "$flag_s" ]; then sd_optimizire;	fi
+	if [ -n "$flag_u" ]; then inst_433utils;	fi
+	if [ -n "$flag_d" ]; then install_realtime;	fi
 }
-
-set_root_password() {
-    stty -echo
-    echo $echo_n "New password: $echo_c"
-    #read password1
-    echo
-    echo $echo_n "Re-enter new password: $echo_c"
-    #read password2
-    echo
-    stty echo
-
-    if [ "$password1" != "$password2" ]; then
-	echo "Sorry, passwords do not match."
-	echo
-	return 1
-    fi
-
-    if [ "$password1" = "" ]; then
-	echo "Sorry, you can't use an empty password here."
-	echo
-	return 1
-    fi
-
-    esc_pass=`basic_single_escape "$password1"`
-    do_query "UPDATE mysql.user SET Password=PASSWORD('$esc_pass') WHERE User='root';"
-    if [ $? -eq 0 ]; then
-	echo "Password updated successfully!"
-	echo "Reloading privilege tables.."
-	reload_privilege_tables || exit 1
-	echo
-	rootpass=$password1
-	make_config
-    else
-	echo "Password update failed!"
-	exit 1
-    fi
-
-    return 0
-}
-
-remove_anonymous_users() {
-    do_query "DELETE FROM mysql.user WHERE User='';"
-    if [ $? -eq 0 ]; then
-	echo " ... Success!"
-    else
-	echo " ... Failed!"
-	exit 1
-    fi
-
-    return 0
-}
-
-remove_remote_root() {
-    do_query "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
-    if [ $? -eq 0 ]; then
-	echo " ... Success!"
-    else
-	echo " ... Failed!"
-    fi
-}
-
-remove_test_database() {
-    echo " - Dropping test database..."
-    do_query "DROP DATABASE test;"
-    if [ $? -eq 0 ]; then
-	echo " ... Success!"
-    else
-	echo " ... Failed!  Not critical, keep moving..."
-    fi
-
-    echo " - Removing privileges on test database..."
-    do_query "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
-    if [ $? -eq 0 ]; then
-	echo " ... Success!"
-    else
-	echo " ... Failed!  Not critical, keep moving..."
-    fi
-
-    return 0
-}
-
-reload_privilege_tables() {
-    do_query "FLUSH PRIVILEGES;"
-    if [ $? -eq 0 ]; then
-	echo " ... Success!"
-	return 0
-    else
-	echo " ... Failed!"
-	return 1
-    fi
-}
-
-interrupt() {
-    echo
-    echo "Aborting!"
-    echo
-    cleanup
-    stty echo
-    exit 1
-}
-
-cleanup() {
-    echo "Cleaning up..."
-    rm -f $config $command
-}
-
-print_help() {
-cat << EOF
-Usage: $0 [OPTION]
-This program enables you to improve the security of your MySQL installation.
-Without any OPTION it runs in standard (and recomended) way.
-  -h, --help        display this help and exit
-  -n, --norootpw    don't check and ask for setup of new root password
-  -y, --yes         say 'yes' to all questios within root password
-                    
-Examples:
-  $0
-  $0 -y
-  $0 -n -y
-EOF
-
-exit 0
-}
-# The actual script starts here
-
-prepare
-find_mysql_client
-set_echo_compat
-
-# Get params
-while [ $# -ge 1 ] ; do
-    case $1 in
-        -h | --help) print_help;;
-        -y | --yes)  YES=1;;
-        -n | --norootpw)    NOROOTPW=1;;
-        *)  echo "Error: Invalid option $1"; exit 1
-    esac
-    shift
+#конец объявления функций, основной вызов программы
+#if [ -z "$1" ]; then inst_start; fi
+if [ -z "$1" ]; then func_help; fi
+while [ -n "$1" ]
+do
+case "$1" in
+-h) func_help ;;
+-t) flag_t=1; flag_t2="$2"; flag_t3="$3" ;;
+-j) flag_j=1 ;;
+-a) flag_a=1 ;;
+-n) flag_n=1 ;;
+-r) flag_r=1 ;;
+-v) flag_v=1 ;;
+-m) flag_m=1 ;;
+-o) flag_o=1; flag_o2="$2" ; flag_o3="$3" ;;
+-s) flag_s=1 ;;
+-p) flag_p=1 ;;
+-w) flag_w=1; flag_w2="$2" ;;
+-s) flag_s=1 ;;
+-c) flag_c=1; flag_c2="$2" ;;
+-u) flag_u=1 ;;
+-d) flag_d=1 ;;
+*) echo "$1 нет такой опции, смотри справку -h";;
+esac
+shift
 done
-
-echo
-echo
-echo
-echo
-echo "NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL"
-echo "      SERVERS IN PRODUCTION USE!  PLEASE READ EACH STEP CAREFULLY!"
-echo
-echo
-
-if [ -z $NOROOTPW ]; then
-
-    echo "In order to log into MySQL to secure it, we'll need the current"
-    echo "password for the root user.  If you've just installed MySQL, and"
-    echo "you haven't set the root password yet, the password will be blank,"
-    echo "so you should just press enter here."
-    echo
-
-    get_root_password
-
-
-    #
-    # Set the root password
-    #
-
-    echo "Setting the root password ensures that nobody can log into the MySQL"
-    echo "root user without the proper authorisation."
-    echo
-
-    if [ $hadpass -eq 0 ]; then
-        echo $echo_n "Set root password? [Y/n] $echo_c"
-    else
-        echo "You already have a root password set, so you can safely answer 'n'."
-        echo
-        echo $echo_n "Change the root password? [Y/n] $echo_c"
-    fi
-
-    #read reply
-    if [ "$reply" = "n" ]; then
-        echo " ... skipping."
-    else
-        status=1
-        while [ $status -eq 1 ]; do
-    	set_root_password
-    	status=$?
-        done
-    fi
-    echo
-
-fi  # end of NOROOTPW
-
-#
-# Remove anonymous users
-#
-
-echo "By default, a MySQL installation has an anonymous user, allowing anyone"
-echo "to log into MySQL without having to have a user account created for"
-echo "them.  This is intended only for testing, and to make the installation"
-echo "go a bit smoother.  You should remove them before moving into a"
-echo "production environment."
-echo
-
-if [ -z $YES ] ; then
-    echo $echo_n "Remove anonymous users? [Y/n] $echo_c"
-    #read reply
-else
-    reply='Y'
-fi
-
-if [ "$reply" = "n" ]; then
-    echo " ... skipping."
-else
-    remove_anonymous_users
-fi
-echo
-
-
-#
-# Disallow remote root login
-#
-
-echo "Normally, root should only be allowed to connect from 'localhost'.  This"
-echo "ensures that someone cannot guess at the root password from the network."
-echo
-
-if [ -z $YES ] ; then
-    echo $echo_n "Disallow root login remotely? [Y/n] $echo_c"
-    #read reply
-else
-    reply='Y'
-fi
-
-if [ "$reply" = "n" ]; then
-    echo " ... skipping."
-else
-    remove_remote_root
-fi
-echo
-
-
-#
-# Remove test database
-#
-
-echo "By default, MySQL comes with a database named 'test' that anyone can"
-echo "access.  This is also intended only for testing, and should be removed"
-echo "before moving into a production environment."
-echo
-
-if [ -z $YES ] ; then
-    echo $echo_n "Remove test database and access to it? [Y/n] $echo_c"
-    #read reply
-else
-    reply='Y'
-fi
-
-if [ "$reply" = "n" ]; then
-    echo " ... skipping."
-else
-    remove_test_database
-fi
-echo
-
-
-#
-# Reload privilege tables
-#
-
-echo "Reloading the privilege tables will ensure that all changes made so far"
-echo "will take effect immediately."
-echo
-
-if [ -z $YES ] ; then
-    echo $echo_n "Reload privilege tables now? [Y/n] $echo_c"
-    #read reply
-else
-    reply='Y'
-fi
-
-if [ "$reply" = "n" ]; then
-    echo " ... skipping."
-else
-    reload_privilege_tables
-fi
-echo
-
-cleanup
-
-echo
-echo
-echo
-echo "All done!  If you've completed all of the above steps, your MySQL"
-echo "installation should now be secure."
-echo
-echo "Thanks for using MySQL!"
-echo
-echo
-
-#конец скрипта настройки базы данных ----------------------------------------------------------------------------------
-#добавляем запуск vlc ower http на порту 7070
-#проверяем наличие файла rc.local
-if test -f /etc/rc.local
-then
-echo yes
-else
-#файла rc.local нет, добавляем файл и включаем в автозапуск
-sudo tee /etc/rc.local << EOF
-#!/bin/sh -e
-#
-# rc.local
-#
-# This script is executed at the end of each multiuser runlevel.
-# Make sure that the script will "exit 0" on success or any other
-# value on error.
-#
-# In order to enable or disable this script just change the execution
-# bits.
-#
-# By default this script does nothing.
-
-exit 0
-EOF
-
-sudo tee /etc/systemd/system/rc-local.service << EOF
-[Unit]
- Description=/etc/rc.local Compatibility
- ConditionPathExists=/etc/rc.local
- 
-[Service]
- Type=forking
- ExecStart=/etc/rc.local start
- TimeoutSec=0
- StandardOutput=tty
- RemainAfterExit=yes
- SysVStartPriority=99
- 
-[Install]
- WantedBy=multi-user.target
- 
-EOF
-
-chmod +x /etc/rc.local
-systemctl enable rc-local
-fi
-
-#echo -n -e "\033[1;36mДобавляю запуск vlc http в сrontab: \033[0m"
-#sudo sed -i "/exit 0/s/exit 0//" /etc/rc.local
-#echo "sudo -u www-data /usr/bin/vlc -I http --http-password 12345 --http-port 7070" | tee -a /etc/rc.local
-#echo "exit 0" | tee -a /etc/rc.local
-
-#делаем службу запуска vlc
-echo -n -e "\033[1;36mДобавляю запуск vlc http: \033[0m"
-sudo tee /etc/systemd/system/vlcd.service << EOF
-[Unit]
-Description=VLCDaemon
-[Service]
-Requires=majordomo.service
-Type=simple
-WorkingDirectory=/var/www
-ExecStart=/usr/bin/vlc -I http --http-password=12345 --http-port 7070
-Restart=always
-User=www-data
-Group=www-data
-[Install]
-WantedBy=multi-user.target
-EOF
-#добавляем vlc в автозагрузку
-sudo systemctl daemon-reload
-sudo systemctl enable vlcd
-#патчим vlc чтобы запускался от root
-sed -i 's/geteuid/getppid/' /usr/bin/vlc
-# Включаем мод rewrite для Apache
-sudo a2enmod rewrite
-#запускаем mosquitto в качестве сервиса
-mosquitto -d
-sudo systemctl enable mosquitto.service
-case "$vibor" in
-"y" )
-echo -e "\033[1;36mУстанавливаю Java...\033[0m"
-#добавляем репы java
-sudo apt-add-repository ppa:webupd8team/java -y
-sudo apt-get -qq update
-sudo apt-get -qq install -y oracle-java8-jdk
-echo -e "\033[1;32m установлено\033[0m"
-;;
-esac
-case "$vibornode" in
-"y" )
-#установка node.js из исходников
-echo -e "\033[1;36mУстанавливаю node.js из исходников, можно попить чайку... литра 2 :-)\033[0m"
-cd ~
-wget -q https://nodejs.org/dist/index.tab
-ver=$(grep -E -o "v([0-9]+\\.[0-9]+\\.[0-9]+)" ./index.tab | sed -n '1,1p')
-echo -e "\033[1;36mпоследняя версия node.js \033[0;31m"$ver"\033[0m"
-wget -q https://nodejs.org/dist/$ver/node-$ver.tar.gz 
-tar -xf node-$ver.tar.gz 
-rm node-$ver.tar.gz 
-cd node-$ver
-echo -n -e "\033[1;36mустановка продлиться продолжительное время (возможно 2-3 часа), подождите завершения...\033[0m"
-./configure
-make -s
-make -s install
-echo -e "\033[1;32m установлено\033[0m"
-;;
-esac
-
-case "$$vibor3" in
-"y" )
-#скачиваем WiringPi -----------------------------------------------------------
-case "$vibor2" in
-"1" )
-echo -n -e "\033[1;36mУстановка WiringOP для OrangePi...\033[0m"
-cd ~
-git clone -q https://github.com/zhaolei/WiringOP.git -b h3 
-cd WiringOP
-chmod +x ./build
-sudo ./build
-echo -e "\033[1;32m WiringOP установлен\033[0m"
-;;
-"2" )
-echo -e "\033[1;36mУстановка WiringPi для Asus tinker board\033[0m"
-cd ~
-wget -q http://dlcdnet.asus.com/pub/ASUS/mb/Linux/Tinker_Board_2GB/GPIO_API_for_C.ZIP
-unzip -qq GPIO_API_for_C.ZIP -d WiringPi
-cd ~/WiringPi
-chmod +x ./build
-./build
-echo -e "\033[1;32m WiringPi установлен\033[0m"
-;;
-"3" )
-echo -e "\033[1;36mУстановка WiringPi для RaspberryPi\033[0m"
-cd ~
-git clone -q git://git.drogon.net/wiringPi
-cd ~/wiringPi
-git pull origin
-cd ~/wiringPi
-chmod +x ./build
-./build
-echo -e "\033[1;32m WiringPi установлен\033[0m"
-;;
-"4" )
-echo -e "\033[1;36mУстановка WiringBP для BananaPi\033[0m"
-git clone https://github.com/LeMaker/WiringBP.git -b bananapi
-cd WiringBP
-chmod +x ./build
-sudo ./build
-echo -e "\033[1;32m WiringPi установлен\033[0m"
-;;
-"5" )
-echo -e "\033[1;36mУстановка WiringPi для NanoPi\033[0m"
-git clone -q https://github.com/friendlyarm/WiringNP
-cd WiringNP/
-chmod +x ./build
-./build
-echo -e "\033[1;32m WiringPi установлен\033[0m"
-;;
-"6" )
-echo -e "\033[1;36mУстановка WiringPi для Cubieboard2\033[0m"
-
-echo -e "\033[1;32m WiringPi установлен\033[0m"
-;;
-"7" )
-echo -e "\033[1;36mУстановка WiringBP для BananaPro\033[0m"
-git clone -q https://github.com/LeMaker/WiringBP.git -b bananapro
-cd WiringBP
-chmod +x ./build
-sudo ./build
-echo -e "\033[1;32m WiringPi установлен\033[0m"
-;;
-"8" )
-echo -e "\033[1;36mУстановка WiringPi для Cubieboard2\033[0m"
-git clone https://github.com/friendlyarm/WiringNP
-cd WiringNP/
-git checkout nanopi-m1
-chmod +x ./build
-./build
-echo -e "\033[1;32m WiringPi установлен\033[0m"
-;;
-"0" )
-echo -e "\033[1;36mWiringPi не устанавливается \033[0m"
-
-;;
-esac
-;;
-esac
-
-#MySensors
-case "$vibor4" in
-"y" )
-sudo modprobe gpio-sunxi
-echo "gpio-sunxi" >> /etc/modules
-echo -n -e "\033[1;36mУстанавливаю Mysensors...\033[0m"
-cd ~
-git clone -q https://github.com/mysensors/MySensors.git
-echo -e "\033[1;32m установлен\033[0m"
-;;
-esac
-#433 Utils
-case "$vibor5" in
-"y" )
-echo -e "\033[1;36mУстанавливаю 433 Utils...\033[0m"
-cd ~
-git clone -q --recursive git://github.com/ninjablocks/433Utils.git
-echo -e "\033[1;32m установлен\033[0m"
-;;
-esac
-#pi-switch-python
-case "$vibor6" in
-"y" )
-echo -e "\033[1;36mУстанавливаю pi-switch-python...\033[0m"
-cd ~
-git clone -q https://github.com/lexruee/pi-switch-python.git
-cd pi-switch-python
-sudo python setup.py install
-sudo tee ~/pi-switch-python/pyswitch.py << EOF
-#!/usr/bin/python
-#for python3:
-#import requests
-#for python2.7
-import urllib
-#---------------
-from pi_switch import RCSwitchReceiver
-import time
-
-receiver = RCSwitchReceiver()
-#порт приемника
-receiver.enableReceive(7)
-
-num = 0
-
-
-while True:
-      time.sleep( 0.1 )      
-      if receiver.available():
-         received_value = receiver.getReceivedValue()
-
-         if received_value:
-            num += 1
-            #for python3
-            #url = 'http://192.168.1.20/objects/?object=RCSwitch&op=set&p=code'
-            #payload = {'v':received_value }
-            #r = requests.get(url, params=payload)
-            #print(r.url)
-            #for python2.7
-            rec_code = str(received_value)
-            url = "http://localhost/objects/?script=RCSwitch&rcswitch=" + rec_code
-            page = urllib.urlopen(url)
-            text = page.read()
-            page.close()
-            #------------------
-            print("Received[%s]:" % num)
-            print(received_value)
-            print("%s / %s bit" % (received_value, receiver.getReceivedBitlength()))
-            print("Protocol: %s" % receiver.getReceivedProtocol())
-            print("") 
-            receiver.resetAvailable()
-time.sleep (0.2)
-EOF
-echo -e "\033[1;32m pi-switch-python установлен\033[0m"
-;;
-esac
-# Скачиваем систему MajorDoMo с GitHab
-echo -e "\033[1;36mУстанавливаю систему \033[1;32mMajorDoMo... \033[0m"
-cd ~
-git clone -q https://github.com/sergejey/majordomo.git
-# Переносим систему в директорию WEB-сервера
-sudo cp -rp ~/majordomo/* /var/www
-sudo cp -rp ~/majordomo/.htaccess /var/www
-rm -r ~/majordomo/*
-rmdir majordomo
-
-
-#установка расширенной конфигурации
-case "$mdconfig" in
-"2" )
-rm mdbackup.tar.gz
-wget -q http://kusheev.com/wp-content/uploads/mdbackup.tar.gz
-tar -xf mdbackup.tar.gz
-rm mdbackup.tar.gz
-sudo cp -rp ~/mdbackup/* /var/www
-rm -r ~/mdbackup/*
-rmdir mdbackup
-;;
-#установка своей конфигурации
-"3" )
-mkdir backup
-tar -zxf $pathconf -C ./buckup
-rm $pathconf
-sudo cp -rp ~/backup/* /var/www
-rm -r ~/backup/*
-rmdir backup
-;;
-esac
-
-
-#качаем phpmyadmin
-echo -e "\033[1;36mУстанавливаю phpMyAdmin \033[0m"
-cd ~
-wget -q https://files.phpmyadmin.net/phpMyAdmin/4.7.7/phpMyAdmin-4.7.7-all-languages.tar.gz
-tar -xf phpMyAdmin-4.7.7-all-languages.tar.gz
-rm phpMyAdmin-4.7.7-all-languages.tar.gz
-cp -a phpMyAdmin-4.7.7-all-languages /var/www/phpmyadmin
-rm -r ~/phpMyAdmin-4.7.7-all-languages/*
-rmdir phpMyAdmin-4.7.7-all-languages
-echo -e "\033[1;32mphpMyAdmin установлен\033[0m"
-echo -e -n "\033[1;36mДелаю конфигурацию... \033[0m"
-# Создаем конфигурационный файл для системы
-sudo cp /var/www/config.php.sample /var/www/config.php
-# Назначаем права и владельца для директории с системой
-sudo chown -R www-data:www-data /var/www
-find /var/www/ -type f -exec sudo chmod 0666 {} \;
-find /var/www/ -type d -exec sudo chmod 0777 {} \;
-# Добавляем пользователя www-data в группы
-sudo usermod -a -G audio www-data
-sudo usermod -a -G i2c www-data
-sudo usermod -a -G tty www-data
-sudo usermod -a -G dialup www-data
-#asound.conf для OrangePiPC
-case "$vibor2" in
-"1" )
-sudo tee /etc/asound.conf << EOF
-pcm.!default {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dsp0 {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dmixer  {
-    type dmix
-    ipc_key 1024
-    slave {
-        pcm "hw:0,0"
-        period_time 0
-        period_size 1024
-        buffer_size 8192
-        rate 44100
-    }
-    bindings {
-        0 0
-        1 1
-    }
-}
-
-ctl.mixer0 { 
-    type hw
-    card 0
-}
-EOF
-;;
-"2" )
-sudo tee /etc/asound.conf << EOF
-pcm.!default {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dsp0 {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dmixer  {
-    type dmix
-    ipc_key 1024
-    slave {
-        pcm "hw:0,2"
-        period_time 0
-        period_size 1024
-        buffer_size 8192
-        rate 44100
-    }
-    bindings {
-        0 0
-        1 1
-    }
-}
-
-ctl.mixer0 { 
-    type hw
-    card 0
-}
-EOF
-;;
-"3" )
-
-;;
-"4" )
-sudo tee /etc/asound.conf << EOF
-pcm.!default {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dsp0 {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dmixer  {
-    type dmix
-    ipc_key 1024
-    slave {
-        pcm "hw:0,2"
-        period_time 0
-        period_size 1024
-        buffer_size 8192
-        rate 44100
-    }
-    bindings {
-        0 0
-        1 1
-    }
-}
-
-ctl.mixer0 { 
-    type hw
-    card 0
-}
-EOF
-;;
-"5" )
-sudo tee /etc/asound.conf << EOF
-pcm.!default {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dsp0 {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dmixer  {
-    type dmix
-    ipc_key 1024
-    slave {
-        pcm "hw:0,2"
-        period_time 0
-        period_size 1024
-        buffer_size 8192
-        rate 44100
-    }
-    bindings {
-        0 0
-        1 1
-    }
-}
-
-ctl.mixer0 { 
-    type hw
-    card 0
-}
-EOF
-;;
-"6" )
-sudo tee /etc/asound.conf << EOF
-pcm.!default {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dsp0 {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dmixer  {
-    type dmix
-    ipc_key 1024
-    slave {
-        pcm "hw:0,2"
-        period_time 0
-        period_size 1024
-        buffer_size 8192
-        rate 44100
-    }
-    bindings {
-        0 0
-        1 1
-    }
-}
-
-ctl.mixer0 { 
-    type hw
-    card 0
-}
-EOF
-;;
-"7" )
-sudo tee /etc/asound.conf << EOF
-pcm.!default {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dsp0 {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dmixer  {
-    type dmix
-    ipc_key 1024
-    slave {
-        pcm "hw:0,2"
-        period_time 0
-        period_size 1024
-        buffer_size 8192
-        rate 44100
-    }
-    bindings {
-        0 0
-        1 1
-    }
-}
-
-ctl.mixer0 { 
-    type hw
-    card 0
-}
-EOF
-;;
-"8" )
-sudo tee /etc/asound.conf << EOF
-pcm.!default {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dsp0 {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dmixer  {
-    type dmix
-    ipc_key 1024
-    slave {
-        pcm "hw:0,2"
-        period_time 0
-        period_size 1024
-        buffer_size 8192
-        rate 44100
-    }
-    bindings {
-        0 0
-        1 1
-    }
-}
-
-ctl.mixer0 { 
-    type hw
-    card 0
-}
-EOF
-;;
-"0" )
-sudo tee /etc/asound.conf << EOF
-pcm.!default {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dsp0 {
-    type plug
-    slave.pcm "dmixer"
-}
-
-pcm.dmixer  {
-    type dmix
-    ipc_key 1024
-    slave {
-        pcm "hw:0,2"
-        period_time 0
-        period_size 1024
-        buffer_size 8192
-        rate 44100
-    }
-    bindings {
-        0 0
-        1 1
-    }
-}
-
-ctl.mixer0 { 
-    type hw
-    card 0
-}
-EOF
-;;
-
-
-
-
-
-esac
-# Создаем описание сервиса для запуска основного цикла системы
-sudo tee /etc/init.d/majordomo << EOF
-#!/bin/sh
-### BEGIN INIT INFO
-# Provides: SmartLiving
-# Required-Start:    $remote_fs $syslog
-# Required-Stop:     $remote_fs $syslog
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Start daemon at boot time
-# Description:       Enable service provided by daemon.
-### END INIT INFO
-
-sleep 10
-dir="/var/www/"
-user="www-data"
-cmd="php /var/www/cycle.php"
-name=\`basename \$0\`
-pid_file="/var/run/\$name.pid"
-stdout_log="/var/log/\$name.log"
-stderr_log="/var/log/\$name.err"
-get_pid() {
-    cat "\$pid_file"
-}
-is_running() {
-    [ -f "\$pid_file" ] && ps \`get_pid\` > /dev/null 2>&1
-}
-case "\$1" in
-    start)
-    if is_running; then
-        echo "Already started"
-    else
-        echo "Starting \$name"
-        cd "\$dir"
-(while true; do
-    sudo -u "\$user" \$cmd
-done)>> "\$stdout_log" 2>> "\$stderr_log" &
-
-        echo \$! > "\$pid_file"
-        if ! is_running; then
-            echo "Unable to start, see \$stdout_log and \$stderr_log"
-            exit 1
-        fi
-    fi
-    ;;
-    stop)
-    if is_running; then
-        echo -n "Stopping \$name.."
-        kill \`get_pid\`
-        sudo killall php
-        for i in {1..10}
-        do
-            if ! is_running; then
-                break
-            fi
-
-            echo -n "."
-            sleep 1
-        done
-        echo
-
-        if is_running; then
-            echo "Not stopped; may still be shutting down or shutdown may have failed"
-            exit 1
-        else
-            echo "Stopped"
-            if [ -f "\$pid_file" ]; then
-                rm "\$pid_file"
-            fi
-        fi
-    else
-        echo "Not running"
-        sudo killall php
-    fi
-    ;;
-    restart)
-    \$0 stop
-    if is_running; then
-        echo "Unable to stop, will not attempt to start"
-        exit 1
-    fi
-    \$0 start
-    ;;
-    status)
-    if is_running; then
-        echo "Running"
-    else
-        echo "Stopped"
-        exit 1
-    fi
-    ;;
-    *)
-    echo "Usage: \$0 {start|stop|restart|status}"
-    exit 1
-    ;;
-esac
-exit 0
-EOF
-echo -e "\033[1;32mготово\033[0m"
-# Добавляем главный цикл системы в автозагрузку
-sudo chmod 0755 /etc/init.d/majordomo
-sudo update-rc.d majordomo defaults
-echo -e "\033[1;36mСистема \033[1;32mMajorDoMo \033[0;36mскопирована, добавляю базу данных...\033[0m "
-# Настраиваем подключение к БД для системы
-sudo sed -i "/DB_USER/s/'root'/'pi'/" /var/www/config.php
-sudo sed -i "/DB_PASSWORD/s/''/'$pass2'/" /var/www/config.php
-# Создаем БД db_terminal и импортируем содержимое из дистрибутива
-mysql -u root -p$pass << EOF
-CREATE DATABASE db_terminal;
-USE db_terminal;
-EOF
-#добавляем mysql пользователя и даем ему привилегии
-mysql -u root -p$pass << EOF
-CREATE USER 'pi'@'localhost' IDENTIFIED BY '$pass2';
-GRANT ALL PRIVILEGES ON * . * TO 'pi'@'localhost';
-FLUSH PRIVILEGES;
-EOF
-
-#выбор конфигурации для установки
-case "$mdconfig" in
-"1" )
-#базовая конфигурация
-mysql -u root -p$pass db_terminal < /var/www/db_terminal.sql
-;;
-"2" )
-#расширенная конфигурация
-mysql -u root -p$pass db_terminal < /var/www/dump.sql
-;;
-esac
-#настройка owfs
-case "$vibor7" in
-"y" )
-sudo sed -i "/ONEWIRE_SERVER/s/\/\///" /var/www/config.php
-sudo sed -i "/server: port/s/localhost:4304/8234/" /etc/owfs.conf
-
-case "$mdowfs" in
-"1" )
-#USB адаптер DS9490R
-sudo sed -i "/server: usb/s/\#//" /etc/owfs.conf
-;;
-"2" )
-#UART адаптер DS2480
-sudo sed -i "/server: device/s/\#//" /etc/owfs.conf
-
-case "$mdowfs2" in
-"0" )
-sudo sed -i "/server: device/s/ttyS1/ttyS0/" /etc/owfs.conf
-;;
-"1" )
-sudo sed -i "/server: device/s/ttyS1/ttyS1/" /etc/owfs.conf
-;;
-"2" )
-sudo sed -i "/server: device/s/ttyS1/ttyS2/" /etc/owfs.conf
-;;
-"3" )
-sudo sed -i "/server: device/s/ttyS1/ttyS3/" /etc/owfs.conf
-;;
-"4" )
-sudo sed -i "/server: device/s/ttyS1/ttyS4/" /etc/owfs.conf
-;;
-"5" )
-sudo sed -i "/server: device/s/ttyS1/ttyUSB0/" /etc/owfs.conf
-;;
-"6" )
-sudo sed -i "/server: device/s/ttyS1/ttyUSB1/" /etc/owfs.conf
-;;
-esac
-;;
-"3" )
-#i2c адаптер DS2482
-echo "server: i2c = ALL:ALL" | tee -a /etc/owfs.conf
-;;
-esac
-;;
-esac
-echo -e "\033[1;36mСистема \033[1;32mMajorDoMo \033[1;36mустановлена\033[0m "
-# Отключаем режим "Strict mode" для MySQL (для избавления от наследственных ошибок)
-echo -e "\033[1;36mНастраиваю кое какие файлы... \033[0m "
-sudo tee /etc/mysql/conf.d/disable_strict_mode.cnf << EOF
-[mysqld]
-sql_mode=IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
-EOF
-# Настраиваем Apache
-sudo sed -i 's/None/All/g' /etc/apache2/apache2.conf
-echo "ServerName localhost" | sudo tee -a /etc/apache2/apache2.conf
-sudo sed -i 's/\/html//' /etc/apache2/sites-available/000-default.conf
-# Настраиваем PHP для Apache
-if [ -f "/etc/php5/apache2/php.ini" ]; then 
-sudo sed -i '/short_open_tag/s/Off/On/' /etc/php5/apache2/php.ini
-sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php5/apache2/php.ini
-sudo sed -i '/max_execution_time/s/30/90/' /etc/php5/apache2/php.ini
-sudo sed -i '/max_input_time/s/60/180/' /etc/php5/apache2/php.ini
-sudo sed -i '/post_max_size/s/8/200/' /etc/php5/apache2/php.ini
-sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php5/apache2/php.ini
-sudo sed -i '/max_file_uploads/s/20/150/' /etc/php5/apache2/php.ini
-sudo sed -i '/log_errors/s/On/Off/' /etc/php5/apache2/php.ini
-fi
-if [ -f "/etc/php5/cli/php.ini" ]; then 
-# Настраиваем PHP для коммандной строки
-sudo sed -i '/short_open_tag/s/Off/On/' /etc/php5/cli/php.ini
-sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php5/cli/php.ini
-sudo sed -i '/log_errors/s/On/Off/' /etc/php5/cli/php.ini
-fi
-
-if [ -f "/etc/php/7.0/apache2/php.ini" ]; then 
-sudo sed -i '/short_open_tag/s/Off/On/' /etc/php/7.0/apache2/php.ini
-sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php/7.0/apache2/php.ini
-sudo sed -i '/max_execution_time/s/30/90/' /etc/php/7.0/apache2/php.ini
-sudo sed -i '/max_input_time/s/60/180/' /etc/php/7.0/apache2/php.ini
-sudo sed -i '/post_max_size/s/8/200/' /etc/php/7.0/apache2/php.ini
-sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php/7.0/apache2/php.ini
-sudo sed -i '/max_file_uploads/s/20/150/' /etc/php/7.0/apache2/php.ini
-sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.0/apache2/php.ini
-fi
-if [ -f "/etc/php/7.0/cli/php.ini" ]; then 
-# Настраиваем PHP для коммандной строки
-sudo sed -i '/short_open_tag/s/Off/On/' /etc/php/7.0/cli/php.ini
-sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php/7.0/cli/php.ini
-sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.0/cli/php.ini
-fi
-
-#исправляем pulse проглатывание начала фраз
-sudo sed -i '/load-module module-suspend-on-idle/s/load-module module-suspend-on-idle/\#load-module module-suspend-on-idle/' /etc/pulse/default.pa
-
-
-# Обновляем и перезапускаем службы
-sudo systemctl daemon-reload
-sudo apache2ctl restart
-sudo service mysql restart
-# Запускаем основной цикл
-sudo service majordomo start
-#загружаем бэкап системы и устанавливаем
-#обновляем систему
-wget -q http://localhost/modules/saverestore/update_iframe.php
-wget -q http://localhost/modules/market/update_iframe.php?mode2=update_all
-echo -e "\033[1;36mСистема \033[1;32mMajorDoMo \033[1;36mнастроена полностью\033[0m "
-#установка часов реального времени
-case "$realtimeset" in
-"y" )
-sudo sed -i "/exit 0/s/exit 0//" /etc/rc.local
-echo "echo ds3231 0x68 > /sys/class/i2c-adapter/i2c-0/new_device" | tee -a /etc/rc.local
-echo "rm /dev/rtc" | tee -a /etc/rc.local
-echo "ln -s /dev/rtc1 /dev/rtc" | tee -a /etc/rc.local
-echo "hwclock -s" | tee -a /etc/rc.local
-echo "exit 0" | tee -a /etc/rc.local
-case "$realtimeset2" in
-"y" )
-ntpdate -s ntp.ubuntu.com
-hwclock -w
-;;
-esac
-echo -e "\033[1;32m установлено\033[0m"
-;;
-esac
-#оптимизация работы с базой данных
-case "$optbd" in
-"y" )
-sudo service majordomo stop
-sudo service mysql stop
-cd /var/www
-mkdir database_backup
-chmod 0777 database_backup
-cp /var/www/scripts/periodical_db_save.php /var/www/scripts/cycle_db_save.php
-sudo swapoff --all
-sudo apt-get remove dphys-swapfile
-sudo tee /etc/init.d/prepare-dirs << EOF
-#!/bin/bash
-### BEGIN INIT INFO
-# Provides:          prepare-dirs
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Required-Start:
-# Required-Stop:
-# Short-Description: Create needed directories on /var/log/ for tmpfs at startup
-# Description:       Create needed directories on /var/log/ for tmpfs at startup
-### END INIT INFO
-
-DIR[0]=/var/log/apache2
-DIR[1]=/var/log/cups
-DIR[2]=/var/log/apt
-DIR[3]=/var/log/ConsoleKit
-DIR[4]=/var/log/fsck
-DIR[5]=/var/log/mysql
-DIR[6]=/var/log/news
-DIR[7]=/var/log/ntpstats
-DIR[8]=/var/log/samba
-DIR[9]=/var/log/lastlog
-DIR[10]=/var/log/exim
-DIR[11]=/var/log/watchdog
-DIR[12]=/tmp/mysql
-DIR[13]=/var/www/cached
-DIR[14]=/var/www/debmes
-DIR[15]=/var/log/mpd
-DIR[16]=/var/www/cached/urls
-DIR[17]=/var/www/cached/voice
-DIR[18]=/var/log/mosquitto
-case "\${1:-''}" in
-  start)
-        typeset -i i=0 max=\${#DIR[*]}
-        while (( i < max ))
-        do
-                mkdir  \${DIR[\$i]}
-                chmod 777 \${DIR[\$i]}
-                i=i+1
-        done
-        # set rights
-        chown pi:pi \${DIR[0]}
-        cp -R /var/lib/mysql/* /tmp/mysql/
-        chown -Rf mysql:mysql /tmp/mysql/*
-        chown mysql:mysql /tmp/mysql
-    ;;
-  stop)
-    ;;
-  restart)
-   ;;
-  reload|force-reload)
-   ;;
-  status)
-   ;;
-  *)
-   echo "Usage: \$SELF start"
-   exit 1
-   ;;
-esac
-EOF
-sudo chmod 755 /etc/init.d/prepare-dirs
-sudo update-rc.d prepare-dirs defaults 01 99
-sudo sed -i '/\/tmp /s/tmpfs \/tmp/\#tmpfs \/tmp/' /etc/fstab
-if echo $ifdietpi | grep -q -s -F "DietPi"
-then
-echo "DietPi /tmp уже есть"
-else
-echo "tmpfs /tmp tmpfs defaults,noatime,nosuid,size=250m 0 0" | tee -a /etc/fstab
-echo "tmpfs   /var/log                tmpfs   size=20M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
-fi
-echo "tmpfs /var/tmp tmpfs defaults,noatime,nosuid,size=200m 0 0" | tee -a /etc/fstab
-echo "tmpfs /run tmpfs defaults,noatime,nosuid,mode=0755,size=4M 0 0" | tee -a /etc/fstab
-echo "tmpfs   /var/cache/apt/archives tmpfs   size=200M,defaults,noexec,nosuid,nodev,mode=0755 0 0" | tee -a /etc/fstab
-echo "tmpfs   /var/www/cached                tmpfs   size=100M,defaults,noatime,mode=0755 0 0 " | tee -a /etc/fstab
-dbconfig=$(grep -iRIl "datadir" /etc/mysql)
-sudo sed -i '/datadir/s/\/var\/lib\/mysql/\/tmp\/mysql/' $dbconfig
-;;
-esac
-#все таблицы в MyISAM для расширенной конфигурации
-
-
-case "$mdconfig" in
-"2")
-mysql -u root << EOF
-SELECT CONCAT('ALTER TABLE ',table_schema,'.',table_name,' ENGINE=MyISAM;')
-FROM information_schema.tables
-WHERE 1=1
-  AND engine = 'InnoDB'
-  AND table_schema NOT IN ('mysql', 'performance_schema');
-EOF
-dbconfig=$(grep -iRIl "datadir" /etc/mysql)
-echo "innodb=OFF" | tee -a $dbconfig
-echo "default-storage-engine = MyISAM" | tee -a $dbconfig
-service mysql stop
-rm -f /tmp/mysql/ibdata1
-rm -f /tmp/mysql/ib_logfile*
-rm -f /var/lib/mysql/ibdata1
-rm -f /var/lib/mysql/ib_logfile* 
-service mysql start
-;;
-esac
-#добавляем в /etc/rc.local паузу старта базы данных
-sudo sed -i "/exit 0/s/exit 0//" /etc/rc.local
-echo "#/bin/sleep 20 && service mysql start" | tee -a /etc/rc.local
-echo "exit 0" | tee -a /etc/rc.local
-#---------------------------------------
-echo -e "\033[1;31mВНИМАНИЕ!!! Если дальше страницы с выбором языка не идет значит не запустилсь база данных, раскомментируйте строку запуска базы mysql с паузой в файле /etc/rc.local  \033[0m"
-echo
-echo -e "\033[1;32m XXXXX  XXX   XXXXX  XXX  XXXX   XXX \033[0m"
-echo -e "\033[1;32m X     X   X    X   X   X X   X X   X\033[0m"
-echo -e "\033[1;32m X     X   X    X   X   X XXXX  X   X\033[0m"
-echo -e "\033[1;32m X     X   X    X   X   X X   X X   X\033[0m"
-echo -e "\033[1;32m X      XXX     X    XXX  XXXX   XXX \033[0m"
-echo
-echo $(($(date +%s)-$time22))
-echo -e "\033[1;32m Система установлена, перезагрузите зверька \033[0m"
-
-
+func_install
