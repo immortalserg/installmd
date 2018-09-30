@@ -450,6 +450,7 @@ inst_db(){
 		if [ "$mdbif2" = "" ];
 		then
 		echo -n -e "\033[1;36mУстановка базы данных MySQL... \033[0m"
+		add-apt-repository universe
 		sudo apt-get -qq install -y mysql-server
 		sudo apt-get -qq install -y mysql-client
 		fi
