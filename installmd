@@ -1636,6 +1636,7 @@ func_install(){
 			pass=$flag_t2
 			if [ -z "$flag_t3" ]; then pass2=$pass; else pass=$flag_t3; fi
 		fi
+		stty echo
 		echo ""
 	password1=$pass
 	password2=$pass
