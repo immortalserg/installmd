@@ -40,7 +40,7 @@ chmod +x ./installmd
 
 -w [type] - установить WiringPi. [type] - тип платы: 1 - OrangePi, 2 - Asus tinker board, 3 - RaspberryPi, 4 - BananaPi, 5 - NanoPi, 6 - Cubieboard2, 7 - BananaPro
 
--s - установить MySensors
+-e - установить MySensors
 
 -v - VPN клиент OpenVPN
 
@@ -75,6 +75,9 @@ chmod +x ./installmd
 ./installmd -n - установка node.js
 
 ### Исправления.
+
+v.0.4.2 от 01.10.2018
+- убраны одинаковые флаги
 
 v.0.4.1 от 29.09.2018
 - скрипт работает с параметрами коммандной строки
