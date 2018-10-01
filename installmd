@@ -351,18 +351,18 @@ inst_sound(){
 	sudo apt-get -qq install -y libav-tools
 	echo -n -e "\033[1;36mДобавляю запуск vlc http: \033[0m"
 	sudo tee /etc/systemd/system/vlcd.service << EOF
-	[Unit]
-	Description=VLCDaemon
-	[Service]
-	Requires=majordomo.service
-	Type=simple
-	WorkingDirectory=/var/www
-	ExecStart=/usr/bin/vlc -I http --http-password=12345 --http-port 7070
-	Restart=always
-	User=www-data
-	Group=www-data
-	[Install]
-	WantedBy=multi-user.target
+[Unit]
+Description=VLCDaemon
+[Service]
+Requires=majordomo.service
+Type=simple
+WorkingDirectory=/var/www
+ExecStart=/usr/bin/vlc -I http --http-password=12345 --http-port 7070
+Restart=always
+User=www-data
+Group=www-data
+[Install]
+WantedBy=multi-user.target
 EOF
 	#добавляем vlc в автозагрузку
 	sudo systemctl daemon-reload
@@ -384,15 +384,15 @@ EOF
 inst_rhvoice(){
 	echo -n -e "\033[0;36mУстанавливаю RHVoice... \033[0m"
 	sudo tee -a /etc/pulse/daemon.conf << EOF
-	high-priority = no
-	nice-level = -1
-	realtime-scheduling = yes
-	realtime-priority = 5
-	flat-volumes = no
-	resample-method = speex-float-1
-	default-sample-rate = 48000
-	default-fragments = 4
-	default-fragment-size-msec = 25
+high-priority = no
+nice-level = -1
+realtime-scheduling = yes
+realtime-priority = 5
+flat-volumes = no
+resample-method = speex-float-1
+default-sample-rate = 48000
+default-fragments = 4
+default-fragment-size-msec = 25
 EOF
 	# Устанавливаем RHVoice
 	cd /usr/src
@@ -458,8 +458,8 @@ inst_db(){
 	#подключаем репы обратно
 	add-apt-repository universe
 	sudo tee /etc/mysql/conf.d/disable_strict_mode.cnf << EOF
-	[mysqld]
-	sql_mode=IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+[mysqld]
+sql_mode=IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
 EOF
 	#добавляем в /etc/rc.local паузу старта базы данных
 	sudo sed -i "/exit 0/s/exit 0//" /etc/rc.local
@@ -881,11 +881,11 @@ inst_config1(){
 	rmdir mdbackup
 	mysql -u root -p$pass db_terminal < /var/www/dump.sql
 	mysql -u root << EOF
-	SELECT CONCAT('ALTER TABLE ',table_schema,'.',table_name,' ENGINE=MyISAM;')
-	FROM information_schema.tables
-	WHERE 1=1
-	  AND engine = 'InnoDB'
-	  AND table_schema NOT IN ('mysql', 'performance_schema');
+SELECT CONCAT('ALTER TABLE ',table_schema,'.',table_name,' ENGINE=MyISAM;')
+FROM information_schema.tables
+WHERE 1=1
+AND engine = 'InnoDB'
+AND table_schema NOT IN ('mysql', 'performance_schema');
 EOF
 	dbconfig=$(grep -iRIl "datadir" /etc/mysql)
 	echo "innodb=OFF" | tee -a $dbconfig
@@ -957,37 +957,37 @@ inst_rclocal(){
 	else
 	#файла rc.local нет, добавляем файл и включаем в автозапуск
 	sudo tee /etc/rc.local << EOF
-	#!/bin/sh -e
-	#
-	# rc.local
-	#
-	# This script is executed at the end of each multiuser runlevel.
-	# Make sure that the script will "exit 0" on success or any other
-	# value on error.
-	#
-	# In order to enable or disable this script just change the execution
-	# bits.
-	#
-	# By default this script does nothing.
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
 
-	exit 0
+exit 0
 EOF
 
 	sudo tee /etc/systemd/system/rc-local.service << EOF
-	[Unit]
-	 Description=/etc/rc.local Compatibility
-	 ConditionPathExists=/etc/rc.local
+[Unit]
+ Description=/etc/rc.local Compatibility
+ ConditionPathExists=/etc/rc.local
 
-	[Service]
-	 Type=forking
-	 ExecStart=/etc/rc.local start
-	 TimeoutSec=0
-	 StandardOutput=tty
-	 RemainAfterExit=yes
-	 SysVStartPriority=99
+[Service]
+ Type=forking
+ ExecStart=/etc/rc.local start
+ TimeoutSec=0
+ StandardOutput=tty
+ RemainAfterExit=yes
+ SysVStartPriority=99
 
-	[Install]
-	 WantedBy=multi-user.target
+[Install]
+ WantedBy=multi-user.target
 EOF
 
 	chmod +x /etc/rc.local
@@ -1098,48 +1098,46 @@ inst_piswitchpython(){
 	cd pi-switch-python
 	sudo python setup.py install
 	sudo tee ~/pi-switch-python/pyswitch.py << EOF
-	#!/usr/bin/python
-	#for python3:
-	#import requests
-	#for python2.7
-	import urllib
-	#---------------
-	from pi_switch import RCSwitchReceiver
-	import time
+#!/usr/bin/python
+#for python3:
+#import requests
+#for python2.7
+import urllib
+#---------------
+from pi_switch import RCSwitchReceiver
+import time
 
-	receiver = RCSwitchReceiver()
-	#порт приемника
-	receiver.enableReceive(7)
+receiver = RCSwitchReceiver()
+#порт приемника
+receiver.enableReceive(7)
+num = 0
 
-	num = 0
 
-
-	while True:
-	      time.sleep( 0.1 )
-	      if receiver.available():
-	         received_value = receiver.getReceivedValue()
-
+while True:
+      time.sleep( 0.1 )
+      if receiver.available():
+         received_value = receiver.getReceivedValue()
 	         if received_value:
-	            num += 1
-	            #for python3
-	            #url = 'http://192.168.1.20/objects/?object=RCSwitch&op=set&p=code'
-	            #payload = {'v':received_value }
-	            #r = requests.get(url, params=payload)
-	            #print(r.url)
-	            #for python2.7
-	            rec_code = str(received_value)
-	            url = "http://localhost/objects/?script=RCSwitch&rcswitch=" + rec_code
-	            page = urllib.urlopen(url)
-	            text = page.read()
-	            page.close()
-	            #------------------
-	            print("Received[%s]:" % num)
-	            print(received_value)
-	            print("%s / %s bit" % (received_value, receiver.getReceivedBitlength()))
-	            print("Protocol: %s" % receiver.getReceivedProtocol())
-	            print("")
-	            receiver.resetAvailable()
-	time.sleep (0.2)
+            num += 1
+            #for python3
+            #url = 'http://192.168.1.20/objects/?object=RCSwitch&op=set&p=code'
+            #payload = {'v':received_value }
+            #r = requests.get(url, params=payload)
+            #print(r.url)
+            #for python2.7
+            rec_code = str(received_value)
+            url = "http://localhost/objects/?script=RCSwitch&rcswitch=" + rec_code
+            page = urllib.urlopen(url)
+            text = page.read()
+            page.close()
+            #------------------
+            print("Received[%s]:" % num)
+            print(received_value)
+            print("%s / %s bit" % (received_value, receiver.getReceivedBitlength()))
+            print("Protocol: %s" % receiver.getReceivedProtocol())
+            print("")
+            receiver.resetAvailable()
+time.sleep (0.2)
 EOF
 	echo -e "\033[1;32m pi-switch-python установлен\033[0m"
 }
@@ -1163,101 +1161,98 @@ inst_md(){
 	rmdir majordomo
 	# Создаем описание сервиса для запуска основного цикла системы
 	sudo tee /etc/init.d/majordomo << EOF
-	#!/bin/sh
-	### BEGIN INIT INFO
-	# Provides: SmartLiving
-	# Required-Start:    $remote_fs $syslog
-	# Required-Stop:     $remote_fs $syslog
-	# Default-Start:     2 3 4 5
-	# Default-Stop:      0 1 6
-	# Short-Description: Start daemon at boot time
-	# Description:       Enable service provided by daemon.
-	### END INIT INFO
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides: SmartLiving
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start daemon at boot time
+# Description:       Enable service provided by daemon.
+### END INIT INFO
 
-	sleep 10
-	dir="/var/www/"
-	user="www-data"
-	cmd="php /var/www/cycle.php"
-	name=\`basename \$0\`
-	pid_file="/var/run/\$name.pid"
-	stdout_log="/var/log/\$name.log"
-	stderr_log="/var/log/\$name.err"
-	get_pid() {
-	    cat "\$pid_file"
-	}
-	is_running() {
-	    [ -f "\$pid_file" ] && ps \`get_pid\` > /dev/null 2>&1
-	}
-	case "\$1" in
-	    start)
-	    if is_running; then
-	        echo "Already started"
-	    else
-	        echo "Starting \$name"
-	        cd "\$dir"
-	(while true; do
-	    sudo -u "\$user" \$cmd
-	done)>> "\$stdout_log" 2>> "\$stderr_log" &
-
+sleep 10
+dir="/var/www/"
+user="www-data"
+cmd="php /var/www/cycle.php"
+name=\`basename \$0\`
+pid_file="/var/run/\$name.pid"
+stdout_log="/var/log/\$name.log"
+stderr_log="/var/log/\$name.err"
+get_pid() {
+    cat "\$pid_file"
+}
+is_running() {
+    [ -f "\$pid_file" ] && ps \`get_pid\` > /dev/null 2>&1
+}
+case "\$1" in
+    start)
+    if is_running; then
+        echo "Already started"
+    else
+        echo "Starting \$name"
+        cd "\$dir"
+(while true; do
+    sudo -u "\$user" \$cmd
+done)>> "\$stdout_log" 2>> "\$stderr_log" &
 	        echo \$! > "\$pid_file"
-	        if ! is_running; then
-	            echo "Unable to start, see \$stdout_log and \$stderr_log"
-	            exit 1
-	        fi
-	    fi
-	    ;;
-	    stop)
-	    if is_running; then
-	        echo -n "Stopping \$name.."
-	        kill \`get_pid\`
-	        sudo killall php
-	        for i in {1..10}
-	        do
-	            if ! is_running; then
-	                break
-	            fi
-
+        if ! is_running; then
+            echo "Unable to start, see \$stdout_log and \$stderr_log"
+            exit 1
+        fi
+    fi
+    ;;
+    stop)
+    if is_running; then
+        echo -n "Stopping \$name.."
+        kill \`get_pid\`
+        sudo killall php
+        for i in {1..10}
+        do
+            if ! is_running; then
+                break
+            fi
 	            echo -n "."
-	            sleep 1
-	        done
-	        echo
-
+            sleep 1
+        done
+        echo
 	        if is_running; then
-	            echo "Not stopped; may still be shutting down or shutdown may have failed"
-	            exit 1
-	        else
-	            echo "Stopped"
-	            if [ -f "\$pid_file" ]; then
-	                rm "\$pid_file"
-	            fi
-	        fi
-	    else
-	        echo "Not running"
-	        sudo killall php
-	    fi
-	    ;;
-	    restart)
-	    \$0 stop
-	    if is_running; then
-	        echo "Unable to stop, will not attempt to start"
-	        exit 1
-	    fi
-	    \$0 start
-	    ;;
-	    status)
-	    if is_running; then
-	        echo "Running"
-	    else
-	        echo "Stopped"
-	        exit 1
-	    fi
-	    ;;
-	    *)
-	    echo "Usage: \$0 {start|stop|restart|status}"
-	    exit 1
-	    ;;
-	esac
-	exit 0
+            echo "Not stopped; may still be shutting down or shutdown may have failed"
+            exit 1
+        else
+            echo "Stopped"
+            if [ -f "\$pid_file" ]; then
+                rm "\$pid_file"
+            fi
+        fi
+    else
+        echo "Not running"
+        sudo killall php
+    fi
+    ;;
+    restart)
+    \$0 stop
+    if is_running; then
+        echo "Unable to stop, will not attempt to start"
+        exit 1
+    fi
+    \$0 start
+    ;;
+    status)
+    if is_running; then
+        echo "Running"
+    else
+        echo "Stopped"
+        exit 1
+    fi
+    ;;
+    *)
+    echo "Usage: \$0 {start|stop|restart|status}"
+    exit 1
+    ;;
+esac
+exit 0
 EOF
 	echo -e "\033[1;32mготово\033[0m"
 	# Добавляем главный цикл системы в автозагрузку
@@ -1278,15 +1273,15 @@ EOF
 	sudo sed -i "/DB_USER/s/'root'/'pi'/" /var/www/config.php
 	sudo sed -i "/DB_PASSWORD/s/''/'$pass2'/" /var/www/config.php
 	# Создаем БД db_terminal и импортируем содержимое из дистрибутива
-	mysql -u root -p$pass << EOF
-	CREATE DATABASE db_terminal;
-	USE db_terminal;
-	EOF
-	#добавляем mysql пользователя и даем ему привилегии
-	mysql -u root -p$pass << EOF
-	CREATE USER 'pi'@'localhost' IDENTIFIED BY '$pass2';
-	GRANT ALL PRIVILEGES ON * . * TO 'pi'@'localhost';
-	FLUSH PRIVILEGES;
+mysql -u root -p$pass << EOF
+CREATE DATABASE db_terminal;
+USE db_terminal;
+EOF
+#добавляем mysql пользователя и даем ему привилегии
+mysql -u root -p$pass << EOF
+CREATE USER 'pi'@'localhost' IDENTIFIED BY '$pass2';
+GRANT ALL PRIVILEGES ON * . * TO 'pi'@'localhost';
+FLUSH PRIVILEGES;
 EOF
 }
 #функция установки phpMyAdmin
@@ -1324,64 +1319,63 @@ sd_optimizire(){
 	sudo swapoff --all
 	sudo apt-get remove dphys-swapfile
 	sudo tee /etc/init.d/prepare-dirs << EOF
-	#!/bin/bash
-	### BEGIN INIT INFO
-	# Provides:          prepare-dirs
-	# Default-Start:     2 3 4 5
-	# Default-Stop:      0 1 6
-	# Required-Start:
-	# Required-Stop:
-	# Short-Description: Create needed directories on /var/log/ for tmpfs at startup
-	# Description:       Create needed directories on /var/log/ for tmpfs at startup
-	### END INIT INFO
-
-	DIR[0]=/var/log/apache2
-	DIR[1]=/var/log/cups
-	DIR[2]=/var/log/apt
-	DIR[3]=/var/log/ConsoleKit
-	DIR[4]=/var/log/fsck
-	DIR[5]=/var/log/mysql
-	DIR[6]=/var/log/news
-	DIR[7]=/var/log/ntpstats
-	DIR[8]=/var/log/samba
-	DIR[9]=/var/log/lastlog
-	DIR[10]=/var/log/exim
-	DIR[11]=/var/log/watchdog
-	DIR[12]=/tmp/mysql
-	DIR[13]=/var/www/cached
-	DIR[14]=/var/www/debmes
-	DIR[15]=/var/log/mpd
-	DIR[16]=/var/www/cached/urls
-	DIR[17]=/var/www/cached/voice
-	DIR[18]=/var/log/mosquitto
-	case "\${1:-''}" in
-	  start)
-	        typeset -i i=0 max=\${#DIR[*]}
-	        while (( i < max ))
-	        do
-	                mkdir  \${DIR[\$i]}
-	                chmod 777 \${DIR[\$i]}
-	                i=i+1
-	        done
-	        # set rights
-	        chown pi:pi \${DIR[0]}
-	        cp -R /var/lib/mysql/* /tmp/mysql/
-	        chown -Rf mysql:mysql /tmp/mysql/*
-	        chown mysql:mysql /tmp/mysql
-	    ;;
-	  stop)
-	    ;;
-	  restart)
-	   ;;
-	  reload|force-reload)
-	   ;;
-	  status)
-	   ;;
-	  *)
-	   echo "Usage: \$SELF start"
-	   exit 1
-	   ;;
-	esac
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          prepare-dirs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Required-Start:
+# Required-Stop:
+# Short-Description: Create needed directories on /var/log/ for tmpfs at startup
+# Description:       Create needed directories on /var/log/ for tmpfs at startup
+### END INIT INFO
+DIR[0]=/var/log/apache2
+DIR[1]=/var/log/cups
+DIR[2]=/var/log/apt
+DIR[3]=/var/log/ConsoleKit
+DIR[4]=/var/log/fsck
+DIR[5]=/var/log/mysql
+DIR[6]=/var/log/news
+DIR[7]=/var/log/ntpstats
+DIR[8]=/var/log/samba
+DIR[9]=/var/log/lastlog
+DIR[10]=/var/log/exim
+DIR[11]=/var/log/watchdog
+DIR[12]=/tmp/mysql
+DIR[13]=/var/www/cached
+DIR[14]=/var/www/debmes
+DIR[15]=/var/log/mpd
+DIR[16]=/var/www/cached/urls
+DIR[17]=/var/www/cached/voice
+DIR[18]=/var/log/mosquitto
+case "\${1:-''}" in
+  start)
+        typeset -i i=0 max=\${#DIR[*]}
+        while (( i < max ))
+        do
+                mkdir  \${DIR[\$i]}
+                chmod 777 \${DIR[\$i]}
+                i=i+1
+        done
+        # set rights
+        chown pi:pi \${DIR[0]}
+        cp -R /var/lib/mysql/* /tmp/mysql/
+        chown -Rf mysql:mysql /tmp/mysql/*
+        chown mysql:mysql /tmp/mysql
+    ;;
+  stop)
+    ;;
+  restart)
+   ;;
+  reload|force-reload)
+   ;;
+  status)
+   ;;
+  *)
+   echo "Usage: \$SELF start"
+   exit 1
+   ;;
+esac
 EOF
 	sudo chmod 755 /etc/init.d/prepare-dirs
 	sudo update-rc.d prepare-dirs defaults 01 99
@@ -1419,36 +1413,36 @@ asound_conf(){
 	#OrangePiPC - 0,0
 	#other - 0,2
 	sudo tee /etc/asound.conf << EOF
-	pcm.!default {
-	   type plug
-	   slave.pcm "dmixer"
-	}
+pcm.!default {
+   type plug
+   slave.pcm "dmixer"
+}
 
-	pcm.dsp0 {
-	   type plug
-	   slave.pcm "dmixer"
-	}
+pcm.dsp0 {
+   type plug
+   slave.pcm "dmixer"
+}
 
-	pcm.dmixer  {
-	   type dmix
-	   ipc_key 1024
-	   slave {
-	     pcm "hw:$hw_device,$hw_port"
-	     period_time 0
-	     period_size 1024
-	     buffer_size 8192
-	     rate 44100
-	    }
-	   bindings {
-	     0 0
-	     1 1
-	   }
-	}
+pcm.dmixer  {
+   type dmix
+   ipc_key 1024
+   slave {
+     pcm "hw:$hw_device,$hw_port"
+     period_time 0
+     period_size 1024
+     buffer_size 8192
+     rate 44100
+    }
+   bindings {
+     0 0
+     1 1
+   }
+}
 
-	ctl.mixer0 {
-	  type hw
-	  card 0
-	}
+ctl.mixer0 {
+  type hw
+  card 0
+}
 EOF
 }
 #функция определения оборудования
@@ -1659,6 +1653,7 @@ func_install(){
 			inst_config0
 		fi
 	inst_md2
+	inst_end
 	fi
 	if [ -n "$flag_j" ]; then inst_java;	fi
 	if [ -n "$flag_a" ]; then inst_webmin;	fi
