@@ -1404,7 +1404,7 @@ inst_end(){
 	echo -e "\033[1;32m X     X   X    X   X   X X   X X   X\033[0m"
 	echo -e "\033[1;32m X      XXX     X    XXX  XXXX   XXX \033[0m"
 	echo
-	echo $(($(date +%s)-$time22))
+	
 	echo -e "\033[1;32m Система установлена, перезагрузите зверька \033[0m"
 
 }
