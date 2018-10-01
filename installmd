@@ -1008,16 +1008,16 @@ inst_wiring(){
 	if echo "$type_pr2" | grep -i "Cubie" >/dev/null; then flag_w2=6; fi
 	if echo "$type_pr2" | grep -i "Banana Pi Pro" >/dev/null; then flag_w2=7; fi
 	fi
-	if [ "$flag_w2" = "0"]; then
+	if [ "$flag_w2" = "0" ]; then
 	echo "невозможно определить тип платы, установка WiringPi невозможна, задайте тип платы вручную"
 	else
-		if [ "$flag_w2" = "1"]; then inst_wiringop; fi
-		if [ "$flag_w2" = "2"]; then inst_wiringpi_asus; fi
-		if [ "$flag_w2" = "3"]; then inst_wiringpi; fi
-		if [ "$flag_w2" = "4"]; then inst_wiringbp; fi
-		if [ "$flag_w2" = "5"]; then inst_wiringnp; fi
-		if [ "$flag_w2" = "6"]; then inst_wiringcb; fi
-		if [ "$flag_w2" = "7"]; then inst_wiringbp_pro; fi
+		if [ "$flag_w2" = "1" ]; then inst_wiringop; fi
+		if [ "$flag_w2" = "2" ]; then inst_wiringpi_asus; fi
+		if [ "$flag_w2" = "3" ]; then inst_wiringpi; fi
+		if [ "$flag_w2" = "4" ]; then inst_wiringbp; fi
+		if [ "$flag_w2" = "5" ]; then inst_wiringnp; fi
+		if [ "$flag_w2" = "6" ]; then inst_wiringcb; fi
+		if [ "$flag_w2" = "7" ]; then inst_wiringbp_pro; fi
 	fi
 }
 inst_wiringop(){
