@@ -1155,7 +1155,7 @@ inst_md(){
 	# Скачиваем систему MajorDoMo с GitHab
 	echo -e "\033[1;36mУстанавливаю систему \033[1;32mMajorDoMo... \033[0m"
 	cd ~
-	git clone -q https://github.com/sergejey/majordomo.git
+	git clone https://github.com/sergejey/majordomo.git
 	# Переносим систему в директорию WEB-сервера
 	sudo cp -rp ~/majordomo/* /var/www
 	sudo cp -rp ~/majordomo/.htaccess /var/www
@@ -1265,6 +1265,16 @@ EOF
 	sudo update-rc.d majordomo defaults
 	echo -e "\033[1;36mСистема \033[1;32mMajorDoMo \033[0;36mскопирована, добавляю базу данных...\033[0m "
 	# Настраиваем подключение к БД для системы
+	sudo cp /var/www/config.php.sample /var/www/config.php
+	# Назначаем права и владельца для директории с системой
+	sudo chown -R www-data:www-data /var/www
+	find /var/www/ -type f -exec sudo chmod 0666 {} \;
+	find /var/www/ -type d -exec sudo chmod 0777 {} \;
+	# Добавляем пользователя www-data в группы
+	sudo usermod -a -G audio www-data
+	sudo usermod -a -G i2c www-data
+	sudo usermod -a -G tty www-data
+	sudo usermod -a -G dialup www-data
 	sudo sed -i "/DB_USER/s/'root'/'pi'/" /var/www/config.php
 	sudo sed -i "/DB_PASSWORD/s/''/'$pass2'/" /var/www/config.php
 	# Создаем БД db_terminal и импортируем содержимое из дистрибутива
@@ -1278,16 +1288,6 @@ EOF
 	GRANT ALL PRIVILEGES ON * . * TO 'pi'@'localhost';
 	FLUSH PRIVILEGES;
 EOF
-	sudo cp /var/www/config.php.sample /var/www/config.php
-	# Назначаем права и владельца для директории с системой
-	sudo chown -R www-data:www-data /var/www
-	find /var/www/ -type f -exec sudo chmod 0666 {} \;
-	find /var/www/ -type d -exec sudo chmod 0777 {} \;
-	# Добавляем пользователя www-data в группы
-	sudo usermod -a -G audio www-data
-	sudo usermod -a -G i2c www-data
-	sudo usermod -a -G tty www-data
-	sudo usermod -a -G dialup www-data
 }
 #функция установки phpMyAdmin
 inst_phpmyadmin(){
