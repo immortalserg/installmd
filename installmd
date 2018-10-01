@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.4.1 от 23.09.2018\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.4.2 от 01.09.2018\033[0m"
 #функция проверки не занят ли установщик
 label1(){
     #проверка не запущен ли процесс apt
@@ -1472,7 +1472,7 @@ func_help(){
 	echo "-o [type [port]]  - установить owfs. type - тип 1-wire адаптера (usb, uart, i2c), port - порт uart 1-wire адаптера без /dev/ (ttyS2*, ttyUSB...)"
 	echo "-r - установить RHVoice"
 	echo "-w [type] - установить WiringPi. [type] - тип платы: 1 - OrangePi, 2 - Asus tinker board, 3 - RaspberryPi, 4 - BananaPi, 5 - NanoPi, 6 - Cubieboard2, 7 - BananaPro"
-	echo "-s - установить MySensors"
+	echo "-e - установить MySensors"
 	echo "-v - VPN клиент OpenVPN"
 	echo "-m - MQTT сервер и клиент Mosquitto"
 	echo "-u - 433Utils"
@@ -1663,7 +1663,7 @@ func_install(){
 	if [ -n "$flag_v" ]; then inst_ovpn;	fi
 	if [ -n "$flag_m" ]; then inst_mqtt;	fi
 	if [ -n "$flag_o" ]; then inst_owfs;	fi
-	if [ -n "$flag_s" ]; then inst_mysensors;	fi
+	if [ -n "$flag_e" ]; then inst_mysensors;	fi
 	if [ -n "$flag_p" ]; then inst_phpmyadmin;	fi
 	if [ -n "$flag_w" ]; then inst_wiring;	fi
 	if [ -n "$flag_s" ]; then sd_optimizire;	fi
@@ -1685,7 +1685,7 @@ case "$1" in
 -v) flag_v=1 ;;
 -m) flag_m=1 ;;
 -o) flag_o=1; flag_o2="$2" ; flag_o3="$3" ;;
--s) flag_s=1 ;;
+-e) flag_e=1 ;;
 -p) flag_p=1 ;;
 -w) flag_w=1; flag_w2="$2" ;;
 -s) flag_s=1 ;;
