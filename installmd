@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.4.2 от 01.09.2018\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.4.3 от 04.09.2018\033[0m"
 #функция проверки не занят ли установщик
 label1(){
     #проверка не запущен ли процесс apt
@@ -127,6 +127,10 @@ inst_mqtt(){
 #функция установки owfs
 inst_owfs(){
 	echo -n -e "\033[1;36mУстанавливаю owfs... \033[0m"
+	tmp_fl6=${flag_o2:0:1}
+	tmp_fl7=${flag_o3:0:1}
+		if [[ $tmp_fl6 = "-" ]]; then flag_o2=""; fi
+		if [[ $tmp_fl7 = "-" ]]; then flag_o3=""; fi
 		if [ -z "$flag_o2" ]; then flag_o2="usb" ; fi
 		if [ -z "$flag_o3" ]; then flag_o3="ttyS2" ; fi
 	sudo apt-get -qq install -y owfs
@@ -996,6 +1000,10 @@ EOF
 }
 #функции установки WiringPi
 inst_wiring(){
+	tmp_fl5=${flag_w2:0:1}
+		if [[ $tmp_fl5 = "-" ]]; then
+			flag_w2=""
+		fi
 	if [ -z "$flag_w2" ]; then
 	echo "пытаюсь определить тип платы"
 	func_hw
@@ -1008,16 +1016,17 @@ inst_wiring(){
 	if echo "$type_pr2" | grep -i "Cubie" >/dev/null; then flag_w2=6; fi
 	if echo "$type_pr2" | grep -i "Banana Pi Pro" >/dev/null; then flag_w2=7; fi
 	fi
+
 	if [ "$flag_w2" = "0" ]; then
 	echo "невозможно определить тип платы, установка WiringPi невозможна, задайте тип платы вручную"
 	else
-		if [ "$flag_w2" = "1" ]; then inst_wiringop; fi
-		if [ "$flag_w2" = "2" ]; then inst_wiringpi_asus; fi
-		if [ "$flag_w2" = "3" ]; then inst_wiringpi; fi
-		if [ "$flag_w2" = "4" ]; then inst_wiringbp; fi
-		if [ "$flag_w2" = "5" ]; then inst_wiringnp; fi
-		if [ "$flag_w2" = "6" ]; then inst_wiringcb; fi
-		if [ "$flag_w2" = "7" ]; then inst_wiringbp_pro; fi
+			if [ "$flag_w2" = "1" ]; then inst_wiringop; fi
+			if [ "$flag_w2" = "2" ]; then inst_wiringpi_asus; fi
+			if [ "$flag_w2" = "3" ]; then inst_wiringpi; fi
+			if [ "$flag_w2" = "4" ]; then inst_wiringbp; fi
+			if [ "$flag_w2" = "5" ]; then inst_wiringnp; fi
+			if [ "$flag_w2" = "6" ]; then inst_wiringcb; fi
+			if [ "$flag_w2" = "7" ]; then inst_wiringbp_pro; fi
 	fi
 }
 inst_wiringop(){
@@ -1404,7 +1413,7 @@ inst_end(){
 	echo -e "\033[1;32m X     X   X    X   X   X X   X X   X\033[0m"
 	echo -e "\033[1;32m X      XXX     X    XXX  XXXX   XXX \033[0m"
 	echo
-	
+
 	echo -e "\033[1;32m Система установлена, перезагрузите зверька \033[0m"
 
 }
@@ -1621,20 +1630,39 @@ inst_start (){
 	if [[ $realtimeset = "y" ]]; then flag_d=1 ; fi
 
 }
+#функция запроса паролей
+func_passw(){
+	stty -echo
+	echo -e -n "\033[1;33mВведите пароль root для MariaDB (MySQL) > \033[0m"
+	read pass
+	#задаем пароль пользователя pi
+	echo -e -n "\033[1;33mВведите пароль пользователя pi (для пользователя системы и пользователя базы данных MajorDoMo) > \033[0m"
+	read pass2
+}
 #функция установки
 func_install(){
 	label1
 	if [ -n "$flag_t" ]; then
-		if [ -z "$flag_t2" ]; then
-			stty -echo
-			echo -e -n "\033[1;33mВведите пароль root для MariaDB (MySQL) > \033[0m"
-			read pass
-			#задаем пароль пользователя pi
-			echo -e -n "\033[1;33mВведите пароль пользователя pi (для пользователя системы и пользователя базы данных MajorDoMo) > \033[0m"
-			read pass2
+		tmp_fl2=${flag_t2:0:1}
+		if [[ -z "$flag_t2" ]]; then
+			func_passw
 		else
-			pass=$flag_t2
-			if [ -z "$flag_t3" ]; then pass2=$pass; else pass=$flag_t3; fi
+			if [[ $tmp_fl2 = "-" ]]; then
+				func_passw
+			else
+				pass=$flag_t2
+				tmp_fl3=${flag_t3:0:1}
+				echo $tmp_fl3
+				if [ -z "$flag_t3" ]; then
+					pass2=$pass
+				else
+					if [ $tmp_fl3 = "-" ]; then
+						pass2=$pass
+					else
+						pass=$flag_t3
+					fi
+				fi
+			fi
 		fi
 		stty echo
 		echo ""
@@ -1649,7 +1677,16 @@ func_install(){
 	setting_db
 	inst_md
 		if [ -n "$flag_c" ]; then
-			if [ -z "$flag_c2" ]; then inst_config1 ; else inst_config2 ; fi
+			tmp_fl4=${flag_c2:0:1}
+			if [ -z "$flag_c2" ]; then
+ 				inst_config1
+			 else
+				if [[ $tmp_fl4 = "-" ]]; then
+ 					inst_config1
+ 				else
+ 					inst_config2
+ 				fi
+			 fi
 		else
 			inst_config0
 		fi
