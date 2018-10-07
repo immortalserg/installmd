@@ -440,17 +440,17 @@ inst_db(){
 					apt-get -qq install -y mariadb-client
 					#проверяем установилась ли mariadb-server
 					mdbif2=$(dpkg --get-selections mariadb-server)
-					if [ "$mdbif2" = "" ]; then
-						apt-get -qq update
-						apt-get -qq install -y mariadb-client-10.1
-						apt-get -qq install -y mariadb-server-10.1
-						apt-get -qq update
-						apt-get -qq install -y mariadb-server
-						apt-get -qq install -y mariadb-client
-						mdbif2=$(dpkg --get-selections mariadb-server)
-					fi
 				fi
 			fi
+		if [ "$mdbif2" = "" ]; then
+			apt-get -qq update
+			apt-get -qq install -y mariadb-client-10.1
+			apt-get -qq install -y mariadb-server-10.1
+			apt-get -qq update
+			apt-get -qq install -y mariadb-server
+			apt-get -qq install -y mariadb-client
+			mdbif2=$(dpkg --get-selections mariadb-server)
+		fi
 		if [ "$mdbif2" = "" ];
 		then
 		echo -n -e "\033[1;36mУстановка базы данных MySQL... \033[0m"
