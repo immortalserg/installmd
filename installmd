@@ -257,13 +257,9 @@ inst_php(){
 					sudo apt-get -qq install -y php-xml
 					sudo apt-get -qq install -y php-mysql
 					sudo apt-get -qq install -y php-pear
-					sudo apt-get -qq install -y php-idn
 					sudo apt-get -qq install -y php-imagick
 					sudo apt-get -qq install -y php-imap
 					sudo apt-get -qq install -y php-memcache
-					sudo apt-get -qq install -y php-mhash
-					sudo apt-get -qq install -y php-ming
-					sudo apt-get -qq install -y php-ps
 					sudo apt-get -qq install -y php-pspell
 					sudo apt-get -qq install -y php-recode
 					sudo apt-get -qq install -y php-snmp
@@ -289,13 +285,9 @@ inst_php(){
 				sudo apt-get -qq install -y php7.2-xml
 				sudo apt-get -qq install -y php7.2-mysql
 				sudo apt-get -qq install -y php7.2-pear
-				sudo apt-get -qq install -y php7.2-idn
 				sudo apt-get -qq install -y php7.2-imagick
 				sudo apt-get -qq install -y php7.2-imap
 				sudo apt-get -qq install -y php7.2-memcache
-				sudo apt-get -qq install -y php7.2-mhash
-				sudo apt-get -qq install -y php7.2-ming
-				sudo apt-get -qq install -y php7.2-ps
 				sudo apt-get -qq install -y php7.2-pspell
 				sudo apt-get -qq install -y php7.2-recode
 				sudo apt-get -qq install -y php7.2-snmp
