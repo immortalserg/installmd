@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.4.4 от 10.10.2018\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.4.5 от 19.10.2018\033[0m"
 #функция проверки не занят ли установщик
 label1(){
     #проверка не запущен ли процесс apt
@@ -48,6 +48,7 @@ inst_base(){
 	sudo apt-get -qq install -y software-properties-common
 	# Устанавливаем необходимые пакеты
 	echo -n -e "\033[1;36mУстанавливаю необходимые утилиты и библиотеки... \033[0m"
+	sudo apt-get -qq install -y snmp-mibs-downloader
 	sudo apt-get -qq install -y ntpdate
 	sudo apt-get -qq install -y libusb-1.0-0
 	sudo apt-get -qq install -y libusb-1.0-0-dev
@@ -875,6 +876,8 @@ inst_config1(){
 	sudo cp -rp ~/mdbackup/* /var/www
 	rm -r ~/mdbackup/*
 	rmdir mdbackup
+	find /var/www/ -type f -exec sudo chmod 0666 {} \;
+	find /var/www/ -type d -exec sudo chmod 0777 {} \;
 	mysql -u root -p$pass db_terminal < /var/www/dump.sql
 	mysql -u root << EOF
 SELECT CONCAT('ALTER TABLE ',table_schema,'.',table_name,' ENGINE=MyISAM;')
