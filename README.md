@@ -86,6 +86,11 @@ chmod +x ./installmd
 
 ### Исправления.
 
+v.0.4.5 от 19.10.2018
+- исправлена ошибка с правами на файлы и папки при расширенной конфигурации (https://github.com/immortalserg/installmd/issues/2)
+- убраны лишние пакеты php (https://github.com/immortalserg/installmd/pull/3)
+- добавлена установка snmp-mibs-downloader
+
 v.0.4.4 от 10.10.2018
 - исправлена ошибка при установке базы данных
 - добавлено сообщение о паролях
