@@ -86,6 +86,9 @@ chmod +x ./installmd
 
 ### Исправления.
 
+v0.4.6 от 24.10.2018
+- настройка параметров в php7.2
+
 v.0.4.5 от 19.10.2018
 - исправлена ошибка с правами на файлы и папки при расширенной конфигурации (https://github.com/immortalserg/installmd/issues/2)
 - убраны лишние пакеты php (https://github.com/immortalserg/installmd/pull/3)
