@@ -1,9 +1,94 @@
 #!/bin/bash
+
+newinstall (){
+
+mkdir /home/pi/blynk
+mkdir /home/pi/blynk/data
+mkdir /home/pi/blynk/logs
+chmod 777 /home/pi/$st2
+chmod 777 /home/pi/$st4
+chmod 777 /home/pi/blynk
+chmod 777 /home/pi/blynk/data
+chmod 777 /home/pi/blynk/logs
+sudo tee /home/pi/blynk/config << EOF
+hardware.mqtt.port=8440
+hardware.ssl.port=8441
+hardware.default.port=8442
+http.port=8080
+https.port=9443
+app.ssl.port=8443
+listen.address=
+server.ssl.cert=
+server.ssl.key=
+server.ssl.key.pass=
+client.ssl.cert=
+client.ssl.key=
+#https.cert=
+#https.key=
+#https.key.pass=
+data.folder=/home/pi/blynk/data
+logs.folder=/home/pi/blynk/logs
+#log debug level. trace|debug|info|error
+log.level=info
+user.devices.limit=25
+user.tags.limit=100
+user.dashboard.max.limit=100
+user.widget.max.size.limit=10
+user.message.quota.limit=100
+user.message.quota.limit.exceeded.warning.period=60000
+notifications.queue.limit=10000
+blocking.processor.thread.pool.limit=5
+notifications.frequency.user.quota.limit=15
+webhooks.frequency.user.quota.limit=1000
+webhooks.response.size.limit=64
+user.profile.max.size=64
+terminal.strings.pool.size=25
+map.strings.pool.size=25
+lcd.strings.pool.size=6
+table.rows.pool.size=100
+user.traffic.limit=256
+profile.save.worker.period=60000
+stats.print.worker.period=60000
+app.socket.idle.timeout=600
+hard.socket.idle.timeout=15
+enable.native.epoll.transport=false
+enable.native.openssl=false
+enable.db=false
+enable.raw.db.data.store=false
+async.logger.ring.buffer.size=2048
+initial.energy=10000
+admin.rootPath=/admin
+net.interface=eth
+allowed.administrator.ips=0.0.0.0/0
+# Замените логин и пароль на свои
+admin.email=admin@blynk.cc
+admin.pass=admin
+allowed.users.list=
+
+EOF
+
+
+}
+
 wget https://github.com/blynkkk/blynk-server/releases
 st1="https://github.com"$(grep -A 1 -o "/blynkkk/blynk-server/releases/download/\(.*\)-java8.jar" ./releases -m 1)
+st3=${st1/"-java8"/""}
 st2=$(grep -A 1 -o "server-\(.*\)-java8.jar" ./releases -m 1)
-echo $st1
-mkdir /home/pi/blynk
+st4=${st2/"-java8"/""}
+rm ./releases
 wget -P /home/pi/ $st1
-chmod 777 /home/pi/$st2
-chmod 777 /home/pi/blynk
+wget -P /home/pi/ $st3
+#проверяем новая установка или обновление
+if test -f /home/pi/blynk-server.jar
+then
+echo yes
+else
+#файла /home/pi/blynk-server.jar нет, новая установка
+newinstall
+fi
+mv -f /home/pi/$st2 /home/pi/blynk-server8.jar
+mv -f /home/pi/$st4 /home/pi/blynk-server.jar
+
+
+
+
