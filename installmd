@@ -248,8 +248,13 @@ func_log_off(){
 	sudo sed -i 's/syslog/#syslog/g' /etc/mysql/conf.d/mysqld_safe_syslog.cnf
 	echo "log-error=/dev/null" | tee -a /etc/mysql/conf.d/mysqld_safe_syslog.cnf
 	sudo systemctl disable rsyslog
-
-
+	rm /etc/cloud/cloud.cfg.d/05_logging.cfg 
+	sudo sed -i 's/PrintLastLog yes/PrintLastLog no/g' /etc/ssh/sshd_config
+ 	sudo sed -i 's/PrintLastLog/#PrintLastLog/g' /etc/ssh/sshd_config
+	sudo sed -i 's/PrintLastLog yes/PrintLastLog no/g' /etc/ssh/ssh_config
+ 	sudo sed -i 's/PrintLastLog/#PrintLastLog/g' /etc/ssh/ssh_config
+  	echo "PrintLastLog no" | tee -a /etc/ssh/ssh_config
+  	echo "PrintLastLog no" | tee -a /etc/ssh/sshd_config
 
 }
 
