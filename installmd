@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.4.6 от 24.10.2018\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.4.7 от 11.11.2018\033[0m"
 #функция проверки не занят ли установщик
 label1(){
     #проверка не запущен ли процесс apt
@@ -240,6 +240,19 @@ inst_owfs(){
 	if [ "$flag_o2" = "i2c"]; then	echo "server: i2c = ALL:ALL" | tee -a /etc/owfs.conf; fi
 	echo -e "\033[1;32m установлено\033[0m"
 }
+#функция отключения логов
+func_log_off(){
+	sudo sed -i 's/ErrorLog/#ErrorLog/g' /etc/apache2/apache2.conf
+	sudo sed -i 's/CustomLog/#CustomLog/g' /etc/apache2/apache2.conf
+	sudo sed -i 's/skip_log_error/#skip_log_error/g' /etc/mysql/conf.d/mysqld_safe_syslog.cnf
+	sudo sed -i 's/syslog/#syslog/g' /etc/mysql/conf.d/mysqld_safe_syslog.cnf
+	echo "log-error=/dev/null" | tee -a /etc/mysql/conf.d/mysqld_safe_syslog.cnf
+	sudo systemctl disable rsyslog
+
+
+
+}
+
 #функция установки apache2
 inst_apache2(){
 	echo -n -e "\033[1;36mУстанавливаю web сервер Apache... \033[0m"
@@ -1815,6 +1828,8 @@ func_install(){
 	if [ -n "$flag_u" ]; then inst_433utils;	fi
 	if [ -n "$flag_d" ]; then install_realtime;	fi
 	if [ -n "$flag_b" ]; then install_blynk;	fi
+	if [ -n "$flag_l" ]; then func_log_off;	fi
+
 }
 #конец объявления функций, основной вызов программы
 #if [ -z "$1" ]; then inst_start; fi
@@ -1839,6 +1854,7 @@ case "$1" in
 -u) flag_u=1 ;;
 -d) flag_d=1 ;;
 -b) flag_b=1 ;;
+-l) flag_l=1 ;;
 #*) echo "$1 нет такой опции, смотри справку -h";;
 esac
 shift
