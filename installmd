@@ -242,7 +242,7 @@ inst_owfs(){
 }
 #функция отключения логов
 func_log_off(){
-	sudo sed -i 's/ErrorLog/#ErrorLog/g' /etc/apache2/apache2.conf
+	#sudo sed -i 's/ErrorLog/#ErrorLog/g' /etc/apache2/apache2.conf
 	sudo sed -i 's/CustomLog/#CustomLog/g' /etc/apache2/apache2.conf
 	sudo sed -i 's/skip_log_error/#skip_log_error/g' /etc/mysql/conf.d/mysqld_safe_syslog.cnf
 	sudo sed -i 's/syslog/#syslog/g' /etc/mysql/conf.d/mysqld_safe_syslog.cnf
