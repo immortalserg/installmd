@@ -1069,8 +1069,7 @@ inst_config1(){
 	tar -xf mdbackup.tar.gz
 	rm mdbackup.tar.gz
 	sudo cp -rp ~/mdbackup/* /var/www
-	rm -r ~/mdbackup/*
-	rmdir mdbackup
+	rm -rf ~/mdbackup
 	find /var/www/ -type f -exec sudo chmod 0666 {} \;
 	find /var/www/ -type d -exec sudo chmod 0777 {} \;
 	mysql -u root -p$pass db_terminal < /var/www/dump.sql
@@ -1097,8 +1096,7 @@ inst_config2(){
 	tar -zxf $pathconf -C ./backup
 	rm $pathconf
 	sudo cp -rp ~/backup/* /var/www
-	rm -r ~/backup/*
-	rmdir backup
+	rm -rf ~/backup
 	mysql -u root -p$pass db_terminal < /var/www/dump.sql
 }
 #функция обновления и включаения системы МД (запуск после установки БД)
@@ -1356,8 +1354,7 @@ inst_md(){
 	# Переносим систему в директорию WEB-сервера
 	sudo cp -rp ~/majordomo/* /var/www
 	sudo cp -rp ~/majordomo/.htaccess /var/www
-	rm -r ~/majordomo/*
-	rmdir majordomo
+	rm -rf ~/majordomo
 	# Создаем описание сервиса для запуска основного цикла системы
 	sudo tee /etc/init.d/majordomo << EOF
 #!/bin/sh
@@ -1491,8 +1488,7 @@ inst_phpmyadmin(){
 	tar -xf phpMyAdmin-4.7.7-all-languages.tar.gz
 	rm phpMyAdmin-4.7.7-all-languages.tar.gz
 	cp -a phpMyAdmin-4.7.7-all-languages /var/www/phpmyadmin
-	rm -r ~/phpMyAdmin-4.7.7-all-languages/*
-	rmdir phpMyAdmin-4.7.7-all-languages
+	rm -rf ~/phpMyAdmin-4.7.7-all-languages
 	echo -e "\033[1;32mphpMyAdmin установлен\033[0m"
 }
 #функция установки часов реального времени на i2c0
