@@ -33,6 +33,10 @@ label1(){
 }
 #функция установки базовых пакетов
 inst_base(){
+  	# Обновляем информацию о пакетах
+	sudo apt-get -qq update
+	sudo apt-get -qq install -y python-software-properties
+	sudo apt-get -qq install -y software-properties-common
 	#добавление репов Universe в Ubuntu server
 	add-apt-repository universe
 	#проверка системы raspbian и добавление репов php7 и mariadb
@@ -42,10 +46,7 @@ inst_base(){
 		#добавляем в распбиан пакеты php7 и mariadb
 		echo "deb http://mirrordirector.raspbian.org/raspbian/ stretch main contrib non-free rpi" | tee -a /etc/apt/sources.list
 	fi
-  # Обновляем информацию о пакетах
-	sudo apt-get -qq update
-	sudo apt-get -qq install -y python-software-properties
-	sudo apt-get -qq install -y software-properties-common
+
 	# Устанавливаем необходимые пакеты
 	echo -n -e "\033[1;36mУстанавливаю необходимые утилиты и библиотеки... \033[0m"
 	sudo apt-get -qq install -y sysvinit-utils
