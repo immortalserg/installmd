@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.4.8 от 15.11.2018\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.4.9 от 25.11.2018\033[0m"
 #функция проверки не занят ли установщик
 label1(){
     #проверка не запущен ли процесс apt
@@ -1070,8 +1070,7 @@ inst_config1(){
 	tar -xf mdbackup.tar.gz
 	rm mdbackup.tar.gz
 	sudo cp -rp ~/mdbackup/* /var/www
-	rm -r ~/mdbackup/*
-	rmdir mdbackup
+	rm -Rfv ~/mdbackup
 	find /var/www/ -type f -exec sudo chmod 0666 {} \;
 	find /var/www/ -type d -exec sudo chmod 0777 {} \;
 	mysql -u root -p$pass db_terminal < /var/www/dump.sql
@@ -1098,8 +1097,7 @@ inst_config2(){
 	tar -zxf $pathconf -C ./backup
 	rm $pathconf
 	sudo cp -rp ~/backup/* /var/www
-	rm -r ~/backup/*
-	rmdir backup
+	rm -Rfv ~/backup
 	mysql -u root -p$pass db_terminal < /var/www/dump.sql
 }
 #функция обновления и включаения системы МД (запуск после установки БД)
@@ -1357,8 +1355,7 @@ inst_md(){
 	# Переносим систему в директорию WEB-сервера
 	sudo cp -rp ~/majordomo/* /var/www
 	sudo cp -rp ~/majordomo/.htaccess /var/www
-	rm -r ~/majordomo/*
-	rmdir majordomo
+	rm -Rfv ~/majordomo
 	# Создаем описание сервиса для запуска основного цикла системы
 	sudo tee /etc/init.d/majordomo << EOF
 #!/bin/sh
@@ -1488,12 +1485,24 @@ EOF
 inst_phpmyadmin(){
 	echo -e "\033[1;36mУстанавливаю phpMyAdmin \033[0m"
 	cd ~
-	wget -q https://files.phpmyadmin.net/phpMyAdmin/4.7.7/phpMyAdmin-4.7.7-all-languages.tar.gz
-	tar -xf phpMyAdmin-4.7.7-all-languages.tar.gz
-	rm phpMyAdmin-4.7.7-all-languages.tar.gz
-	cp -a phpMyAdmin-4.7.7-all-languages /var/www/phpmyadmin
-	rm -r ~/phpMyAdmin-4.7.7-all-languages/*
-	rmdir phpMyAdmin-4.7.7-all-languages
+	#определяем последнюю версию
+	wget https://www.phpmyadmin.net/downloads/
+	pmpm1=$(grep -A 1 -o "download_popup\" href=\"https://files.phpmyadmin.net/phpMyAdmin/\(.*\)-all-languages.zip\"" ./index.html -m 1)
+	pmpm2=${pmpm1/"download_popup\" href=\""/""}
+	pmpm3=${pmpm2/".zip\""/""}
+	pmpm4=$pmpm3".tar.gz"
+	pmpm5=$(echo $pmpm3 | sed 's/https:\/\/files.phpmyadmin.net\/phpMyAdmin\/\(.*\)\///')
+	rm ./index.html
+	DIR="/var/www/phpmyadmin"
+	if [ ! -d "$DIR" ]; then
+ 	   # Создать папку, только если ее не было
+	    mkdir $DIR
+	fi
+	wget $pmpm4
+	tar -xf $pmpm5.tar.gz
+	rm $pmpm5.tar.gz
+	cp -rf $pmpm5/* $DIR
+	rm -Rfv ./$pmpm5
 	echo -e "\033[1;32mphpMyAdmin установлен\033[0m"
 }
 #функция установки часов реального времени на i2c0
