@@ -1899,6 +1899,21 @@ func_install(){
 		fi
 	inst_md2
 	inst_end
+	else
+		if [ -n "$flag_c" ]; then
+			tmp_fl4=${flag_c2:0:1}
+			if [ -z "$flag_c2" ]; then
+ 				inst_config1
+			 else
+				if [[ $tmp_fl4 = "-" ]]; then
+ 					inst_config1
+ 				else
+ 					inst_config2
+ 				fi
+			 fi
+		else
+			inst_config0
+		fi
 	fi
 	if [ -n "$flag_j" ]; then inst_java;	fi
 	if [ -n "$flag_a" ]; then inst_webmin;	fi
