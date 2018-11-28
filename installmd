@@ -231,14 +231,14 @@ inst_owfs(){
 	sudo sed -i "/ONEWIRE_SERVER/s/\/\///" /var/www/config.php
 	sudo sed -i "/server: port/s/localhost:4304/8234/" /etc/owfs.conf
 	#USB адаптер DS9490R
-	if [[ "$flag_o2" = "usb" ]]; then sudo sed -i "/server: usb/s/\#//" /etc/owfs.conf; fi
+	if [[ $flag_o2 = "usb" ]]; then sudo sed -i "/server: usb/s/\#//" /etc/owfs.conf; fi
 	#UART адаптер DS2480
-	if [[ "$flag_o2" = "uart" ]]; then
+	if [[ $flag_o2 = "uart" ]]; then
 		sudo sed -i "/server: device/s/\#//" /etc/owfs.conf
 		sudo sed -i "/server: device/s/ttyS1/$flag_o3/" /etc/owfs.conf
 	fi
 	#i2c адаптер DS2482
-	if [[ "$flag_o2" = "i2c" ]]; then	echo "server: i2c = ALL:ALL" | tee -a /etc/owfs.conf; fi
+	if [[ $flag_o2 = "i2c" ]]; then	echo "server: i2c = ALL:ALL" | tee -a /etc/owfs.conf; fi
 	echo -e "\033[1;32m установлено\033[0m"
 }
 #функция отключения логов
