@@ -1065,6 +1065,16 @@ inst_config0(){
 }
 #функция установки расширенной конфигурации
 inst_config1(){
+	
+	if [ -z "$pass" ]; then 
+	stty -echo
+	echo -e -n "\033[1;33mВведите пароль root для MariaDB (MySQL) > \033[0m"
+	read pass
+	stty echo
+		echo ""
+	fi
+
+
 	rm mdbackup.tar.gz
 	wget -q http://kusheev.com/wp-content/uploads/mdbackup.tar.gz
 	tar -xf mdbackup.tar.gz
