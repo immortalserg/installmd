@@ -1075,12 +1075,10 @@ inst_config1(){
 	fi
 
 
-	rm mdbackup.tar.gz
-	wget -q http://kusheev.com/wp-content/uploads/mdbackup.tar.gz
-	tar -xf mdbackup.tar.gz
-	rm mdbackup.tar.gz
-	sudo cp -rp ~/mdbackup/* /var/www
-	rm -Rfv ~/mdbackup
+	rm mdbackup.tgz
+	wget -q http://kusheev.com/wp-content/uploads/mdbackup.tgz
+	tar -xf mdbackup.tar.gz -C /var/www
+	rm mdbackup.tgz
 	find /var/www/ -type f -exec sudo chmod 0666 {} \;
 	find /var/www/ -type d -exec sudo chmod 0777 {} \;
 	mysql -u root -p$pass db_terminal < /var/www/dump.sql
@@ -1103,11 +1101,16 @@ EOF
 }
 #функция установки своей конфигурации
 inst_config2(){
-	mkdir backup
-	tar -zxf $pathconf -C ./backup
-	rm $pathconf
-	sudo cp -rp ~/backup/* /var/www
-	rm -Rfv ~/backup
+	if [ -z "$pass" ]; then 
+	stty -echo
+	echo -e -n "\033[1;33mВведите пароль root для MariaDB (MySQL) > \033[0m"
+	read pass
+	stty echo
+		echo ""
+	fi
+
+
+	tar -zxf $pathconf -C /var/www
 	mysql -u root -p$pass db_terminal < /var/www/dump.sql
 }
 #функция обновления и включаения системы МД (запуск после установки БД)
