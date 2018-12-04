@@ -1908,7 +1908,9 @@ func_install(){
  				fi
 			 fi
 		else
+			if [ -n "$flag_t" ]; then
 			inst_config0
+			fi
 		fi
 	inst_md2
 	inst_end
@@ -1925,7 +1927,9 @@ func_install(){
  				fi
 			 fi
 		else
+			if [ -n "$flag_t" ]; then
 			inst_config0
+			fi
 		fi
 	fi
 	if [ -n "$flag_j" ]; then inst_java;	fi
