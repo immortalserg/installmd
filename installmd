@@ -1077,7 +1077,7 @@ inst_config1(){
 
 	rm mdbackup.tgz
 	wget -q http://kusheev.com/wp-content/uploads/mdbackup.tgz
-	tar -xf mdbackup.tar.gz -C /var/www
+	tar -xf mdbackup.tgz -C /var/www
 	rm mdbackup.tgz
 	find /var/www/ -type f -exec sudo chmod 0666 {} \;
 	find /var/www/ -type d -exec sudo chmod 0777 {} \;
