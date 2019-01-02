@@ -100,37 +100,43 @@ inst_base(){
 }
 #функция установки Blynk 
 install_blynk(){
+# проверка дирректории /home/blynk
+if ! [ -d /path/directory/ ]; then
+echo 'No directory'
+mkdir /home/blynk
+fi
 wget https://github.com/blynkkk/blynk-server/releases
 st1="https://github.com"$(grep -A 1 -o "/blynkkk/blynk-server/releases/download/\(.*\)-java8.jar" ./releases -m 1)
 st3=${st1/"-java8"/""}
 st2=$(grep -A 1 -o "server-\(.*\)-java8.jar" ./releases -m 1)
 st4=${st2/"-java8"/""}
 rm ./releases
-wget -P /home/pi/ $st1
-wget -P /home/pi/ $st3
+wget -P /home/blynk/ $st1
+wget -P /home/blynk/ $st3
 #проверяем новая установка или обновление
-if test -f /home/pi/blynk-server.jar
+if test -f /home/blynk/blynk-server.jar
 then
 echo yes
 else
 #файла /home/pi/blynk-server.jar нет, новая установка
 newinstallblynk
 fi
-mv -f /home/pi/$st2 /home/pi/blynk-server8.jar
-mv -f /home/pi/$st4 /home/pi/blynk-server.jar
+mv -f /home/blynk/$st2 /home/blynk/blynk-server8.jar
+mv -f /home/blynk/$st4 /home/blynk/blynk-server.jar
 
 
 }
 newinstallblynk (){
-	mkdir /home/pi/blynk
-	mkdir /home/pi/blynk/data
-	mkdir /home/pi/blynk/logs
-	chmod 777 /home/pi/$st2
-	chmod 777 /home/pi/$st4
-	chmod 777 /home/pi/blynk
-	chmod 777 /home/pi/blynk/data
-	chmod 777 /home/pi/blynk/logs
-sudo tee /home/pi/blynk/config << EOF
+	mkdir /home/blynk/data
+	mkdir /home/blynk/logs
+	chmod 777 /home/blynk/$st2
+	chmod 777 /home/blynk/$st4
+	chmod 777 /home/blynk
+	chmod 777 /home/blynk/data
+	chmod 777 /home/blynk/logs
+echo "@reboot java -jar /home/blynk/blynk-server8.jar -dataFolder /home/blynk -serverConfig /home/blynk/config &" >> /var/spool/cron/crontabs/root
+
+sudo tee /home/blynk/config << EOF
 hardware.mqtt.port=8440
 hardware.ssl.port=8441
 hardware.default.port=8442
@@ -146,8 +152,8 @@ client.ssl.key=
 #https.cert=
 #https.key=
 #https.key.pass=
-data.folder=/home/pi/blynk/data
-logs.folder=/home/pi/blynk/logs
+data.folder=/home/blynk/data
+logs.folder=/home/blynk/logs
 #log debug level. trace|debug|info|error
 log.level=info
 user.devices.limit=25
@@ -176,7 +182,7 @@ enable.native.openssl=false
 enable.db=false
 enable.raw.db.data.store=false
 async.logger.ring.buffer.size=2048
-initial.energy=10000
+initial.energy=100000
 admin.rootPath=/admin
 net.interface=eth
 allowed.administrator.ips=0.0.0.0/0
