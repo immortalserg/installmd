@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.4.9 от 25.11.2018\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.4.10 от 05.01.2019\033[0m"
 #функция проверки не занят ли установщик
 label1(){
     #проверка не запущен ли процесс apt
@@ -98,7 +98,7 @@ inst_base(){
 	sudo useradd -m -d /home/pi pi -p $pass2
 	echo -e "\033[1;32m установлено\033[0m"
 }
-#функция установки Blynk 
+#функция установки Blynk
 install_blynk(){
 # проверка дирректории /home/blynk
 if ! [ -d /path/directory/ ]; then
@@ -255,7 +255,7 @@ func_log_off(){
 	sudo sed -i 's/syslog/#syslog/g' /etc/mysql/conf.d/mysqld_safe_syslog.cnf
 	echo "log-error=/dev/null" | tee -a /etc/mysql/conf.d/mysqld_safe_syslog.cnf
 	sudo systemctl disable rsyslog
-	rm /etc/cloud/cloud.cfg.d/05_logging.cfg 
+	rm /etc/cloud/cloud.cfg.d/05_logging.cfg
 	rm /var/log/wtmp
 	rm /var/log/btmp
 	rm /var/log/lastlog
@@ -447,7 +447,7 @@ inst_php(){
 		sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php/7.2/apache2/php.ini
 		sudo sed -i '/max_file_uploads/s/20/150/' /etc/php/7.2/apache2/php.ini
 		sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.2/apache2/php.ini
-	fi	
+	fi
 	# Настраиваем PHP для коммандной строки
 	if [ -f "/etc/php5/cli/php.ini" ]; then
 		sudo sed -i '/short_open_tag/s/Off/On/' /etc/php5/cli/php.ini
@@ -541,7 +541,7 @@ inst_db(){
 			then
 	#добавляем репы mariadb-server и устанавливаем
 	sudo apt-get -qq install -y software-properties-common
-			
+
 	type_os=$(lsb_release -i)
 	type_os2=$(lsb_release -c)
 	type_os5=$(lsb_release -r)
@@ -553,22 +553,22 @@ inst_db(){
 	if [ $type_os3 = "Ubuntu" ]; then
 	echo "Ubuntu"
     if [ $type_os4 = "trusty" ]; then
-    sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db 
+    sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
     sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/ubuntu trusty main';
     fi
-    if [ $type_os4 = "xenial" ]; then 
+    if [ $type_os4 = "xenial" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,arm64,i386,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/ubuntu xenial main'
     fi
-    if [ $type_os4 = "artful" ]; then 
+    if [ $type_os4 = "artful" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,i386] http://mariadb.mirror.nucleus.be/repo/10.3/ubuntu artful main'
     fi
-    if [ $type_os4 = "bionic" ]; then 
+    if [ $type_os4 = "bionic" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/ubuntu bionic main'
     fi
-    if [ $type_os4 = "cosmic" ]; then 
+    if [ $type_os4 = "cosmic" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64] http://mariadb.mirror.nucleus.be/repo/10.2/ubuntu cosmic main'
     fi
@@ -576,15 +576,15 @@ inst_db(){
 
 	if [ $type_os3 = "Debian" ]; then
 	echo "Debian"
-    if [ $type_os4 = "jessie" ]; then 
+    if [ $type_os4 = "jessie" ]; then
     sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db
     sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/debian jessie main'
     fi
-    if [ $type_os4 = "stretch" ]; then 
+    if [ $type_os4 = "stretch" ]; then
     sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/debian stretch main'
     fi
-    if [ $type_os4 = "sid" ]; then 
+    if [ $type_os4 = "sid" ]; then
     sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,i386] http://mariadb.mirror.nucleus.be/repo/10.3/debian sid main'
     fi
@@ -593,19 +593,19 @@ inst_db(){
 
 	if [ $type_os3 = "Mint" ]; then
 	echo "Mint"
-    if [ $type_os6 = "17" ]; then 
+    if [ $type_os6 = "17" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
     sudo add-apt-repository 'deb http://mariadb.mirror.nucleus.be/repo/10.2/ubuntu trusty main'
     fi
-    if [ $type_os6 = "17.1" ]; then 
+    if [ $type_os6 = "17.1" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
     sudo add-apt-repository 'deb http://mariadb.mirror.nucleus.be/repo/10.2/ubuntu trusty main'
     fi
-    if [ $type_os4 = "18" ]; then 
+    if [ $type_os4 = "18" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/ubuntu xenial main'
     fi
-    if [ $type_os4 = "19" ]; then 
+    if [ $type_os4 = "19" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/ubuntu bionic main'
     fi
@@ -1071,8 +1071,8 @@ inst_config0(){
 }
 #функция установки расширенной конфигурации
 inst_config1(){
-	
-	if [ -z "$pass" ]; then 
+
+	if [ -z "$pass" ]; then
 	stty -echo
 	echo -e -n "\033[1;33mВведите пароль root для MariaDB (MySQL) > \033[0m"
 	read pass
@@ -1107,7 +1107,7 @@ EOF
 }
 #функция установки своей конфигурации
 inst_config2(){
-	if [ -z "$pass" ]; then 
+	if [ -z "$pass" ]; then
 	stty -echo
 	echo -e -n "\033[1;33mВведите пароль root для MariaDB (MySQL) > \033[0m"
 	read pass
@@ -1691,8 +1691,8 @@ func_hw(){
 func_help(){
 	echo "Список опций коммандной строки:"
 	echo "квадратные скобки это значит параметр не обязательный, сами квадратные скобки не писать"
-	echo "-t [db_root_password] [pi_password] - установка базовой системы MAjorDoMo, если пароль db_root_password не задан то пароль спросит при установке, если pi_password не задан, но задан db_root_password то pi_password=db_root_password"
-	echo "-c [path] - альтернативная конфигурация, параметр не обязательный, если не указан, то конфигурация базовая, path - путь к своей конфигурации (если путь не задан то устанавливается расширенная конфигурация) параметр используется только с параметром -t"
+	echo "-t - установка базовой системы MAjorDoMo, если пароль db_root_password не задан то пароль спросит при установке, если pi_password не задан, но задан db_root_password то pi_password=db_root_password"
+	echo "-c [path] - альтернативная конфигурация, параметр не обязательный, если не указан, то конфигурация базовая, path - путь к своей конфигурации (если путь не задан то устанавливается расширенная конфигурация) параметр используется только с параметром -t, при указании [path] параметр должен использоваться последним"
 	echo "-b - установка Blynk Server"
 	echo "-j - установка Java"
 	echo "-a - установить webmin"
@@ -1835,7 +1835,7 @@ inst_start (){
 	#создать пользователя pi
 	echo -e -n "\033[0;36mСоздать пользователя pi (если нету необходимо создать) пользователь pi для базы данных создается независимо от выбора? (y/n) \033[0m"
 	read piuser
-	
+
 	echo  -e "\033[1;31mВНИМАНИЕ!!! ВНИМАНИЕ!!! ВНИМАНИЕ!!! далее нигде пароли на базу данных не вводить!!! если спросит то оставлять поле пароля пустым \033[0m"
 	time22=$(date +%s)
 	flag_t=1
@@ -1861,37 +1861,18 @@ func_passw(){
 	read pass2
 	stty echo
 		echo ""
-	
+
 }
 #функция установки
 func_install(){
 	label1
 	if [ -n "$flag_t" ]; then
 		tmp_fl2=${flag_t2:0:1}
-		if [[ -z "$flag_t2" ]]; then
-			func_passw
-		else
-			if [[ $tmp_fl2 = "-" ]]; then
-				func_passw
-			else
-				pass=$flag_t2
-				tmp_fl3=${flag_t3:0:1}
-				echo $tmp_fl3
-				if [ -z "$flag_t3" ]; then
-					pass2=$pass
-				else
-					if [ $tmp_fl3 = "-" ]; then
-						pass2=$pass
-					else
-						pass=$flag_t3
-					fi
-				fi
-			fi
-		fi
+		func_passw
 		stty echo
 		echo ""
 		echo  -e "\033[1;31mВНИМАНИЕ!!! ВНИМАНИЕ!!! ВНИМАНИЕ!!! далее нигде пароли на базу данных не вводить!!! если спросит то оставлять поле пароля пустым \033[0m"
-	
+
 	password1=$pass
 	password2=$pass
 	reply='Y'

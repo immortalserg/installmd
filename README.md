@@ -24,7 +24,7 @@ chmod +x ./installmd
 
 -h - справка
 
--t [db_root_password] [pi_password] - установка базовой системы MAjorDoMo, если пароль db_root_password не задан то пароль спросит при установке, если pi_password не задан, но задан db_root_password то pi_password=db_root_password
+-t - установка базовой системы MAjorDoMo, если пароль db_root_password не задан то пароль спросит при установке, если pi_password не задан, но задан db_root_password то pi_password=db_root_password
 
 -c [path] - альтернативная конфигурация, параметр не обязательный, если не указан, то конфигурация базовая, path - путь к своей конфигурации (если путь не задан то устанавливается расширенная конфигурация)
 
@@ -89,6 +89,10 @@ chmod +x ./installmd
 ./installmd -n - установка node.js
 
 ### Исправления.
+
+v0.4.10 от 05.01.2019
+- добавлен запуск Blynk сервер
+- убран ввод пароля из коммандной строки
 
 v0.4.9 от 25.11.2018
 - обновление phpmyadmin
