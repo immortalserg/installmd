@@ -519,6 +519,7 @@ EOF
 		hw_device=0
 		hw_port=2
 		if echo "$type_pr2" | grep -i "Orange Pi" >/dev/null; then hw_port=0; fi
+		if echo "$type_pr2" | grep -i "Raspberry Pi" >/dev/null; then hw_port=0; fi
 		asound_conf
 	fi
 }
