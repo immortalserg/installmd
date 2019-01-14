@@ -1218,7 +1218,7 @@ EOF
 EOF
 
 	chmod +x /etc/rc.local
-	systemctl enable rc-local
+	systemctl enable rc-local.service
 	fi
 }
 #функции установки WiringPi
@@ -1701,6 +1701,7 @@ func_hw(){
 	#Raspberry Pi 3 Model B Plus Rev 1.3
 	#Xunlong Orange Pi PC
         #Xunlong Orange Pi Zero
+	#OrangePi Win/Win Plus
 	fi
 }
 #функция вывода справки
@@ -1893,6 +1894,7 @@ func_install(){
 	password2=$pass
 	reply='Y'
 	inst_base
+        inst_rclocal
 	inst_sound
 	inst_apache2
 	inst_php
