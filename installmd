@@ -33,6 +33,8 @@ label1(){
 }
 #функция установки базовых пакетов
 inst_base(){
+        # задаем имя хоста md.lan
+        sudo hostnamectl set-hostname md.lan
   	# Обновляем информацию о пакетах
 	sudo apt-get -qq update
 	sudo apt-get -qq install -y python-software-properties
@@ -1137,7 +1139,10 @@ inst_md2(){
 #функция установки Java
 inst_java(){
 	echo -e "\033[1;36mУстанавливаю Java...\033[0m"
-	#добавляем репы java
+	
+
+
+        #добавляем репы java
 	sudo apt-add-repository ppa:webupd8team/java -y
 	sudo apt-get -qq update
 	sudo apt-get -qq install -y oracle-java8-jdk
