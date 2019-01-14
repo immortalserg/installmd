@@ -100,7 +100,7 @@ inst_base(){
 	sudo useradd -m -d /home/pi pi -p $pass2
         # получаем имя платы
         func_hw
-    	if [[ $type_pr2 = "Xunlong Orange Pi Zero" ]]
+    	if [[ $type_pr2 = "Xunlong Orange Pi Zero" || $type_pr2 = "Xunlong Orange Pi Plus 2"]]
     	then
         	echo "она"
 		echo "sun4i_codec" | tee -a /etc/modules
@@ -1703,6 +1703,7 @@ func_hw(){
 	#Xunlong Orange Pi PC
         #Xunlong Orange Pi Zero
 	#OrangePi Win/Win Plus
+	#Xunlong Orange Pi Plus 2
 	fi
 }
 #функция вывода справки
