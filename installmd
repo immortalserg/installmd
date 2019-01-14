@@ -674,7 +674,7 @@ sql_mode=IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO
 EOF
 	#добавляем в /etc/rc.local паузу старта базы данных
 	sudo sed -i "/exit 0/s/exit 0//" /etc/rc.local
-	echo "#/bin/sleep 20 && service mysql start" | tee -a /etc/rc.local
+	echo "/bin/sleep 60 && service mysql start" | tee -a /etc/rc.local
 	echo "exit 0" | tee -a /etc/rc.local
 }
 #функция настройки базы данных
