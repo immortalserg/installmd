@@ -291,6 +291,60 @@ inst_apache2(){
 	sudo sed -i 's/None/All/g' /etc/apache2/apache2.conf
 	echo "ServerName localhost" | sudo tee -a /etc/apache2/apache2.conf
 	sudo sed -i 's/\/html//' /etc/apache2/sites-available/000-default.conf
+	#проверка наличия php
+	phpif=$(apt-cache search php-common)
+	phpif70=$(apt-cache search php7.0-common)
+	phpif5=$(apt-cache search php5-common)
+	phpif72=$(apt-cache search php7.2-common)
+	if [ "$phpif72" = "" ];
+	then
+		// если php не версии 7.2
+		if [ "$phpif" = "" ];
+		then
+					if [ "$phpif70" = "" ];
+					then
+						sudo apt-get -qq install -y libapache2-mod-php5
+					else
+						sudo apt-get -qq install -y libapache2-mod-php7.0
+					fi
+				else
+					sudo apt-get -qq install -y libapache2-mod-php
+				fi
+			else
+				sudo apt-get -qq install -y libapache2-mod-php7.2
+			fi
+
+	# Настраиваем PHP для apache2
+	if [ -f "/etc/php5/apache2/php.ini" ]; then
+		sudo sed -i '/short_open_tag/s/Off/On/' /etc/php5/apache2/php.ini
+		sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php5/apache2/php.ini
+		sudo sed -i '/max_execution_time/s/30/90/' /etc/php5/apache2/php.ini
+		sudo sed -i '/max_input_time/s/60/180/' /etc/php5/apache2/php.ini
+		sudo sed -i '/post_max_size/s/8/200/' /etc/php5/apache2/php.ini
+		sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php5/apache2/php.ini
+		sudo sed -i '/max_file_uploads/s/20/150/' /etc/php5/apache2/php.ini
+		sudo sed -i '/log_errors/s/On/Off/' /etc/php5/apache2/php.ini
+	fi
+	if [ -f "/etc/php/7.0/apache2/php.ini" ]; then
+		sudo sed -i '/short_open_tag/s/Off/On/' /etc/php/7.0/apache2/php.ini
+		sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php/7.0/apache2/php.ini
+		sudo sed -i '/max_execution_time/s/30/90/' /etc/php/7.0/apache2/php.ini
+		sudo sed -i '/max_input_time/s/60/180/' /etc/php/7.0/apache2/php.ini
+		sudo sed -i '/post_max_size/s/8/200/' /etc/php/7.0/apache2/php.ini
+		sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php/7.0/apache2/php.ini
+		sudo sed -i '/max_file_uploads/s/20/150/' /etc/php/7.0/apache2/php.ini
+		sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.0/apache2/php.ini
+	fi
+	if [ -f "/etc/php/7.2/apache2/php.ini" ]; then
+		sudo sed -i '/short_open_tag/s/Off/On/' /etc/php/7.2/apache2/php.ini
+		sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php/7.2/apache2/php.ini
+		sudo sed -i '/max_execution_time/s/30/90/' /etc/php/7.2/apache2/php.ini
+		sudo sed -i '/max_input_time/s/60/180/' /etc/php/7.2/apache2/php.ini
+		sudo sed -i '/post_max_size/s/8/200/' /etc/php/7.2/apache2/php.ini
+		sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php/7.2/apache2/php.ini
+		sudo sed -i '/max_file_uploads/s/20/150/' /etc/php/7.2/apache2/php.ini
+		sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.2/apache2/php.ini
+	fi
 	echo -e "\033[1;32m установлено\033[0m"
 }
 #функция установки php пакетов
@@ -339,7 +393,6 @@ inst_php(){
 						sudo apt-get -qq install -y php5-xmlrpc
 						sudo apt-get -qq install -y php5-xsl
 						sudo apt-get -qq install -y php5-json
-						sudo apt-get -qq install -y libapache2-mod-php5
 					else
 						sudo apt-get -qq install -y php7.0
 						sudo apt-get -qq install -y php7.0-bz2
@@ -370,7 +423,6 @@ inst_php(){
 						sudo apt-get -qq install -y php7.0-xmlrpc
 						sudo apt-get -qq install -y php7.0-xsl
 						sudo apt-get -qq install -y php7.0-json
-						sudo apt-get -qq install -y libapache2-mod-php7.0
 					fi
 				else
 					sudo apt-get -qq install -y php
@@ -398,7 +450,6 @@ inst_php(){
 					sudo apt-get -qq install -y php-xmlrpc
 					sudo apt-get -qq install -y php-xsl
 					sudo apt-get -qq install -y php-json
-					sudo apt-get -qq install -y libapache2-mod-php
 				fi
 			else
 				sudo apt-get -qq install -y php7.2
@@ -426,40 +477,8 @@ inst_php(){
 				sudo apt-get -qq install -y php7.2-xmlrpc
 				sudo apt-get -qq install -y php7.2-xsl
 				sudo apt-get -qq install -y php7.2-json
-				sudo apt-get -qq install -y libapache2-mod-php7.2
 			fi
 	# Настраиваем PHP
-	# Настраиваем PHP для apache2
-	if [ -f "/etc/php5/apache2/php.ini" ]; then
-		sudo sed -i '/short_open_tag/s/Off/On/' /etc/php5/apache2/php.ini
-		sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php5/apache2/php.ini
-		sudo sed -i '/max_execution_time/s/30/90/' /etc/php5/apache2/php.ini
-		sudo sed -i '/max_input_time/s/60/180/' /etc/php5/apache2/php.ini
-		sudo sed -i '/post_max_size/s/8/200/' /etc/php5/apache2/php.ini
-		sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php5/apache2/php.ini
-		sudo sed -i '/max_file_uploads/s/20/150/' /etc/php5/apache2/php.ini
-		sudo sed -i '/log_errors/s/On/Off/' /etc/php5/apache2/php.ini
-	fi
-	if [ -f "/etc/php/7.0/apache2/php.ini" ]; then
-		sudo sed -i '/short_open_tag/s/Off/On/' /etc/php/7.0/apache2/php.ini
-		sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php/7.0/apache2/php.ini
-		sudo sed -i '/max_execution_time/s/30/90/' /etc/php/7.0/apache2/php.ini
-		sudo sed -i '/max_input_time/s/60/180/' /etc/php/7.0/apache2/php.ini
-		sudo sed -i '/post_max_size/s/8/200/' /etc/php/7.0/apache2/php.ini
-		sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php/7.0/apache2/php.ini
-		sudo sed -i '/max_file_uploads/s/20/150/' /etc/php/7.0/apache2/php.ini
-		sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.0/apache2/php.ini
-	fi
-	if [ -f "/etc/php/7.2/apache2/php.ini" ]; then
-		sudo sed -i '/short_open_tag/s/Off/On/' /etc/php/7.2/apache2/php.ini
-		sudo sed -i '/error_reporting/s/~E_DEPRECATED & ~E_STRICT/~E_NOTICE/' /etc/php/7.2/apache2/php.ini
-		sudo sed -i '/max_execution_time/s/30/90/' /etc/php/7.2/apache2/php.ini
-		sudo sed -i '/max_input_time/s/60/180/' /etc/php/7.2/apache2/php.ini
-		sudo sed -i '/post_max_size/s/8/200/' /etc/php/7.2/apache2/php.ini
-		sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php/7.2/apache2/php.ini
-		sudo sed -i '/max_file_uploads/s/20/150/' /etc/php/7.2/apache2/php.ini
-		sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.2/apache2/php.ini
-	fi
 	# Настраиваем PHP для коммандной строки
 	if [ -f "/etc/php5/cli/php.ini" ]; then
 		sudo sed -i '/short_open_tag/s/Off/On/' /etc/php5/cli/php.ini
@@ -1898,8 +1917,8 @@ func_install(){
 	inst_base
         inst_rclocal
 	inst_sound
-	inst_apache2
 	inst_php
+	inst_apache2
 	inst_db
 	setting_db
 	inst_md
