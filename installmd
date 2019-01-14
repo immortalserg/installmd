@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.4.11 от 10.01.2019\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.4.12 от 14.01.2019\033[0m"
 #функция проверки не занят ли установщик
 label1(){
     #проверка не запущен ли процесс apt
@@ -98,6 +98,15 @@ inst_base(){
 	sudo apt-get -qq install -y libao-common
 	sudo apt-get -qq install -y libao-dev
 	sudo useradd -m -d /home/pi pi -p $pass2
+        # получаем имя платы
+        func_hw
+    	if [[ $type_pr2 = "Xunlong Orange Pi Zero" ]]
+    	then
+        	echo "она"
+		echo "sun4i_codec" | tee -a /etc/modules
+		echo "sun8i_codec_analog" | tee -a /etc/modules
+    	fi
+
 	echo -e "\033[1;32m установлено\033[0m"
 }
 #функция установки Blynk
@@ -253,10 +262,10 @@ inst_owfs(){
 func_log_off(){
 	#sudo sed -i 's/ErrorLog/#ErrorLog/g' /etc/apache2/apache2.conf
 	sudo sed -i 's/CustomLog/#CustomLog/g' /etc/apache2/apache2.conf
-	sudo sed -i '/ Storage=/s/volatile/none/' /etc/systemd/journald.conf 
-	sudo sed -i 's/skip_log_error/#skip_log_error/g' /etc/mysql/conf.d/mysqld_safe_syslog.cnf
-	sudo sed -i 's/syslog/#syslog/g' /etc/mysql/conf.d/mysqld_safe_syslog.cnf
-	echo "log-error=/dev/null" | tee -a /etc/mysql/conf.d/mysqld_safe_syslog.cnf
+	sudo sed -i '/Storage=/s/volatile/none/' /etc/systemd/journald.conf 
+	#sudo sed -i 's/skip_log_error/#skip_log_error/g' /etc/mysql/conf.d/mysqld_safe_syslog.cnf
+	#sudo sed -i 's/syslog/#syslog/g' /etc/mysql/conf.d/mysqld_safe_syslog.cnf
+	#echo "log-error=/dev/null" | tee -a /etc/mysql/conf.d/mysqld_safe_syslog.cnf
 	sudo systemctl disable rsyslog
 	rm /etc/cloud/cloud.cfg.d/05_logging.cfg
 	rm /var/log/wtmp
@@ -1691,6 +1700,7 @@ func_hw(){
 	type_pr2=$(cat /proc/device-tree/model)
 	#Raspberry Pi 3 Model B Plus Rev 1.3
 	#Xunlong Orange Pi PC
+        #Xunlong Orange Pi Zero
 	fi
 }
 #функция вывода справки
