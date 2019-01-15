@@ -354,9 +354,9 @@ inst_apache2(){
 	echo -e "\033[1;32m установлено\033[0m"
 }
 # функция установки nginx
-inst_nginx(){
-	sudo apt install nginx
-	sudo apt install php-fpm
+inst_nginx(){	
+	sudo apt-get -qq install -y nginx
+	sudo apt-get -qq install -y php-fpm
 sudo tee /etc/nginx/nginx.conf << EOF
 user                    www-data;
 worker_processes        4;
