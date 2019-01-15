@@ -83,7 +83,6 @@ inst_base(){
 	sudo apt-get -qq install -y make
 	sudo apt-get -qq install -y ed
 	sudo apt-get -qq install -y libusb-dev
-	sudo apt-get -qq install -y php-dev
 	sudo apt-get -qq install -y libavahi-common
 	sudo apt-get -qq install -y libftdi-dev
 	sudo apt-get -qq install -y libudev-dev
@@ -357,79 +356,7 @@ inst_apache2(){
 inst_nginx(){	
 	sudo apt-get -qq install -y nginx
 	sudo apt-get -qq install -y php-fpm
-sudo tee /etc/nginx/nginx.conf << EOF
-user                    www-data;
-worker_processes        4;
-worker_rlimit_nofile    8192;
-error_log               /var/log/nginx/error.log debug;
-pid                     /var/run/nginx.pid;
 
-events {
-  worker_connections    1024;
-}
-
-http {
-  include               /etc/nginx/mime.types;
-
-  default_type  application/octet-stream;
-  log_format    main    '\$remote_addr - \$remote_user [\$time_local] "\$request" '
-                        '\$status \$body_bytes_sent "\$http_referer" '
-                        '"\$http_user_agent" "\$http_x_forwarded_for"';
-  access_log    /var/log/nginx/access.log main;
-
-  client_body_temp_path /var/spool/nginx_client_body_temp;
-
-  sendfile      on;
-  tcp_nopush    on;
-  tcp_nodelay   on;
-  server_tokens off;
-  server_names_hash_bucket_size 128;
-
-server {
-    server_name     localhost;
-    root            /var/www;
-    listen           80;
-    index           index.html index.htm index.php default.html;
-    access_log      off;
-
-    location / {
-          rewrite pda$ /popup/pda.html redirect;
-          rewrite ^api/ /api.php;
-
-              if (!-e $request_filename){
-              rewrite ^(.*)$ /nf.php;
-              }
-    }
-
-    location /config.php {
-          deny all;
-    }
-
-    location ~* "/\.(htaccess|htpasswd)$" {
-          deny all;
-          return 404;
-    }
-
-    location ~ \.php$ {
-          fastcgi_index index.php;
-          fastcgi_pass unix:/var/run/php-fpm/www.sock;
-          fastcgi_split_path_info ^(.+\.php)(/.+)$;
-          set $path_info $fastcgi_path_info;
-          fastcgi_param PATH_INFO $path_info;
-          fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-          fastcgi_param PATH_TRANSLATED $document_root$fastcgi_path_info;
-          include /etc/nginx/fastcgi_params;
-          fastcgi_param PHP_VALUE "short_open_tag=on";
-          fastcgi_param PHP_VALUE "error_reporting=E_ALL & ~E_NOTICE";
-          fastcgi_param PHP_VALUE "max_execution_time=90";
-          fastcgi_param PHP_VALUE "max_input_time=180";
-          fastcgi_param PHP_VALUE "post_max_size=200M";
-          fastcgi_param PHP_VALUE "upload_max_filesize=50M";
-          fastcgi_param PHP_VALUE "max_file_uploads=150";
-   }
-  }
-}
-EOF
 
 }
 
@@ -453,6 +380,7 @@ inst_php(){
 		then
 					if [ "$phpif70" = "" ];
 					then
+						sudo apt-get -qq install -y php5-dev
 						sudo apt-get -qq install -y php5
 						sudo apt-get -qq install -y php5-bz2
 						sudo apt-get -qq install -y php5-cli
@@ -483,6 +411,7 @@ inst_php(){
 						sudo apt-get -qq install -y php5-xsl
 						sudo apt-get -qq install -y php5-json
 					else
+						sudo apt-get -qq install -y php7.0-dev
 						sudo apt-get -qq install -y php7.0
 						sudo apt-get -qq install -y php7.0-bz2
 						sudo apt-get -qq install -y php7.0-cli
@@ -514,6 +443,7 @@ inst_php(){
 						sudo apt-get -qq install -y php7.0-json
 					fi
 				else
+					sudo apt-get -qq install -y php-dev
 					sudo apt-get -qq install -y php
 					sudo apt-get -qq install -y php-bz2
 					sudo apt-get -qq install -y php-cli
@@ -541,6 +471,7 @@ inst_php(){
 					sudo apt-get -qq install -y php-json
 				fi
 			else
+				sudo apt-get -qq install -y php7.2-dev
 				sudo apt-get -qq install -y php7.2
 				sudo apt-get -qq install -y php7.2-bz2
 				sudo apt-get -qq install -y php7.2-cli
