@@ -2067,6 +2067,7 @@ func_install(){
 		fi
         # задаем имя хоста md.lan
         sudo hostnamectl set-hostname md.lan
+	echo "127.0.0.1  md md.lan" >> /etc/host
 	fi
 	if [ -n "$flag_j" ]; then inst_java;	fi
 	if [ -n "$flag_a" ]; then inst_webmin;	fi
