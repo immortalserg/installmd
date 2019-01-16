@@ -360,9 +360,16 @@ inst_apache2(){
 }
 # функция установки nginx
 inst_nginx(){	
-	sudo apt-get -qq install -y nginx
 	sudo apt-get -qq install -y php-fpm
-    
+	sudo apt-get -qq install -y php7.2-cli
+	sudo apt-get -qq install -y php7.2-mbstring
+	sudo apt-get -qq install -y php7.2-mysql
+	sudo apt-get -qq install -y php7.2-xml
+	sudo apt-get -qq install -y php7.2-pear
+	sudo apt-get -qq install -y php7.2-common
+	sudo apt-get -qq install -y php7.2-gd
+	sudo apt-get -qq install -y nginx
+   
 	sudo tee /etc/nginx/sites-available/default << EOF
 server {
     listen   80;
@@ -2012,10 +2019,11 @@ func_install(){
 	inst_base
         inst_rclocal
 	inst_sound
-	inst_php
+
 		if [ -n "$flag_x" ]; then
 	  		inst_nginx
 		else
+			inst_php
 	 		inst_apache2
 		fi
 	inst_db
