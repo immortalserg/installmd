@@ -33,8 +33,6 @@ label1(){
 }
 #функция установки базовых пакетов
 inst_base(){
-        # задаем имя хоста md.lan
-        sudo hostnamectl set-hostname md.lan
   	# Обновляем информацию о пакетах
 	sudo apt-get -qq update
 	sudo apt-get -qq install -y python-software-properties
@@ -111,6 +109,14 @@ inst_base(){
 		echo "sun4i_codec" | tee -a /etc/modules
 		echo "sun8i_codec_analog" | tee -a /etc/modules
     	fi
+
+    	if [[ $type_pr2 = "Xunlong Orange Pi PC" ]]
+    	then
+        	echo "она"
+		echo "sun4i_codec" | tee -a /etc/modules
+		echo "sun8i_codec_analog" | tee -a /etc/modules
+    	fi
+
 
 	echo -e "\033[1;32m установлено\033[0m"
 }
@@ -356,7 +362,71 @@ inst_apache2(){
 inst_nginx(){	
 	sudo apt-get -qq install -y nginx
 	sudo apt-get -qq install -y php-fpm
-           
+    
+	sudo tee /etc/nginx/sites-available/default << EOF
+server {
+    listen   80;
+    root /var/www;
+    index index.html index.htm index.php default.html;
+    server_name 0.0.0.0;
+    charset utf-8;
+    location / {
+        rewrite pda$ /popup/pda.html redirect;
+        rewrite ^api/ /api.php;
+        if (!-e \$request_filename){
+            rewrite ^(.*)$ /nf.php;
+        }
+    }
+    location /config.php {
+        deny all;
+    }
+    location /debmes.txt {
+        deny all;
+    }
+    location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+
+        set \$path_info \$fastcgi_path_info;
+        fastcgi_param PATH_INFO \$path_info;
+        fastcgi_index index.php;
+        fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        include fastcgi_params;
+    }
+    # Запрет доступа к .htaccess и .htpasswd файлам
+    location ~* "/\.(htaccess|htpasswd)\$"
+    {
+        deny all;               # запретить все для всех
+        return 404;             # вернуть код ошибки
+    }
+}
+EOF
+   
+	sudo tee /etc/nginx/fastcgi_params << EOF
+fastcgi_param  QUERY_STRING       \$query_string;
+fastcgi_param  REQUEST_METHOD     \$request_method;
+fastcgi_param  CONTENT_TYPE       \$content_type;
+fastcgi_param  CONTENT_LENGTH     \$content_length;
+fastcgi_param  SCRIPT_FILENAME    \$document_root\$fastcgi_script_name;
+fastcgi_param  SCRIPT_NAME        \$fastcgi_script_name;
+fastcgi_param  PATH_INFO          \$fastcgi_path_info;
+fastcgi_param  PATH_TRANSLATED    \$document_root\$fastcgi_path_info;
+fastcgi_param  REQUEST_URI        \$request_uri;
+fastcgi_param  DOCUMENT_URI       \$document_uri;
+fastcgi_param  DOCUMENT_ROOT      \$document_root;
+fastcgi_param  SERVER_PROTOCOL    \$server_protocol;
+fastcgi_param  HTTPS              \$https if_not_empty;
+fastcgi_param  GATEWAY_INTERFACE  CGI/1.1;
+fastcgi_param  SERVER_SOFTWARE    nginx/\$nginx_version;
+fastcgi_param  REMOTE_ADDR        \$remote_addr;
+fastcgi_param  REMOTE_PORT        \$remote_port;
+fastcgi_param  SERVER_ADDR        \$server_addr;
+fastcgi_param  SERVER_PORT        \$server_port;
+fastcgi_param  SERVER_NAME        \$server_name;
+fastcgi_param  REDIRECT_STATUS    200;
+ 
+EOF
+
+
 
 }
 
@@ -1942,12 +2012,12 @@ func_install(){
 	inst_base
         inst_rclocal
 	inst_sound
-	if [ -n "$flag_x" ]; then
-	  inst_nginx
-	else
-	  inst_php
-	  inst_apache2
-	fi
+	inst_php
+		if [ -n "$flag_x" ]; then
+	  		inst_nginx
+		else
+	 		inst_apache2
+		fi
 	inst_db
 	setting_db
 	inst_md
@@ -1986,6 +2056,8 @@ func_install(){
 			inst_config0
 			fi
 		fi
+        # задаем имя хоста md.lan
+        sudo hostnamectl set-hostname md.lan
 	fi
 	if [ -n "$flag_j" ]; then inst_java;	fi
 	if [ -n "$flag_a" ]; then inst_webmin;	fi
