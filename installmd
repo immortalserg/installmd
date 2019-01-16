@@ -35,6 +35,7 @@ label1(){
 inst_base(){
   	# Обновляем информацию о пакетах
 	sudo apt-get -qq update
+	sudo apt-get -qq upgrade -y
 	sudo apt-get -qq install -y python-software-properties
 	sudo apt-get -qq install -y software-properties-common
 	#добавление репов Universe в Ubuntu server
