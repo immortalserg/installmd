@@ -370,13 +370,15 @@ inst_nginx(){
 	sudo apt-get -qq install -y php7.2-common
 	sudo apt-get -qq install -y php7.2-gd
 	sudo apt-get -qq install -y nginx
-   
+
+	# конфиги для nginx вариант 1
+<<comment1
 	sudo tee /etc/nginx/sites-available/default << EOF
 server {
     listen   80;
     root /var/www;
     index index.html index.htm index.php default.html;
-    server_name md.lan 0.0.0.0;
+    server_name localhost md.lan;
     charset utf-8;
     location / {
         rewrite pda$ /popup/pda.html redirect;
@@ -399,16 +401,120 @@ server {
         fastcgi_index index.php;
         fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
         include fastcgi_params;
+        fastcgi_param PHP_VALUE "short_open_tag=on";
+        fastcgi_param PHP_VALUE "error_reporting=E_ALL & ~E_NOTICE";
+        fastcgi_param PHP_VALUE "max_execution_time=90";
+        fastcgi_param PHP_VALUE "max_input_time=180";
+        fastcgi_param PHP_VALUE "post_max_size=200M";
+        fastcgi_param PHP_VALUE "upload_max_filesize=50M";
+        fastcgi_param PHP_VALUE "max_file_uploads=150";
     }
     # Запрет доступа к .htaccess и .htpasswd файлам
     location ~* "/\.(htaccess|htpasswd)\$"
     {
-        deny all;               # запретить все для всех
-        return 404;             # вернуть код ошибки
+        deny all;
+        return 404;
     }
 }
 EOF
-   
+comment1
+	# конфиг для nginx вариант 2
+
+	rm /etc/nginx/sites-available/default
+	rm /etc/nginx/sites-enabled/default
+	tee /etc/nginx/nginx.conf << EOF
+user                    www-data;
+worker_processes        4;
+worker_rlimit_nofile    8192;
+error_log               /var/log/nginx/error.log debug;
+pid                     /var/run/nginx.pid;
+events {
+  worker_connections    1024;
+}
+http {
+  include               /etc/nginx/mime.types;
+  default_type  application/octet-stream;
+  log_format    main    '\$remote_addr - \$remote_user [\$time_local] "\$request" '
+                        '\$status \$body_bytes_sent "\$http_referer" '
+                        '"\$http_user_agent" "\$http_x_forwarded_for"';
+  access_log    /var/log/nginx/access.log main;
+  client_body_temp_path /var/spool/nginx_client_body_temp;
+  sendfile      on;
+  tcp_nopush    on;
+  tcp_nodelay   on;
+  server_tokens off;
+  server_names_hash_bucket_size 128;
+server {
+    server_name     localhost md.lan;
+    root            /var/www;
+    listen           80;
+    index           index.html index.htm index.php default.html;
+    access_log      off;
+    # настройки тюнинга https://xakep.ru/2010/12/15/54168/
+    # Максимальный размер буфера для хранения тела запроса клиента
+    client_body_buffer_size 1K;
+    # Максимальный размер буфера для хранения заголовков запроса клиента
+    client_header_buffer_size 1k;
+    # Максимальный размер тела запроса клиента, прописанный в поле Content-Length заголовка. Если сервер должен поддерживать загрузку файлов, это значение необходимо увеличить
+    client_max_body_size 1k;
+    # Количество и размер буферов для чтения большого заголовка запроса клиента
+    large_client_header_buffers 2 1k;
+    # Таймаут при чтении тела запроса клиента
+    client_body_timeout 10;
+    # Таймаут при чтении заголовка запроса клиента
+    client_header_timeout 10;
+    # Таймаут, по истечению которого keep-alive соединение с клиентом не будет закрыто со стороны сервера
+    keepalive_timeout 5 5;
+    # Таймаут при передаче ответа клиенту
+    send_timeout 10;
+    # обрабатывать только запросы GET HEAD POST
+    if (\$request_method !~ ^(GET|HEAD|POST)$ ) {
+    return 444;
+    }
+    #########
+    location / {
+          rewrite pda$ /popup/pda.html redirect;
+          rewrite ^api/ /api.php;
+
+              if (!-e \$request_filename){
+              rewrite ^(.*)$ /nf.php;
+              }
+         # настройки тюнинга
+         # обращение только по DNS имени
+         if (\$host !~ ^(md.lan|www.md.lan)$ ) {
+         return 444;
+         }
+         ##########
+    }
+    location /config.php {
+          deny all;
+    }
+    location ~* "/\.(htaccess|htpasswd)$" {
+          deny all;
+          return 404;
+    }
+    location ~ \.php$ {
+          fastcgi_index index.php;
+          fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+          fastcgi_split_path_info ^(.+\.php)(/.+)$;
+          set \$path_info \$fastcgi_path_info;
+          fastcgi_param PATH_INFO \$path_info;
+          fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+          fastcgi_param PATH_TRANSLATED \$document_root\$fastcgi_path_info;
+          include /etc/nginx/fastcgi_params;
+          fastcgi_param PHP_VALUE "short_open_tag=on";
+          fastcgi_param PHP_VALUE "error_reporting=E_ALL & ~E_NOTICE";
+          fastcgi_param PHP_VALUE "max_execution_time=90";
+          fastcgi_param PHP_VALUE "max_input_time=180";
+          fastcgi_param PHP_VALUE "post_max_size=200M";
+          fastcgi_param PHP_VALUE "upload_max_filesize=50M";
+          fastcgi_param PHP_VALUE "max_file_uploads=150";
+   }
+  }
+}
+EOF
+
+
 	sudo tee /etc/nginx/fastcgi_params << EOF
 fastcgi_param  QUERY_STRING       \$query_string;
 fastcgi_param  REQUEST_METHOD     \$request_method;
@@ -431,7 +537,6 @@ fastcgi_param  SERVER_ADDR        \$server_addr;
 fastcgi_param  SERVER_PORT        \$server_port;
 fastcgi_param  SERVER_NAME        \$server_name;
 fastcgi_param  REDIRECT_STATUS    200;
- 
 EOF
 
 	# Настраиваем PHP для коммандной строки
