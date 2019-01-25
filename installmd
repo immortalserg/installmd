@@ -293,16 +293,7 @@ func_log_off(){
 
 #функция установки apache2
 inst_apache2(){
-	echo -n -e "\033[1;36mУстанавливаю web сервер Apache... \033[0m"
-	sudo apt-get -qq install -y apache2
-	sudo apt-get -qq install -y apache2-bin
-	sudo apt-get -qq install -y apache2-data
-	sudo apt-get -qq install -y apache2-utils
-	# Включаем мод rewrite для Apache
-	sudo a2enmod rewrite
-	sudo sed -i 's/None/All/g' /etc/apache2/apache2.conf
-	echo "ServerName localhost" | sudo tee -a /etc/apache2/apache2.conf
-	sudo sed -i 's/\/html//' /etc/apache2/sites-available/000-default.conf
+
 	#проверка наличия php
 	phpif=$(apt-cache search php-common)
 	phpif70=$(apt-cache search php7.0-common)
@@ -313,18 +304,47 @@ inst_apache2(){
 		// если php не версии 7.2
 		if [ "$phpif" = "" ];
 		then
-					if [ "$phpif70" = "" ];
-					then
-						sudo apt-get -qq install -y libapache2-mod-php5
-					else
-						sudo apt-get -qq install -y libapache2-mod-php7.0
-					fi
-				else
-					sudo apt-get -qq install -y libapache2-mod-php
-				fi
+			if [ "$phpif70" = "" ];
+			then
+				sudo apt-get -qq install -y libapache2-mod-php5
 			else
-				sudo apt-get -qq install -y libapache2-mod-php7.2
+				sudo apt-get -qq install -y libapache2-mod-php7.0
 			fi
+		else
+			sudo apt-get -qq install -y libapache2-mod-php
+		fi
+	else
+		sudo apt-get -qq install -y libapache2-mod-php7.2
+	fi
+	echo -n -e "\033[1;36mУстанавливаю web сервер Apache... \033[0m"
+	sudo apt-get -qq install -y apache2
+	sudo apt-get -qq install -y apache2-bin
+	sudo apt-get -qq install -y apache2-data
+	sudo apt-get -qq install -y apache2-utils
+	# Включаем мод rewrite для Apache
+	sudo a2enmod rewrite
+	sudo sed -i 's/None/All/g' /etc/apache2/apache2.conf
+	echo "ServerName localhost" | sudo tee -a /etc/apache2/apache2.conf
+	sudo sed -i 's/\/html//' /etc/apache2/sites-available/000-default.conf
+
+	if [ "$phpif72" = "" ];
+	then
+		// если php не версии 7.2
+		if [ "$phpif" = "" ];
+		then
+			if [ "$phpif70" = "" ];
+			then
+				sudo a2enmod php5
+			else
+				sudo a2enmod php7.0
+			fi
+		else
+			sudo a2enmod php
+		fi
+	else
+		sudo a2enmod php7.2
+	fi
+
 
 	# Настраиваем PHP для apache2
 	if [ -f "/etc/php5/apache2/php.ini" ]; then
