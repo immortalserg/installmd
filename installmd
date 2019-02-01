@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.5.0 от 18.01.2019\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.5.1 от 01.02.2019\033[0m"
 #функция проверки не занят ли установщик
 label1(){
     #проверка не запущен ли процесс apt
@@ -117,7 +117,9 @@ inst_base(){
 		echo "sun4i_codec" | tee -a /etc/modules
 		echo "sun8i_codec_analog" | tee -a /etc/modules
     	fi
+# включение аналогового выхода, портов i2c, uart, spi
 
+echo "overlays=analog-codec i2c0 i2c1 spi-spidev uart1 uart2 uart3" | tee -a /boot/armbianEnv.txt
 
 	echo -e "\033[1;32m установлено\033[0m"
 }
