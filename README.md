@@ -24,7 +24,7 @@ chmod +x ./installmd
 
 -h - справка
 
--t - установка базовой системы MAjorDoMo c вэб сервером apache, если пароль db_root_password не задан то пароль спросит при установке, если pi_password не задан, но задан db_root_password то pi_password=db_root_password
+-t - установка базовой системы MAjorDoMo c вэб сервером apache
 
 -x - установка базовой системы MAjorDoMo c вэб сервером nginx + php-fpm (вместо флага -t)
 
