@@ -391,6 +391,10 @@ inst_nginx(){
 	sudo apt-get -qq install -y php7.2-gd
 	sudo apt-get -qq install -y nginx
 
+#определение пути к php-fpm
+phpfpm=$(find /run -name  "*fpm.sock" -print)
+
+
 	# конфиги для nginx вариант 1
 <<comment1
 	sudo tee /etc/nginx/sites-available/default << EOF
@@ -419,7 +423,7 @@ server {
         set \$path_info \$fastcgi_path_info;
         fastcgi_param PATH_INFO \$path_info;
         fastcgi_index index.php;
-        fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        fastcgi_pass unix:/var$phpfpm;
         include fastcgi_params;
         fastcgi_param PHP_VALUE "short_open_tag=on";
         fastcgi_param PHP_VALUE "error_reporting=E_ALL & ~E_NOTICE";
@@ -515,7 +519,7 @@ server {
     }
     location ~ \.php$ {
           fastcgi_index index.php;
-          fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+          fastcgi_pass unix:/var$phpfpm;
           fastcgi_split_path_info ^(.+\.php)(/.+)$;
           set \$path_info \$fastcgi_path_info;
           fastcgi_param PATH_INFO \$path_info;
