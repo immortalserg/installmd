@@ -455,7 +455,7 @@ comment1
 user                    www-data;
 worker_processes        4;
 worker_rlimit_nofile    8192;
-error_log               /var/log/nginx/error.log debug;
+error_log               /var/log/nginx/error.log error;
 pid                     /var/run/nginx.pid;
 events {
   worker_connections    1024;
