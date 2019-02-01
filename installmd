@@ -510,9 +510,9 @@ server {
               }
          # настройки тюнинга
          # обращение только по DNS имени
-         if (\$host !~ ^(md.lan|www.md.lan)$ ) {
-         return 444;
-         }
+         #if (\$host !~ ^(md.lan|www.md.lan)$ ) {
+         #return 444;
+         #}
          ##########
     }
     location /config.php {
