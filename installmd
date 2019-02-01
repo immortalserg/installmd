@@ -328,6 +328,9 @@ inst_apache2(){
 	sudo sed -i 's/None/All/g' /etc/apache2/apache2.conf
 	echo "ServerName localhost" | sudo tee -a /etc/apache2/apache2.conf
 	sudo sed -i 's/\/html//' /etc/apache2/sites-available/000-default.conf
+	sudo a2dismod mpm_event
+	sudo a2enmod mpm_prefork
+	
 
 	if [ "$phpif72" = "" ];
 	then
