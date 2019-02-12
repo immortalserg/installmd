@@ -436,7 +436,7 @@ server {
         fastcgi_param PHP_VALUE "max_input_time=180";
         fastcgi_param PHP_VALUE "post_max_size=200M";
         fastcgi_param PHP_VALUE "upload_max_filesize=50M";
-        fastcgi_param PHP_VALUE "max_file_uploads=150";
+        fastcgi_param PHP_VALUE "max_file_uploads=150M";
     }
     # Запрет доступа к .htaccess и .htpasswd файлам
     location ~* "/\.(htaccess|htpasswd)\$"
