@@ -972,6 +972,7 @@ inst_db(){
 		#sudo apt-get -qq install -y mysql-server
 		#sudo apt-get -qq install -y mysql-client
 	echo -e "\033[1;31mВНИМАНИЕ!!! База данных Marifdb не установилась, дальнейшее продолжение невозможно  \033[0m"
+	exit 0
 		fi
 		echo -e "\033[1;32m установлено\033[0m"
 	#подключаем репы обратно
