@@ -863,23 +863,23 @@ add_repo_mbd(){
 
 	if [ $type_os3 = "Ubuntu" ]; then
 	echo "Ubuntu"
-    if [ $type_os4 = "trusty" ]; then
+    if [ "$type_os4" = "trusty" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
     sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/ubuntu trusty main';
     fi
-    if [ $type_os4 = "xenial" ]; then
+    if [ "$type_os4" = "xenial" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,arm64,i386,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/ubuntu xenial main'
     fi
-    if [ $type_os4 = "artful" ]; then
+    if [ "$type_os4" = "artful" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,i386] http://mariadb.mirror.nucleus.be/repo/10.3/ubuntu artful main'
     fi
-    if [ $type_os4 = "bionic" ]; then
+    if [ "$type_os4" = "bionic" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/ubuntu bionic main'
     fi
-    if [ $type_os4 = "cosmic" ]; then
+    if [ "$type_os4" = "cosmic" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64] http://mariadb.mirror.nucleus.be/repo/10.2/ubuntu cosmic main'
     fi
@@ -887,15 +887,15 @@ add_repo_mbd(){
 
 	if [ $type_os3 = "Debian" ]; then
 	echo "Debian"
-    if [ $type_os4 = "jessie" ]; then
+    if [ "$type_os4" = "jessie" ]; then
     sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db
     sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/debian jessie main'
     fi
-    if [ $type_os4 = "stretch" ]; then
+    if [ "$type_os4" = "stretch" ]; then
     sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/debian stretch main'
     fi
-    if [ $type_os4 = "sid" ]; then
+    if [ "$type_os4" = "sid" ]; then
     sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,i386] http://mariadb.mirror.nucleus.be/repo/10.3/debian sid main'
     fi
@@ -904,19 +904,19 @@ add_repo_mbd(){
 
 	if [ $type_os3 = "Mint" ]; then
 	echo "Mint"
-    if [ $type_os6 = "17" ]; then
+    if [ "$type_os6" = "17" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
     sudo add-apt-repository 'deb http://mariadb.mirror.nucleus.be/repo/10.2/ubuntu trusty main'
     fi
-    if [ $type_os6 = "17.1" ]; then
+    if [ "$type_os6" = "17.1" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
     sudo add-apt-repository 'deb http://mariadb.mirror.nucleus.be/repo/10.2/ubuntu trusty main'
     fi
-    if [ $type_os4 = "18" ]; then
+    if [ "$type_os4" = "18" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/ubuntu xenial main'
     fi
-    if [ $type_os4 = "19" ]; then
+    if [ "$type_os4" = "19" ]; then
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/ubuntu bionic main'
     fi
