@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\033[1;33mВерсия скрипта 0.5.2 от 13.02.2019\033[0m"
+echo -e "\033[1;33mВерсия скрипта 0.5.3 от 28.02.2019\033[0m"
 #функция проверки не занят ли установщик
 label1(){
     #проверка не запущен ли процесс apt
@@ -848,13 +848,9 @@ EOF
 	sudo ldconfig
 	echo -e "\033[1;32m установлено\033[0m"
 }
-#функция установки базы данных
-inst_db(){
-		#проверяем есть ли пакеты mariadb-server в репах
-		mdbif=$(apt-cache search mariadb-server)
-			if [ "$mdbif" = "" ];
-			then
-	#добавляем репы mariadb-server и устанавливаем
+# функция добавления репов mariadb
+add_repo_mbd(){
+#добавляем репы mariadb-server и устанавливаем
 	sudo apt-get -qq install -y software-properties-common
 
 	type_os=$(lsb_release -i)
@@ -925,9 +921,17 @@ inst_db(){
     sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/ubuntu bionic main'
     fi
 	fi
+	sudo apt-get -qq update
+}
 
 
-			sudo apt-get -qq update
+#функция установки базы данных
+inst_db(){
+		#проверяем есть ли пакеты mariadb-server в репах
+		mdbif=$(apt-cache search mariadb-server)
+			if [ "$mdbif" = "" ];
+			then
+			add_repo_mbd;
 			sudo apt-get -qq install -y mariadb-server
 			sudo apt-get -qq install -y mariadb-client
 			#проверяем установилась ли mariadb-server
@@ -942,10 +946,7 @@ inst_db(){
 				then
 					#из стандартных репов mariadb-server не установилась, отключаем стандартные репы и подключаем репы mariadb-server и устанавливаем
 					add-apt-repository -r universe
-					apt-get -qq install -y software-properties-common
-					apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
-					add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mirror.ehv.weppel.nl/mariadb/repo/10.2/ubuntu xenial main'
-					apt-get -qq update
+					add_repo_mbd
 					apt-get -qq install -y mariadb-server
 					apt-get -qq install -y mariadb-client
 					#проверяем установилась ли mariadb-server
