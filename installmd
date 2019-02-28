@@ -927,16 +927,18 @@ add_repo_mbd(){
 
 #функция установки базы данных
 inst_db(){
+		add_repo_mbd
 		#проверяем есть ли пакеты mariadb-server в репах
 		mdbif=$(apt-cache search mariadb-server)
 			if [ "$mdbif" = "" ];
 			then
-			add_repo_mbd;
+			echo -e "\033[1;31mdebug3  \033[0m"
 			sudo apt-get -qq install -y mariadb-server
 			sudo apt-get -qq install -y mariadb-client
 			#проверяем установилась ли mariadb-server
 			mdbif2=$(dpkg --get-selections mariadb-server)
 			else
+			echo -e "\033[1;31mdebug4  \033[0m"
 			#пытаемся установить
 			sudo apt-get -qq install -y mariadb-server
 			sudo apt-get -qq install -y mariadb-client
@@ -944,9 +946,9 @@ inst_db(){
 			mdbif3=$(dpkg --get-selections mariadb-server)
 				if [ "$mdbif3" = "" ];
 				then
+				echo -e "\033[1;31mdebug2  \033[0m"
 					#из стандартных репов mariadb-server не установилась, отключаем стандартные репы и подключаем репы mariadb-server и устанавливаем
 					add-apt-repository -r universe
-					add_repo_mbd
 					apt-get -qq install -y mariadb-server
 					apt-get -qq install -y mariadb-client
 					#проверяем установилась ли mariadb-server
@@ -954,6 +956,7 @@ inst_db(){
 				fi
 			fi
 		if [ "$mdbif2" = "" ]; then
+			echo -e "\033[1;31mdebug1  \033[0m"
 			apt-get -qq update
 			apt-get -qq install -y mariadb-client-10.1
 			apt-get -qq install -y mariadb-server-10.1
@@ -966,8 +969,9 @@ inst_db(){
 		then
 		echo -n -e "\033[1;36mУстановка базы данных MySQL... \033[0m"
 		add-apt-repository universe
-		sudo apt-get -qq install -y mysql-server
-		sudo apt-get -qq install -y mysql-client
+		#sudo apt-get -qq install -y mysql-server
+		#sudo apt-get -qq install -y mysql-client
+	echo -e "\033[1;31mВНИМАНИЕ!!! База данных Marifdb не установилась, дальнейшее продолжение невозможно  \033[0m"
 		fi
 		echo -e "\033[1;32m установлено\033[0m"
 	#подключаем репы обратно
