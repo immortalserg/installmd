@@ -958,6 +958,10 @@ inst_db(){
 		if [ "$mdbif2" = "" ]; then
 			echo -e "\033[1;31mdebug1  \033[0m"
 			apt-get -qq update
+			apt-get -qq install -y mariadb-client-10.3
+			apt-get -qq install -y mariadb-server-10.3
+			apt-get -qq install -y mariadb-client-10.2
+			apt-get -qq install -y mariadb-server-10.2
 			apt-get -qq install -y mariadb-client-10.1
 			apt-get -qq install -y mariadb-server-10.1
 			apt-get -qq update
