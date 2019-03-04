@@ -2244,7 +2244,9 @@ func_install(){
 	inst_md2
         # задаем имя хоста md.lan
         sudo hostnamectl set-hostname md.lan
-	echo "127.0.0.1  md md.lan" >> /etc/host
+	echo "127.0.0.1 md.lan" >> /etc/hosts
+	echo "127.0.0.1 md" >> /etc/hosts
+
 	inst_end
 
 	else
