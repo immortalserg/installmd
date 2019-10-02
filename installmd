@@ -424,7 +424,7 @@ server {
     location /debmes.txt {
         deny all;
     }
-    location ~ \.php$ {
+     location ~* [^/]\.php(/|$) {
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
 
         set \$path_info \$fastcgi_path_info;
@@ -525,7 +525,7 @@ server {
           deny all;
           return 404;
     }
-    location ~ \.php$ {
+     location ~* [^/]\.php(/|$) {
           fastcgi_index index.php;
           fastcgi_pass unix:/var$phpfpm;
           fastcgi_split_path_info ^(.+\.php)(/.+)$;
@@ -616,8 +616,8 @@ EOF
 		sudo sed -i '/max_input_time/s/60/180/' /etc/php/7.2/fpm/php.ini
 		sudo sed -i '/post_max_size/s/8/200/' /etc/php/7.2/fpm/php.ini
 		sudo sed -i '/upload_max_filesize/s/2/50/' /etc/php/7.2/fpm/php.ini
-		sudo sed -i '/max_file_uploads/s/20/150/' /etc/php/7.2/afpm/php.ini
-		sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.2/afpm/php.ini
+		sudo sed -i '/max_file_uploads/s/20/150/' /etc/php/7.2/fpm/php.ini
+		sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.2/fpm/php.ini
 	fi
 
 
