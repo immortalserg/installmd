@@ -888,6 +888,10 @@ add_repo_mbd(){
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64] http://mariadb.mirror.nucleus.be/repo/10.2/ubuntu cosmic main'
     fi
+    if [ "$type_os4" = "disco" ]; then
+    sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
+    sudo add-apt-repository 'deb [arch=amd64] http://mariadb.mirror.serveriai.lt/repo/10.4/ubuntu disco main'
+    fi
 	fi
 
 	if [ $type_os3 = "Debian" ]; then
