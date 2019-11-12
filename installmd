@@ -1918,6 +1918,7 @@ DIR[15]=/var/log/mpd
 DIR[16]=/var/www/cached/urls
 DIR[17]=/var/www/cached/voice
 DIR[18]=/var/log/mosquitto
+DIR[19]=/var/log/nginx
 case "\${1:-''}" in
   start)
         typeset -i i=0 max=\${#DIR[*]}
