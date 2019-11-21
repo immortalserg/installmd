@@ -221,13 +221,13 @@ EOF
 
 #функция установки OpenVPN
 inst_ovpn(){
-	echo -n -e "\033[1;36mУстанавливаю openvpn... \033[0m"
+	echo -n -e "\033[1;36mУстанавливаю OpenVPN... \033[0m"
 	sudo apt-get -qq install -y openvpn
 	echo -e "\033[1;32m установлено\033[0m"
 }
 #функция установки webmin
 inst_webmin(){
-	echo -n -e "\033[0;36mУстанавливаю webmin... \033[0m"
+	echo -n -e "\033[0;36mУстанавливаю Webmin... \033[0m"
 	sudo sed -i '/deb http:\/\/download.webmin.com\/download\/repository sarge contrib/s/deb http:\/\/download.webmin.com\/download\/repository sarge contrib//' /etc/apt/sources.list
 	echo "deb http://download.webmin.com/download/repository sarge contrib" | tee -a /etc/apt/sources.list
 	sudo sed -i '/deb http:\/\/webmin.mirror.somersettechsolutions.co.uk\/repository sarge contrib/s/deb http:\/\/webmin.mirror.somersettechsolutions.co.uk\/repository sarge contrib//' /etc/apt/sources.list
@@ -250,7 +250,7 @@ inst_mqtt(){
 }
 #функция установки owfs
 inst_owfs(){
-	echo -n -e "\033[1;36mУстанавливаю owfs... \033[0m"
+	echo -n -e "\033[1;36mУстанавливаю OWFS... \033[0m"
 	tmp_fl6=${flag_o2:0:1}
 	tmp_fl7=${flag_o3:0:1}
 		if [[ $tmp_fl6 = "-" ]]; then flag_o2=""; fi
@@ -634,7 +634,7 @@ EOF
 #функция установки php пакетов
 inst_php(){
 	#установка php
-	echo -n -e "\033[1;36mУстанавливаю php пакеты... \033[0m"
+	echo -n -e "\033[1;36mУстанавливаю PHP пакеты... \033[0m"
 	#проверка наличия php
 	phpif=$(apt-cache search php-common)
 	phpif70=$(apt-cache search php7.0-common)
@@ -788,7 +788,7 @@ inst_php(){
 #функция установки поддержки звука vlc, mpd, alsa ...
 inst_sound(){
 	#установка поддержки звука и т.п.
-	echo -e "\033[1;36mУстановка пакетов поддержки звука и видео (vlc, mpd, ffmpeg, alsa и т.п.)... \033[0m"
+	echo -e "\033[1;36mУстановка пакетов поддержки звука и видео (VLC, MPD, FFMPEG, ALSA и т.п.)... \033[0m"
 	sudo apt-get -qq install -y vlc
 	sudo apt-get -qq install -y mpd
 	sudo apt-get -qq install -y mplayer
@@ -984,7 +984,7 @@ inst_db(){
 		add-apt-repository universe
 		#sudo apt-get -qq install -y mysql-server
 		#sudo apt-get -qq install -y mysql-client
-	echo -e "\033[1;31mВНИМАНИЕ!!! База данных Marifdb не установилась, дальнейшее продолжение невозможно  \033[0m"
+	echo -e "\033[1;31mВНИМАНИЕ!!! База данных MariaDB не установилась, дальнейшее продолжение невозможно  \033[0m"
 	exit 0
 		fi
 		echo -e "\033[1;32m установлено\033[0m"
@@ -1482,11 +1482,11 @@ inst_java(){
 #функция установки node.js
 inst_node(){
 	#установка node.js из исходников
-	echo -e "\033[1;36mУстанавливаю node.js из исходников, можно попить чайку... литра 2 :-)\033[0m"
+	echo -e "\033[1;36mУстанавливаю Node.js из исходников, можно попить чайку... литра 2 :-)\033[0m"
 	cd ~
 	wget -q https://nodejs.org/dist/index.tab
 	ver=$(grep -E -o "v([0-9]+\\.[0-9]+\\.[0-9]+)" ./index.tab | sed -n '1,1p')
-	echo -e "\033[1;36mпоследняя версия node.js \033[0;31m"$ver"\033[0m"
+	echo -e "\033[1;36mпоследняя версия Node.js \033[0;31m"$ver"\033[0m"
 	wget -q https://nodejs.org/dist/$ver/node-$ver.tar.gz
 	tar -xf node-$ver.tar.gz
 	rm node-$ver.tar.gz
@@ -1640,7 +1640,7 @@ inst_wiringcb(){
 inst_mysensors(){
 	sudo modprobe gpio-sunxi
 	echo "gpio-sunxi" >> /etc/modules
-	echo -n -e "\033[1;36mУстанавливаю Mysensors...\033[0m"
+	echo -n -e "\033[1;36mУстанавливаю MySensors...\033[0m"
 	cd ~
 	git clone -q https://github.com/mysensors/MySensors.git
 	echo -e "\033[1;32m установлен\033[0m"
@@ -1967,7 +1967,7 @@ EOF
 	sudo sed -i '/datadir/s/\/var\/lib\/mysql/\/tmp\/mysql/' $dbconfig
 }
 inst_end(){
-	echo -e "\033[1;31mВНИМАНИЕ!!! Если дальше страницы с выбором языка не идет значит не запустилсь база данных, раскомментируйте строку запуска базы mysql с паузой в файле /etc/rc.local  \033[0m"
+	echo -e "\033[1;31mВНИМАНИЕ!!! Если дальше страницы с выбором языка не идет, значит не запустилсь база данных. Раскомментируйте строку запуска базы mysql с паузой в файле /etc/rc.local  \033[0m"
 	echo
 	echo -e "\033[1;32m XXXXX  XXX   XXXXX  XXX  XXXX   XXX \033[0m"
 	echo -e "\033[1;32m X     X   X    X   X   X X   X X   X\033[0m"
@@ -2023,7 +2023,7 @@ func_hw(){
 	echo "Система x86"
 	type_system="x86"
 	else
-	echo "Система arm"
+	echo "Система ARM"
 	type_system="arm"
 	type_pr2=$(cat /proc/device-tree/model)
 	#Raspberry Pi 3 Model B Plus Rev 1.3
@@ -2037,27 +2037,27 @@ func_hw(){
 func_help(){
 	echo "Список опций коммандной строки:"
 	echo "квадратные скобки это значит параметр не обязательный, сами квадратные скобки не писать"
-	echo "-t - установка базовой системы MAjorDoMo, если пароль db_root_password не задан то пароль спросит при установке, если pi_password не задан, но задан db_root_password то pi_password=db_root_password"
+	echo "-t - установка базовой системы MajorDoMo, если пароль db_root_password не задан то пароль спросит при установке, если pi_password не задан, но задан db_root_password то pi_password=db_root_password"
 	echo "-c [path] - альтернативная конфигурация, параметр не обязательный, если не указан, то конфигурация базовая, path - путь к своей конфигурации (если путь не задан то устанавливается расширенная конфигурация) параметр используется только с параметром -t, при указании [path] параметр должен использоваться последним"
-	echo "-b - установка Blynk Server"
-	echo "-j - установка Java"
-	echo "-a - установить webmin"
-	echo "-n - установить node.js из исходников (установка долгая 2-3 часа)"
-	echo "-o [type [port]]  - установить owfs. type - тип 1-wire адаптера (usb, uart, i2c), port - порт uart 1-wire адаптера без /dev/ (ttyS2*, ttyUSB...)"
+	echo "-b - установить Blynk Server"
+	echo "-j - установить Java"
+	echo "-a - установить Webmin"
+	echo "-n - установить Node.js из исходников (установка долгая 2-3 часа)"
+	echo "-o [type [port]]  - установить OWFS. type - тип 1-wire адаптера (usb, uart, i2c), port - порт uart 1-wire адаптера без /dev/ (ttyS2*, ttyUSB...)"
 	echo "-r - установить RHVoice"
 	echo "-w [type] - установить WiringPi. [type] - тип платы: 1 - OrangePi, 2 - Asus tinker board, 3 - RaspberryPi, 4 - BananaPi, 5 - NanoPi, 6 - Cubieboard2, 7 - BananaPro"
 	echo "-e - установить MySensors"
-	echo "-v - VPN клиент OpenVPN"
-	echo "-m - MQTT сервер и клиент Mosquitto"
-	echo "-u - 433Utils"
-	echo "-p - phpMyAdmin"
+	echo "-v - установить VPN клиент OpenVPN"
+	echo "-m - установить MQTT сервер и клиент Mosquitto"
+	echo "-u - установить 433Utils"
+	echo "-p - установить phpMyAdmin"
 	echo "-s - оптимизация работы с SD картой (база в tmpfs)"
 	echo "-d - часы реального времени DS3132 на i2c"
-	echo "Примеры использования"
-	echo "./installmd -t  - установка базовой системы с стандартной конфигурацией"
+	echo "Примеры использования:"
+	echo "./installmd -t  - установка базовой системы со стандартной конфигурацией"
 	echo "./installmd -t -с  - установка базовой системы с расширенной конфигурацией"
-	echo "./installmd -t -с /home/user/backup.tgz  - установка базовой системы с своей конфигурацией архив которой находиться по пути /home/user/backup.tgz "
-	echo "./installmd -t -с ./backup.tgz -  установка базовой системы с своей конфигурацией архив которой находиться в папке с скриптом установки"
+	echo "./installmd -t -с /home/user/backup.tgz  - установка базовой системы со своей конфигурацией, архив которой находиться по пути /home/user/backup.tgz "
+	echo "./installmd -t -с ./backup.tgz -  установка базовой системы со своей конфигурацией, архив которой находиться в папке с скриптом установки"
 	echo "./installmd -t -p - установка базовой системы и phpMyAdmin"
 	echo "./installmd -t -p -j - установка базовой системы, phpMyAdmin, Java"
 	echo "./installmd -j - установка Java"
