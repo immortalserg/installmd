@@ -1414,22 +1414,25 @@ inst_config1(){
 	find /var/www/ -type f -exec sudo chmod 0666 {} \;
 	find /var/www/ -type d -exec sudo chmod 0777 {} \;
 	mysql -u root -p$pass db_terminal < /var/www/dump.sql
-	mysql -u root << EOF
-SELECT CONCAT('ALTER TABLE ',table_schema,'.',table_name,' ENGINE=MyISAM;')
-FROM information_schema.tables
-WHERE 1=1
-AND engine = 'InnoDB'
-AND table_schema NOT IN ('mysql', 'performance_schema');
-EOF
-	dbconfig=$(grep -iRIl "datadir" /etc/mysql)
-	echo "innodb=OFF" | tee -a $dbconfig
-	echo "default-storage-engine = MyISAM" | tee -a $dbconfig
-	service mysql stop
-	rm -f /tmp/mysql/ibdata1
-	rm -f /tmp/mysql/ib_logfile*
-	rm -f /var/lib/mysql/ibdata1
-	rm -f /var/lib/mysql/ib_logfile*
-	service mysql start
+
+#	mysql -u root << EOF
+#SELECT CONCAT('ALTER TABLE ',table_schema,'.',table_name,' ENGINE=MyISAM;')
+#FROM information_schema.tables
+#WHERE 1=1
+#AND engine = 'InnoDB'
+#AND table_schema NOT IN ('mysql', 'performance_schema');
+#EOF
+	#dbconfig=$(grep -iRIl "datadir" /etc/mysql)
+	#echo "innodb=OFF" | tee -a $dbconfig
+	#echo "default-storage-engine = MyISAM" | tee -a $dbconfig
+	#service mysql stop
+	#rm -f /tmp/mysql/ibdata1
+	#rm -f /tmp/mysql/ib_logfile*
+	#rm -f /var/lib/mysql/ibdata1
+	#rm -f /var/lib/mysql/ib_logfile*
+	#service mysql start
+
+
 }
 #функция установки своей конфигурации
 inst_config2(){
