@@ -663,7 +663,6 @@ inst_php(){
 						sudo apt-get -qq install -y php5-readline
 						sudo apt-get -qq install -y php5-xml
 						sudo apt-get -qq install -y php5-mysql
-						sudo apt-get -qq install -y php5-pear
 						sudo apt-get -qq install -y php5-idn
 						sudo apt-get -qq install -y php5-imagick
 						sudo apt-get -qq install -y php5-imap
@@ -688,13 +687,11 @@ inst_php(){
 						sudo apt-get -qq install -y php7.0-gd
 						sudo apt-get -qq install -y php7.0-json
 						sudo apt-get -qq install -y php7.0-mbstring
-						sudo apt-get -qq install -y php7.0-mcrypt
 						sudo apt-get -qq install -y php7.0-mysql
 						sudo apt-get -qq install -y php7.0-opcache
 						sudo apt-get -qq install -y php7.0-readline
 						sudo apt-get -qq install -y php7.0-xml
 						sudo apt-get -qq install -y php7.0-mysql
-						sudo apt-get -qq install -y php7.0-pear
 						sudo apt-get -qq install -y php7.0-idn
 						sudo apt-get -qq install -y php7.0-imagick
 						sudo apt-get -qq install -y php7.0-imap
@@ -720,13 +717,11 @@ inst_php(){
 					sudo apt-get -qq install -y php-gd
 					sudo apt-get -qq install -y php-json
 					sudo apt-get -qq install -y php-mbstring
-					sudo apt-get -qq install -y php-mcrypt
 					sudo apt-get -qq install -y php-mysql
 					sudo apt-get -qq install -y php-opcache
 					sudo apt-get -qq install -y php-readline
 					sudo apt-get -qq install -y php-xml
 					sudo apt-get -qq install -y php-mysql
-					sudo apt-get -qq install -y php-pear
 					sudo apt-get -qq install -y php-imagick
 					sudo apt-get -qq install -y php-imap
 					sudo apt-get -qq install -y php-memcache
@@ -748,13 +743,11 @@ inst_php(){
 				sudo apt-get -qq install -y php7.2-gd
 				sudo apt-get -qq install -y php7.2-json
 				sudo apt-get -qq install -y php7.2-mbstring
-				sudo apt-get -qq install -y php7.2-mcrypt
 				sudo apt-get -qq install -y php7.2-mysql
 				sudo apt-get -qq install -y php7.2-opcache
 				sudo apt-get -qq install -y php7.2-readline
 				sudo apt-get -qq install -y php7.2-xml
 				sudo apt-get -qq install -y php7.2-mysql
-				sudo apt-get -qq install -y php7.2-pear
 				sudo apt-get -qq install -y php7.2-imagick
 				sudo apt-get -qq install -y php7.2-imap
 				sudo apt-get -qq install -y php7.2-memcache
@@ -797,7 +790,6 @@ inst_sound(){
 	sudo apt-get -qq install -y alsa
 	sudo apt-get -qq install -y alsa-utils
 	sudo apt-get -qq install -y alsa-tools
-	sudo apt-get -qq install -y libav-tools
 	echo -n -e "\033[1;36mДобавляю запуск vlc http: \033[0m"
 	sudo tee /etc/systemd/system/vlcd.service << EOF
 [Unit]
@@ -1716,7 +1708,7 @@ inst_md(){
 	fi
 	sudo cp -rp ~/majordomo/* /var/www
 	sudo cp -rp ~/majordomo/.htaccess /var/www
-	rm -Rfv ~/majordomo
+	rm -Rdf ~/majordomo
 	# Создаем описание сервиса для запуска основного цикла системы
 	sudo tee /etc/init.d/majordomo << EOF
 #!/bin/sh
@@ -1863,7 +1855,7 @@ inst_phpmyadmin(){
 	tar -xf $pmpm5.tar.gz
 	rm $pmpm5.tar.gz
 	cp -rf $pmpm5/* $DIR
-	rm -Rfv ./$pmpm5
+	rm -Rdf ./$pmpm5
 	echo -e "\033[1;32mphpMyAdmin установлен\033[0m"
 }
 #функция установки часов реального времени на i2c0
