@@ -786,7 +786,7 @@ inst_sound(){
 	sudo apt-get -qq install -y mpd
 	sudo apt-get -qq install -y mplayer
 	sudo apt-get -qq install -y ffmpeg
-	#sudo apt-get -qq install -y pulseaudio
+	sudo apt-get -qq install -y pulseaudio
 	sudo apt-get -qq install -y alsa
 	sudo apt-get -qq install -y alsa-utils
 	sudo apt-get -qq install -y alsa-tools
