@@ -117,6 +117,11 @@ inst_base(){
 		echo "sun4i_codec" | tee -a /etc/modules
 		echo "sun8i_codec_analog" | tee -a /etc/modules
     	fi
+
+# ограничение журналов для /run
+sed -i '/#SystemMaxUse=/c SystemMaxUse=16M' /etc/systemd/journald.conf
+
+
 # включение аналогового выхода, портов i2c, uart, spi
 
 echo "overlays=analog-codec i2c0 i2c1 spi-spidev uart1 uart2 uart3" | tee -a /boot/armbianEnv.txt
@@ -847,7 +852,7 @@ EOF
 }
 # функция добавления репов mariadb
 add_repo_mbd(){
-#добавляем репы mariadb-server и устанавливаем
+#добавляем репы mariadb-server и устанавливаем (репы можно посмотреть тут https://downloads.mariadb.org/mariadb/repositories/#mirror=piconets)
 	sudo apt-get -qq install -y software-properties-common
 
 	type_os=$(lsb_release -i)
