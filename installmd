@@ -25,7 +25,7 @@ label1(){
 	then
 	echo "продолжаю..."
 	else
-	//удаление файлов блокировки
+	#удаление файлов блокировки
 	sudo rm /var/lib/dpkg/lock
 	sudo rm /var/lib/apt/lists/lock
 	sudo rm /var/cache/apt/archives/lock
@@ -308,7 +308,7 @@ inst_apache2(){
 	phpif72=$(apt-cache search php7.2-common)
 	if [ "$phpif72" = "" ];
 	then
-		// если php не версии 7.2
+		# если php не версии 7.2
 		if [ "$phpif" = "" ];
 		then
 			if [ "$phpif70" = "" ];
@@ -339,7 +339,7 @@ inst_apache2(){
 
 	if [ "$phpif72" = "" ];
 	then
-		// если php не версии 7.2
+		# если php не версии 7.2
 		if [ "$phpif" = "" ];
 		then
 			if [ "$phpif70" = "" ];
@@ -387,6 +387,7 @@ inst_apache2(){
 		sudo sed -i '/max_file_uploads/s/20/150/' /etc/php/7.2/apache2/php.ini
 		sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.2/apache2/php.ini
 	fi
+       sudo a2enmod php7.3
        sudo a2enmod php7.2
        sudo a2enmod php7.1
        sudo a2enmod php7.0
@@ -403,7 +404,7 @@ inst_nginx(){
 	sudo apt-get -qq install -y php-pear
 	sudo apt-get -qq install -y php-common
 	sudo apt-get -qq install -y php-gd
-
+	sudo apt-get -qq remove -y apache2
 	sudo apt-get -qq install -y nginx
 
 #определение пути к php-fpm
@@ -648,7 +649,7 @@ inst_php(){
 
 	if [ "$phpif72" = "" ];
 	then
-		// если php не версии 7.2
+		# если php не версии 7.2
 		if [ "$phpif" = "" ];
 		then
 					if [ "$phpif70" = "" ];
@@ -900,6 +901,10 @@ add_repo_mbd(){
     if [ "$type_os4" = "stretch" ]; then
     sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] http://mariadb.mirror.nucleus.be/repo/10.3/debian stretch main'
+    fi
+    if [ "$type_os4" = "buster" ]; then
+    sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
+    sudo add-apt-repository 'deb [arch=amd64] http://download.nus.edu.sg/mirror/mariadb/repo/10.4/debian buster main'
     fi
     if [ "$type_os4" = "sid" ]; then
     sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
