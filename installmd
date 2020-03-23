@@ -904,7 +904,7 @@ add_repo_mbd(){
     fi
     if [ "$type_os4" = "buster" ]; then
     sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
-    sudo add-apt-repository 'deb [arch=amd64] http://download.nus.edu.sg/mirror/mariadb/repo/10.4/debian buster main'
+    sudo add-apt-repository 'deb [arch=amd64] http://download.nus.edu.sg/mirror/mariadb/repo/10.3/debian buster main'
     fi
     if [ "$type_os4" = "sid" ]; then
     sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xF1656F24C74CD1D8
