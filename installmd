@@ -892,7 +892,7 @@ add_repo_mbd(){
     fi
     if [ "$type_os4" = "focal" ]; then
 sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
-sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://ftp.bme.hu/pub/mirrors/mariadb/repo/10.5/ubuntu focal main'
+sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://ftp.bme.hu/pub/mirrors/mariadb/repo/10.3/ubuntu focal main'
     fi
 	fi
 
@@ -968,11 +968,16 @@ inst_db(){
 					apt-get -qq install -y mariadb-client
 					#проверяем установилась ли mariadb-server
 					mdbif2=$(dpkg --get-selections mariadb-server)
+					mdbif5=$(dpkg --get-selections mariadb-server-10.3)
 				fi
 			fi
 		if [ "$mdbif2" = "" ]; then
 			echo -e "\033[1;31mdebug1  \033[0m"
 			apt-get -qq update
+			apt-get -qq install -y mariadb-client-10.5
+			apt-get -qq install -y mariadb-server-10.5
+			apt-get -qq install -y mariadb-client-10.4
+			apt-get -qq install -y mariadb-server-10.4
 			apt-get -qq install -y mariadb-client-10.3
 			apt-get -qq install -y mariadb-server-10.3
 			apt-get -qq install -y mariadb-client-10.2
@@ -983,16 +988,24 @@ inst_db(){
 			apt-get -qq install -y mariadb-server
 			apt-get -qq install -y mariadb-client
 			mdbif2=$(dpkg --get-selections mariadb-server)
+			mdbif5=$(dpkg --get-selections mariadb-server-10.3)
 		fi
-		if [ "$mdbif2" = "" ];
-		then
-		echo -n -e "\033[1;36mУстановка базы данных MySQL... \033[0m"
-		add-apt-repository universe
-		#sudo apt-get -qq install -y mysql-server
-		#sudo apt-get -qq install -y mysql-client
-	echo -e "\033[1;31mВНИМАНИЕ!!! База данных MariaDB не установилась, дальнейшее продолжение невозможно  \033[0m"
-	exit 0
-		fi
+			mdbif2=$(dpkg --get-selections mariadb-server)
+			mdbif5=$(dpkg --get-selections mariadb-server-10.3)
+        if [[ "$mdbif5" != "" || "$mdbif2" != "" ]];
+        then
+            echo "всё хорошо"
+
+        else
+        echo -n -e "\033[1;36mУстановка базы данных MySQL... \033[0m"
+        #add-apt-repository universe
+        #sudo apt-get -qq install -y mysql-server
+        #sudo apt-get -qq install -y mysql-client
+    echo -e "\033[1;31mВНИМАНИЕ!!! База данных MariaDB не установилась, дальнейшее продолжение невозможно  \033[0m"
+    exit 0
+
+        fi
+
 		echo -e "\033[1;32m установлено\033[0m"
 	#подключаем репы обратно
 	add-apt-repository universe
