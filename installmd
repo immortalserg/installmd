@@ -890,6 +890,10 @@ add_repo_mbd(){
     sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
     sudo add-apt-repository 'deb [arch=amd64] http://mariadb.mirror.serveriai.lt/repo/10.4/ubuntu disco main'
     fi
+    if [ "$type_os4" = "focal" ]; then
+sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
+sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://ftp.bme.hu/pub/mirrors/mariadb/repo/10.5/ubuntu focal main'
+    fi
 	fi
 
 	if [ $type_os3 = "Debian" ]; then
