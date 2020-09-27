@@ -421,9 +421,11 @@ server {
     server_name localhost md.lan;
     charset utf-8;
     client_max_body_size 150M;
+    location /api { 
+        rewrite ^(.*)$ /api.php;
+    }
     location / {
         rewrite pda$ /popup/pda.html redirect;
-        rewrite ^api/ /api.php;
         if (!-e \$request_filename){
             rewrite ^(.*)$ /nf.php;
         }
@@ -514,10 +516,11 @@ server {
     return 444;
     }
     #########
+    location /api { 
+        rewrite ^(.*)$ /api.php;
+    }
     location / {
           rewrite pda$ /popup/pda.html redirect;
-          rewrite ^api/ /api.php;
-
               if (!-e \$request_filename){
               rewrite ^(.*)$ /nf.php;
               }
