@@ -538,6 +538,11 @@ server {
           deny all;
           return 404;
     }
+    location ~ \.(ini|phps|fla|sql|log|sh|py|prev)$ {
+          deny all;
+          return 404;
+    }
+
      location ~* [^/]\.php(/|$) {
           fastcgi_index index.php;
           fastcgi_pass unix:/var$phpfpm;
