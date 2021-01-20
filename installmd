@@ -408,7 +408,7 @@ inst_nginx(){
 	sudo apt-get -qq install -y nginx
 
 #определение пути к php-fpm
-phpfpm=$(find /run -name  "*fpm.sock" -print)
+phpfpm=$(find /run -name  "php-fpm.sock" -print)
 
 
 	# конфиги для nginx вариант 1
