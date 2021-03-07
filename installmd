@@ -96,6 +96,7 @@ inst_base(){
 	sudo apt-get -qq install -y libao-common
 	sudo apt-get -qq install -y libao-dev
 	sudo useradd -m -d /home/pi pi -p $pass2
+	sudo adduser www-data mysql
         # получаем имя платы
         func_hw
     	if [[ $type_pr2 = "Xunlong Orange Pi Zero" ]]
