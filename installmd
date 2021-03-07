@@ -387,6 +387,7 @@ inst_apache2(){
 		sudo sed -i '/max_file_uploads/s/20/150/' /etc/php/7.2/apache2/php.ini
 		sudo sed -i '/log_errors/s/On/Off/' /etc/php/7.2/apache2/php.ini
 	fi
+	sudo a2enmod php7.4
        sudo a2enmod php7.3
        sudo a2enmod php7.2
        sudo a2enmod php7.1
