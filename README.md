@@ -1,5 +1,7 @@
 # installmd
 
+# Скрипт не поддерживается, установите MajorDoMo с помощью этого скрипта https://github.com/immortalserg/majordomo_docker/
+
 Скрипт установки MajorDoMo на OrangePi, Asus Tinker Board, RaspberryPi, Cubieboard, NanoPi, BananaPi и т.п.
 
 Установка.
